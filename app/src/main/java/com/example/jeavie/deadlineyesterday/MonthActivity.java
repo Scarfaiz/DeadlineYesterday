@@ -5,6 +5,7 @@ import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,8 +39,9 @@ public class MonthActivity extends AppCompatActivity {
             }
         });
     }
-    public void backward(View v){
-        this.finish();    // This will kill current activity, and if previous activity is still opened in background, it will come in front.
+    public void toWeek(View v) {
+        Intent week = new Intent(this, MainActivity.class);
+        startActivity(week);
     }
 
 }
