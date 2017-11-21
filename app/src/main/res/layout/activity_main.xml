@@ -22,7 +22,7 @@
             android:id="@+id/toMonth"
             android:layout_width="@android:dimen/notification_large_icon_width"
             android:layout_height="match_parent"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:background="@android:color/transparent"
             android:onClick="toMonth"
             android:src="@android:drawable/ic_menu_month"
