@@ -1,7 +1,5 @@
 package com.example.jeavie.deadlineyesterday;
 
-
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,7 +24,11 @@ public class AddTaskActivity extends AppCompatActivity {
 
         switch (item.getItemId()){
 
-            case R.id.doneEvent:
+            case android.R.id.home:
+                finish();
+                return true;
+
+            case R.id.doneTask:
                 finish();
                 return true;
         }

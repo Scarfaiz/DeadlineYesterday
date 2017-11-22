@@ -53,7 +53,7 @@ public class MonthActivity extends AppCompatActivity {
 
         switch (item.getItemId()){
 
-            case R.id.addEvent:
+            case R.id.addTask:
                 startActivity(new Intent(this, AddTaskActivity.class));
                 return true;
         }

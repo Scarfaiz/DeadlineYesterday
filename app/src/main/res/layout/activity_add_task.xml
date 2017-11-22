@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/the_darkest_grey">
 
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--android:id="@+id/marker_layout_toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="?attr/colorPrimary"-->
+        <!--android:minHeight="?attr/actionBarSize"-->
+        <!--android:theme="?attr/actionBarTheme"-->
+        <!--app:navigationIcon="?attr/homeAsUpIndicator"-->
+        <!--app:title="@string/addTask"-->
+        <!--tools:layout_editor_absoluteX="0dp"-->
+        <!--tools:layout_editor_absoluteY="0dp">-->
+
+        <!--<ImageButton-->
+            <!--android:id="@+id/upButton"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="end"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--android:icon="@mipmap/ic_done"-->
+            <!--android:onClick="back" />-->
+
+    <!--</android.support.v7.widget.Toolbar>-->
 </android.support.constraint.ConstraintLayout>

@@ -29,7 +29,7 @@
 
         <activity
             android:name=".AddTaskActivity"
-            android:label="@string/addEvent"
+            android:label="@string/addTask"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

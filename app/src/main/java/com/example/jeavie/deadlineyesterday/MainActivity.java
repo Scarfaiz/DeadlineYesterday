@@ -6,8 +6,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-//Action bar + Week view. Action bar consists of changing view and adding a new event activity
-//Day view - no events - add a new or show a list and "+".
+//add an opportunity to add a new task by holding a calendar/week date
+//add drawing toolbar: icon - during date - week view - month view - settings (colors, notifications) - about
+//add week view (main view) - "no tasks" message or all nearest events with dates etc.
+//add an opportunity to create and save tasks
+//complete add task activity
+//add settings activity
+//light theme?
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -33,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, MonthActivity.class));
                 return true;
 
-            case R.id.addEvent:
+            case R.id.addTask:
                 startActivity(new Intent(this, AddTaskActivity.class));
                 return true;
         }
