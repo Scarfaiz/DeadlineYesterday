@@ -1,26 +1,23 @@
 package com.example.jeavie.deadlineyesterday;
 
+
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-//Action bar + Week view. Action bar consists of changing view and adding a new event activity
-//Day view - no events - add a new or show a list and "+".
-public class MainActivity extends AppCompatActivity {
-
+public class AddTaskActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_add_task);
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_add_task, menu);
         return true;
     }
 
@@ -29,14 +26,11 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()){
 
-            case R.id.toMonth:
-                startActivity(new Intent(this, MonthActivity.class));
-                return true;
-
-            case R.id.addEvent:
-                startActivity(new Intent(this, AddTaskActivity.class));
+            case R.id.doneEvent:
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

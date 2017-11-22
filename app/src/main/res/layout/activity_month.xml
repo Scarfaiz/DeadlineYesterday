@@ -4,40 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.jeavie.deadlineyesterday.MonthActivity">
+    android:orientation="vertical"
+    android:background="@color/the_darkest_grey">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/activity_main_toolbar"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimaryDark"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-        <ImageButton
-            android:id="@+id/toWeek"
-            android:layout_width="@android:dimen/notification_large_icon_width"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:background="@android:color/transparent"
-            android:onClick="toWeek"
-            android:src="@android:drawable/ic_menu_week" />
-    </android.support.v7.widget.Toolbar>
-
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/monthView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="95dp"
+        android:layout_marginBottom="75dp"
+        android:layout_marginStart="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/activity_main_toolbar"
-        app:layout_constraintTop_toBottomOf="@+id/activity_main_toolbar"
-        app:mcv_selectionColor="#cccccc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:mcv_selectionColor="@color/dark_grey"
         app:mcv_showOtherDates="all" />
-
 
 </android.support.constraint.ConstraintLayout>
