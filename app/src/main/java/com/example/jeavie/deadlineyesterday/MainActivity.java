@@ -1,10 +1,15 @@
 package com.example.jeavie.deadlineyesterday;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.Locale;
 
 //add an opportunity to add a new task by holding a calendar/week date
 //add drawing toolbar: icon - during date - week view - month view - settings (colors, notifications) - about
@@ -14,12 +19,22 @@ import android.view.MenuItem;
 //add settings activity
 //light theme?
 public class MainActivity extends AppCompatActivity {
+    private SharedPreferences preferences;
+    private Locale locale;
+    private String lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        lang = getResources().getConfiguration().locale.getDisplayLanguage(Locale.CHINESE);
+        locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, null);
     }
 
     @Override
