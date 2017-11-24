@@ -4,19 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/the_darkest_grey">
+    android:background="@color/the_darkest_grey"
+    android:orientation="vertical">
 
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        android:id="@+id/monthView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="75dp"
-        android:layout_marginStart="1dp"
+    <io.github.memfis19.cadar.view.ListCalendar
+        android:id="@+id/listCalendar"
+        android:layout_width="403dp"
+        android:layout_height="286dp"
+        android:layout_below="@id/monthCalendar"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/monthCalendar"
+        app:layout_constraintTop_toBottomOf="@+id/monthCalendar" />
+
+    <io.github.memfis19.cadar.view.MonthCalendar
+        android:id="@+id/monthCalendar"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/listCalendar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:mcv_selectionColor="@color/dark_grey"
-        app:mcv_showOtherDates="all" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--<com.prolificinteractive.materialcalendarview.MaterialCalendarView-->
+    <!--android:id="@+id/monthView"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="75dp"-->
+    <!--android:layout_marginStart="1dp"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent"-->
+    <!--app:mcv_selectionColor="@color/dark_grey"-->
+    <!--app:mcv_showOtherDates="all" />-->
 
 </android.support.constraint.ConstraintLayout>
