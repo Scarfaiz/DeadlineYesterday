@@ -24,6 +24,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout2"
+        android:layout_width="0dp"
+        android:layout_height="247dp"
+        app:layout_constraintBottom_toBottomOf="@+id/monthCalendar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/monthCalendar">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@mipmap/ic_add"
+            app:backgroundTint="@color/dark_grey"
+            app:fabSize="auto" />
+    </android.support.design.widget.CoordinatorLayout>
     <!--<com.prolificinteractive.materialcalendarview.MaterialCalendarView-->
     <!--android:id="@+id/monthView"-->
     <!--android:layout_width="wrap_content"-->

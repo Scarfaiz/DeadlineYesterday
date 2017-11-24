@@ -3,12 +3,15 @@ package com.example.jeavie.deadlineyesterday;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -28,6 +31,8 @@ import io.github.memfis19.cadar.view.ListCalendar;
 import io.github.memfis19.cadar.view.MonthCalendar;
 
 public class MonthActivity extends AppCompatActivity implements CalendarPrepareCallback {
+
+    FloatingActionButton addTask;
 
     private MonthCalendar monthCalendar;
     private ListCalendar listCalendar;
@@ -83,6 +88,14 @@ public class MonthActivity extends AppCompatActivity implements CalendarPrepareC
             @Override
             public void onMonthChanged(Calendar calendar) {
                 monthCalendar.setSelectedDay(calendar, true);
+            }
+        });
+
+        addTask=(FloatingActionButton)findViewById(R.id.addTask);
+        addTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MonthActivity.this, AddTaskActivity.class));
             }
         });
     }

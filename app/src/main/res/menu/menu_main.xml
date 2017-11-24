@@ -6,9 +6,5 @@
         android:title="@string/month"
         android:icon="@mipmap/ic_month"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/addTask"
-        android:title="@string/addTask"
-        android:icon="@mipmap/ic_add"
-        app:showAsAction="ifRoom" />
+
 </menu>

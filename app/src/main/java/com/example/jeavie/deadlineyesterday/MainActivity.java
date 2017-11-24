@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.Locale;
 
@@ -22,12 +24,15 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private Locale locale;
     private String lang;
+    FloatingActionButton addTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         lang = getResources().getConfiguration().locale.getDisplayLanguage(Locale.CHINESE);
         locale = new Locale(lang);
@@ -35,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, null);
+
+        addTask=(FloatingActionButton)findViewById(R.id.addTask);
+        addTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, AddTaskActivity.class));
+            }
+        });
     }
 
     @Override
