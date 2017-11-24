@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/toMonth"
-        android:title="@string/month"
+        android:id="@+id/toWeek"
+        android:title="@string/week"
         android:icon="@mipmap/ic_month"
         app:showAsAction="ifRoom" />
 

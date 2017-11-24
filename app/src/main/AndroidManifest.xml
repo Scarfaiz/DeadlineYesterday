@@ -21,8 +21,8 @@
         </activity>
 
         <activity
-            android:name=".MonthActivity"
-            android:label="@string/month"
+            android:name=".WeekActivity"
+            android:label="@string/week"
             android:parentActivityName=".MainActivity"
             android:configChanges="locale">
             <meta-data

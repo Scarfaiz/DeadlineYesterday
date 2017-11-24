@@ -13,13 +13,16 @@ import android.view.View;
 
 import java.util.Locale;
 
-//add an opportunity to add a new task by holding a calendar/week date
-//add drawing toolbar: icon - during date - week view - month view - settings (colors, notifications) - about
-//add week view (main view) - "no tasks" message or all nearest events with dates etc.
-//add an opportunity to create and save tasks
-//complete add task activity
+
+//add drawing toolbar: icon - during date - week view - settings (colored tags, notifications) - about
+//add deadlines view (main view) - "add deadline" message or all nearest events with dates etc.
+//add an opportunity to save tasks
+//modify tasks
+//delete tasks by swaping?
+//complete add task activity: - name - time - tag - notification.
 //add settings activity
-//light theme?
+////add an opportunity to add a new task by holding a week date?
+////light theme?
 public class MainActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private Locale locale;
@@ -62,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()){
 
-            case R.id.toMonth:
-                startActivity(new Intent(this, MonthActivity.class));
+            case R.id.toWeek:
+                startActivity(new Intent(this, WeekActivity.class));
                 return true;
 
             case R.id.addTask:
