@@ -26,9 +26,9 @@ import java.util.Locale;
 ////TODO:add an opportunity to add a new task by holding a week date?
 ////TODO:light theme?
 public class MainActivity extends AppCompatActivity {
-    private SharedPreferences preferences;
-    private Locale locale;
-    private String lang;
+    SharedPreferences preferences;
+    Locale locale;
+    String lang;
     FloatingActionButton addTask;
 
     @Override
