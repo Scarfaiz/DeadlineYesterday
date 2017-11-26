@@ -14,15 +14,17 @@ import android.view.View;
 import java.util.Locale;
 
 
-//add drawing toolbar: icon - during date - week view - settings (colored tags, notifications) - about
-//add deadlines view (main view) - "add deadline" message or all nearest events with dates etc.
-//add an opportunity to save tasks
-//modify tasks
-//delete tasks by swaping?
-//complete add task activity: - name - time - tag - notification.
-//add settings activity
-////add an opportunity to add a new task by holding a week date?
-////light theme?
+//TODO:add drawing toolbar: icon - during date - week view - settings (colored tags, notifications) - about
+//TODO:add deadlines view (main view) - "add deadline" message or all nearest events with dates etc.
+//TODO:add an opportunity to save tasks
+//TODO:modify tasks
+//TODO:delete tasks by sliding?
+//TODO:check previous tasks
+//TODO:complete add task activity: - name - time - tag - notification.
+//TODO:complete settings activity
+
+////TODO:add an opportunity to add a new task by holding a week date?
+////TODO:light theme?
 public class MainActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private Locale locale;
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+// language configuration (show months in english)
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         lang = getResources().getConfiguration().locale.getDisplayLanguage(Locale.CHINESE);
         locale = new Locale(lang);
@@ -69,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, WeekActivity.class));
                 return true;
 
-            case R.id.addTask:
-                startActivity(new Intent(this, AddTaskActivity.class));
+            case R.id.history:
+                startActivity(new Intent(this, HistoryActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);

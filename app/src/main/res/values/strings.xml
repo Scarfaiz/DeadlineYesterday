@@ -5,4 +5,6 @@
     <string name="addTask">Add Task</string>
     <string name="doneTask">Done Task</string>
     <string name="back">Back</string>
+    <string name="settings">Settings</string>
+    <string name="history">History</string>
 </resources>
