@@ -37,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-// language configuration (show months in english)
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);// language configuration
         lang = getResources().getConfiguration().locale.getDisplayLanguage(Locale.CHINESE);
         locale = new Locale(lang);
         Locale.setDefault(locale);
