@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="black">#000000</color>
     <color name="the_darkest_grey">#111618</color>
     <color name="dark_dark_grey">#222729</color>
@@ -8,5 +9,7 @@
     <color name="grey">#666666</color>
     <color name="light_grey">#999999</color>
     <color name="white">#FFFFFF</color>
+
+    <color name="red">#ca3a13</color>
 
 </resources>

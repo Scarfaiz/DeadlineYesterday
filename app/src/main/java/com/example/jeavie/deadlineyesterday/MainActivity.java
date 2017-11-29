@@ -13,7 +13,6 @@ import android.view.View;
 
 import java.util.Locale;
 
-
 //TODO:add drawing toolbar: icon - during date - week view - settings (colored tags, notifications) - about
 //TODO:add deadlines view (main view) - "add deadline" message or all nearest events with dates etc.
 //TODO:add an opportunity to save tasks
@@ -25,10 +24,13 @@ import java.util.Locale;
 
 ////TODO:add an opportunity to add a new task by holding a week date?
 ////TODO:light theme?
+
 public class MainActivity extends AppCompatActivity {
+
     SharedPreferences preferences;
     Locale locale;
     String lang;
+
     FloatingActionButton addTask;
 
     @Override

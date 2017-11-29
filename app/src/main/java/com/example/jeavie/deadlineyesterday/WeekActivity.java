@@ -282,4 +282,5 @@ public class WeekActivity extends AppCompatActivity implements CalendarPrepareCa
             }, 3000);
         }
     }
+
 }

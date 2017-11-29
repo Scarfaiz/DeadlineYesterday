@@ -30,17 +30,7 @@
             android:src="@mipmap/ic_add"
             app:backgroundTint="@color/dark_grey"
             app:fabSize="auto" />
+
     </android.support.design.widget.CoordinatorLayout>
-    <!--<com.prolificinteractive.materialcalendarview.MaterialCalendarView-->
-    <!--android:id="@+id/monthView"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginBottom="75dp"-->
-    <!--android:layout_marginStart="1dp"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toTopOf="parent"-->
-    <!--app:mcv_selectionColor="@color/dark_grey"-->
-    <!--app:mcv_showOtherDates="all" />-->
 
 </android.support.constraint.ConstraintLayout>
