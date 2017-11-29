@@ -7,4 +7,5 @@
     <string name="back">Back</string>
     <string name="settings">Settings</string>
     <string name="history">History</string>
+    <string name="addSummary">Add summary</string>
 </resources>

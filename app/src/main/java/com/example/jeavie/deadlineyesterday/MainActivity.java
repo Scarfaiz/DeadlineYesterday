@@ -20,7 +20,7 @@ import java.util.Locale;
 //TODO:modify tasks
 //TODO:delete tasks by sliding?
 //TODO:check previous tasks
-//TODO:complete add task activity: - name - time - tag - notification.
+//TODO:complete add task activity: - name - datetime - colored tag - notification "yes-no".
 //TODO:complete settings activity
 
 ////TODO:add an opportunity to add a new task by holding a week date?
