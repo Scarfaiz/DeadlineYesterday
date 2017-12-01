@@ -1,31 +1,23 @@
 package com.example.jeavie.deadlineyesterday;
 
-
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import java.util.Calendar;
 
 import com.wafflecopter.charcounttextview.CharCountTextView;
+import java.util.Calendar;
 
 public class AddTaskActivity extends AppCompatActivity {
 
-    Calendar currentDate;
-    Calendar currentTime;
     TextView setDate;
     TextView setTime;
     int minute, hour, year, month, day;
@@ -62,7 +54,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
         setDate = (TextView)findViewById(R.id.setDate);
 
-        currentDate = Calendar.getInstance();
+        Calendar currentDate = Calendar.getInstance();
         year = currentDate.get(Calendar.YEAR);
         month = currentDate.get(Calendar.MONTH)+1;
         day = currentDate.get(Calendar.DAY_OF_MONTH);
@@ -84,7 +76,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
         setTime = (TextView)findViewById(R.id.setTime);
 
-        currentTime = Calendar.getInstance();
+        Calendar currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
         minute = currentTime.get(Calendar.MINUTE);
         selectedTimeFormat(hour);
@@ -120,8 +112,6 @@ public class AddTaskActivity extends AppCompatActivity {
             format = "AM";
         }
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

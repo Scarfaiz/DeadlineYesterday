@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+        <!--custom colors-->
+
     <color name="black">#000000</color>
     <color name="the_darkest_grey">#111618</color>
     <color name="dark_dark_grey">#222729</color>
-    <color name="blue_grey">#243445</color>
-    <color name="dark_grey">#4e4c4e</color>
-    <color name="grey">#666666</color>
-    <color name="light_grey">#9e9e9e</color>
     <color name="white">#FFFFFF</color>
-    <color name="green">#FF8BC34A</color>
-    <color name="blue">#90caf9</color>
 
-    <color name="red">#ca3a13</color>
-    <color name="accent_material_dark_1">#90caf9</color>
+        <!--material colors-->
+
+    <color name="blue_grey">#37474F</color>
+    <color name="dark_grey">#424242</color>
+    <color name="grey">#757575</color>
+    <color name="light_grey">#BDBDBD</color>
+    <color name="blue">#90caf9</color>
+    <color name="green">#66BB6A</color>
+
 
 </resources>

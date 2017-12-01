@@ -2,24 +2,25 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="@style/Theme.AppCompat.NoActionBar">
-        <item name="background">@color/dark_dark_grey</item>
         <item name="colorPrimaryDark">@color/the_darkest_grey</item>
         <item name="android:colorBackground">@color/the_darkest_grey</item>
         <item name="colorPrimary">@color/dark_dark_grey</item>
+        <item name="background">@color/dark_dark_grey</item>
         <item name="colorAccent">@color/blue</item>
 
 
     </style>
 
     <style name="DeadlineTheme" parent="AppTheme" >
-        <item name="colorPrimaryDark">@color/the_darkest_grey</item>
-        <item name="android:colorBackground">@color/dark_dark_grey</item>
         <item name="colorPrimary">@color/the_darkest_grey</item>
-        <item name="colorAccent">@color/blue</item>
-        <item name="android:colorForeground">@color/dark_dark_grey</item>
+        <item name="colorPrimaryDark">@color/the_darkest_grey</item>
         <item name="android:navigationBarColor">@color/the_darkest_grey</item>
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:colorBackground">@color/dark_dark_grey</item>
+        <item name="android:colorForeground">@color/dark_dark_grey</item>
         <item name="android:colorButtonNormal">@color/dark_dark_grey</item>
+        <item name="colorAccent">@color/blue</item>
+        <item name="android:textColorPrimary">@color/white</item>
+
     </style>
 
 </resources>
