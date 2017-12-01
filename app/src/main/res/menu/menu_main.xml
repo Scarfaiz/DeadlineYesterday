@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/toWeek"
-        android:title="@string/week"
         android:icon="@mipmap/ic_month"
+        android:title="@string/week"
         app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/history"
         android:orderInCategory="100"

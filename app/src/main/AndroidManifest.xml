@@ -45,7 +45,8 @@
             android:name=".HistoryActivity"
             android:label="@string/history"
             android:parentActivityName=".MainActivity"
-            android:configChanges="locale">
+            android:configChanges="locale"
+            android:theme="@style/DeadlineTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>

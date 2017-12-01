@@ -10,5 +10,11 @@
     <string name="addSummary">Add summary</string>
     <string name="setDate">Date</string>
     <string name="setTime">Time</string>
+    <string name="tags">Tags</string>
+    <string name="notifications">Notifications</string>
+    <string name="other">Other</string>
+    <string name="info">Info</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="divider">/</string>
 </resources>

@@ -2,5 +2,5 @@ package com.example.jeavie.deadlineyesterday;
 
 
 
-public class SettingsActivity {
+public class TagsActivity {
 }

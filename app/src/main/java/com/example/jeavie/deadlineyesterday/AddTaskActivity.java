@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.text.format.DateUtils;
@@ -36,6 +37,18 @@ public class AddTaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_add_task_activity);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.ic_back));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         final EditText editText = (EditText)findViewById(R.id.summary);
 
         CharCountTextView charCountTextView = (CharCountTextView)findViewById(R.id.tvTextCounter);
@@ -51,9 +64,10 @@ public class AddTaskActivity extends AppCompatActivity {
 
         currentDate = Calendar.getInstance();
         year = currentDate.get(Calendar.YEAR);
-        month = currentDate.get(Calendar.MONTH) + 1;
+        month = currentDate.get(Calendar.MONTH)+1;
         day = currentDate.get(Calendar.DAY_OF_MONTH);
         setDate.setText(day + "/" + month + "/" + year);
+        month = month-1;
 
         setDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +75,6 @@ public class AddTaskActivity extends AppCompatActivity {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(AddTaskActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        month=month+1;
                         setDate.setText(dayOfMonth + "/" + month + "/" + year);
                     }
                 },year, month, day);

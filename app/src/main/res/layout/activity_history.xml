@@ -7,4 +7,18 @@
     android:orientation="vertical"
     android:background="@color/the_darkest_grey">
 
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_dark_grey">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_history"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/dark_dark_grey"
+            />
+
+    </android.support.design.widget.AppBarLayout>
+
 </android.support.constraint.ConstraintLayout>

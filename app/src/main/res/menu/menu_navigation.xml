@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/settings">
+        <menu android:checkableBehavior="single">
+            <item android:id="@+id/tags"
+                android:title="@string/tags"
+                android:icon="@mipmap/ic_tags"/>
+            <item android:id="@+id/notifications"
+                android:title="@string/notifications"
+                android:icon="@mipmap/ic_notifications"/>
+        </menu>
+    </item>
+
+    <item android:title="@string/other">
+        <menu>
+            <item android:id="@+id/info"
+                android:title="@string/info"
+                android:icon="@mipmap/ic_info"/>
+        </menu>
+    </item>
+
+</menu>

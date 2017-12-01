@@ -11,11 +11,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,6 +59,17 @@ public class WeekActivity extends AppCompatActivity implements CalendarPrepareCa
 
         setContentView(R.layout.activity_week);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_week);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.ic_back));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         //events.add(new EventModel());
 
         listCalendar = (ListCalendar) findViewById(R.id.listCalendar);
@@ -114,6 +128,27 @@ public class WeekActivity extends AppCompatActivity implements CalendarPrepareCa
                 startActivity(new Intent(WeekActivity.this, AddTaskActivity.class));
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_week, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+
+            case android.R.id.home:
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class MonthDecoratorImpl implements MonthDecorator {
