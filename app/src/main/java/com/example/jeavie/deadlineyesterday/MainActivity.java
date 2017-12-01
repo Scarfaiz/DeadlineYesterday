@@ -21,11 +21,12 @@ import java.util.Locale;
 //TODO: main - "add deadline" message or "listview" events with dates etc.
 //TODO: save, modify, delete tasks
 //TODO: complete add task activity: tags - notifications "yes-no".
-//TODO: history activity
-//TODO: clear history - snackbar: accept
+//TODO: history activity, clear history - snackbar: cancel
 //TODO: tags activity
 //TODO: notifications activity
 //TODO: about
+//TODO: week activity
+//TODO: sort by?
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

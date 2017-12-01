@@ -47,8 +47,6 @@ import io.github.memfis19.cadar.view.ListCalendar;
 
 public class WeekActivity extends AppCompatActivity implements CalendarPrepareCallback {
 
-    FloatingActionButton addTask;
-
     private ListCalendar listCalendar;
 
     private List<Event> events = new ArrayList<>();
@@ -121,7 +119,7 @@ public class WeekActivity extends AppCompatActivity implements CalendarPrepareCa
                 Log.i("onEventLongClick", String.valueOf(event));
             }
         });
-        addTask=(FloatingActionButton)findViewById(R.id.addTask);
+        FloatingActionButton addTask=(FloatingActionButton)findViewById(R.id.addTask);
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

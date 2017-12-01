@@ -2,7 +2,10 @@ package com.example.jeavie.deadlineyesterday;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,6 +18,7 @@ import android.widget.TimePicker;
 
 import com.wafflecopter.charcounttextview.CharCountTextView;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class AddTaskActivity extends AppCompatActivity {
 
