@@ -87,5 +87,43 @@
         app:layout_constraintStart_toEndOf="@+id/setDate"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
+    <mabbas007.tagsedittext.TagsEditText
+        android:id="@+id/tags"
+        app:tagsBackground="@drawable/tags"
+        app:tagsCloseImagePadding="@dimen/defaultTagsCloseImagePadding"
+        app:tagsCloseImageRight="@drawable/tag_close"
+        app:tagsTextColor="@color/blue"
+        app:tagsTextSize="18sp"
+        app:tagsPaddingLeft="@dimen/item"
+        android:hint="@string/addTags"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="197dp"
+        android:padding="@dimen/item"
+        android:singleLine="true"
+        android:textSize="18sp"
+        android:background="@drawable/frame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/appBarLayout" />
+
+    <Switch
+        android:id="@+id/switch_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="256dp"
+        android:background="@drawable/frame"
+        android:padding="@dimen/item"
+        android:text="@string/notifications"
+        android:textSize="18sp"
+        android:textColor="@color/light_grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/appBarLayout" />
+
 
 </android.support.constraint.ConstraintLayout>

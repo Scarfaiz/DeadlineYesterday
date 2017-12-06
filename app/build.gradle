@@ -31,4 +31,5 @@ dependencies {
     compile 'com.prolificinteractive:material-calendarview:1.4.3'
     compile 'io.github.memfis19:cadar:0.4.8'
     compile 'com.github.broakenmedia:CharCountTextView:v1.0'
+    compile 'com.github.mabbas007:TagsEditText:1.0.5'
 }

@@ -18,7 +18,6 @@ import android.widget.TimePicker;
 
 import com.wafflecopter.charcounttextview.CharCountTextView;
 import java.util.Calendar;
-import java.util.Locale;
 
 public class AddTaskActivity extends AppCompatActivity {
 
