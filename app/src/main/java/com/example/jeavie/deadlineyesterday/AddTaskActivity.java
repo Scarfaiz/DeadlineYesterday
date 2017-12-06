@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.wafflecopter.charcounttextview.CharCountTextView;
 import java.util.Calendar;
@@ -133,8 +135,16 @@ public class AddTaskActivity extends AppCompatActivity {
                 return true;
 
             case R.id.doneTask:
-                finish();
-                return true;
+                EditText editText = (EditText)findViewById(R.id.summary);
+                String summary = editText.getText().toString();
+                if (TextUtils.isEmpty(summary.trim())) {
+                    Toast.makeText(this, "You did not enter a summary", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                else {
+                    finish();
+                    return true;
+                }
         }
         return super.onOptionsItemSelected(item);
     }
