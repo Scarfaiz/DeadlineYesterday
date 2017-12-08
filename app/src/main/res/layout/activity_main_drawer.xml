@@ -8,14 +8,14 @@
         layout="@layout/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <!-- The navigation drawer -->
+    <!-- The navigatactivity_main_drawerawer -->
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation"
         android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/the_darkest_grey"
-        app:headerLayout="@layout/header"
+        app:headerLayout="@layout/activity_main_header"
         app:menu="@menu/navigation"
         app:itemTextColor="@color/light_grey"
         app:itemIconTint="@color/light_grey"/>

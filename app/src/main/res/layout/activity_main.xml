@@ -10,6 +10,7 @@
     android:background="@color/the_darkest_grey">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/dark_dark_grey">
@@ -18,14 +19,33 @@
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/dark_dark_grey"
-            />
+            android:background="@color/dark_dark_grey" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.CoordinatorLayout
+    <ListView
+        android:id="@+id/listDeadlines"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/item"
+        android:layout_marginStart="8dp"
+        android:divider="@color/the_darkest_grey"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2" />
+
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/noDeadlines"
+        android:textSize="24sp" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/addTask"
@@ -33,9 +53,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            app:fabSize="auto"
+            android:src="@mipmap/ic_add"
             app:backgroundTint="@color/blue"
-            android:src="@mipmap/ic_add" />
+            app:fabSize="auto" />
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -2,8 +2,10 @@ package com.example.jeavie.deadlineyesterday;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +21,12 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.wafflecopter.charcounttextview.CharCountTextView;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import mabbas007.tagsedittext.TagsEditText;
 
 public class AddTaskActivity extends AppCompatActivity {
 
@@ -126,25 +133,44 @@ public class AddTaskActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult(MainActivity.INTENT_EMPTY_CODE, intent);
+        super.onBackPressed();
+    }
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()){
-
             case android.R.id.home:
                 finish();
                 return true;
 
             case R.id.doneTask:
-                EditText editText = (EditText)findViewById(R.id.summary);
-                String summary = editText.getText().toString();
+
+                EditText editTextSummary = (EditText)findViewById(R.id.summary);
+                String summary = editTextSummary.getText().toString();
+
+                TextView textViewDate = (TextView)findViewById(R.id.setDate);
+                String deadline1 = textViewDate.getText().toString();
+                TextView textViewTime = (TextView)findViewById(R.id.setTime);
+                String deadline2 = textViewTime.getText().toString();
+
+                TagsEditText tagsEditText = (TagsEditText)findViewById(R.id.tags);
+                tagsEditText.getTags();
+
                 if (TextUtils.isEmpty(summary.trim())) {
                     Toast.makeText(this, "You did not enter a summary", Toast.LENGTH_SHORT).show();
                     return false;
                 }
                 else {
+                    Intent intent = new Intent();
+                    intent.putExtra("summary", summary);
+                    setResult(MainActivity.INTENT_RESULT_CODE, intent);
                     finish();
                     return true;
                 }
+
         }
         return super.onOptionsItemSelected(item);
     }

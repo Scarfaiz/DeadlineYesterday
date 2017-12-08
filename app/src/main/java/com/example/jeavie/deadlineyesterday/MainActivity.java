@@ -12,10 +12,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 //TODO: main - "add deadline" message or "listview" events with dates etc.
@@ -29,11 +36,21 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public final static int INTENT_REQUEST_CODE = 1;
+    public final static int INTENT_RESULT_CODE = 1;
+    public final static int INTENT_EMPTY_CODE = 0;
+    String result;
+
+    private ListView listView;
+    DeadlineActivityAdapter deadlineActivityAdapter;
+    List<DeadlineActivity> list;
+    String summary, getData, getTime, tags;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.drawer);
+        setContentView(R.layout.activity_main_drawer);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);// language configuration
         String lang = getResources().getConfiguration().locale.getDisplayLanguage(Locale.CHINESE);
@@ -50,7 +67,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, AddTaskActivity.class));
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, AddTaskActivity.class);
+                startActivityForResult(intent, INTENT_REQUEST_CODE);
             }
         });
 
@@ -63,6 +82,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
 
+        listView = (ListView)findViewById(R.id.listDeadlines);
+
+        TextView emptyText = (TextView)findViewById(android.R.id.empty);
+        listView.setEmptyView(emptyText);
+
+        list = new ArrayList<DeadlineActivity>();
+        deadlineActivityAdapter = new DeadlineActivityAdapter(this, list);
+        listView.setAdapter(deadlineActivityAdapter);
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == INTENT_RESULT_CODE){
+            if(resultCode == INTENT_RESULT_CODE) {
+                Toast.makeText(this, "Deadline saved", Toast.LENGTH_SHORT).show();
+                summary = data.getStringExtra("summary");
+                list.add(new DeadlineActivity(summary, "", ""));
+                deadlineActivityAdapter.notifyDataSetChanged();
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+        }
     }
 
     @Override
