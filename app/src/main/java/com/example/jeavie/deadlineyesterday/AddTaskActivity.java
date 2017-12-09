@@ -3,11 +3,7 @@ package com.example.jeavie.deadlineyesterday;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -22,9 +18,7 @@ import android.widget.Toast;
 
 import com.wafflecopter.charcounttextview.CharCountTextView;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import mabbas007.tagsedittext.TagsEditText;
 
@@ -34,6 +28,7 @@ public class AddTaskActivity extends AppCompatActivity {
     TextView setTime;
     int minute, hour, year, month, day;
     String format;
+    String summary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +44,14 @@ public class AddTaskActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 onBackPressed();
             }
         });
 
-        final EditText editText = (EditText)findViewById(R.id.summary);
+        final EditText editText = (EditText) findViewById(R.id.summary);
 
-        CharCountTextView charCountTextView = (CharCountTextView)findViewById(R.id.tvTextCounter);
+        CharCountTextView charCountTextView = (CharCountTextView) findViewById(R.id.tvTextCounter);
         charCountTextView.setEditText(editText);
         charCountTextView.setCharCountChangedListener(new CharCountTextView.CharCountChangedListener() {
             @Override
@@ -64,14 +60,14 @@ public class AddTaskActivity extends AppCompatActivity {
             }
         });
 
-        setDate = (TextView)findViewById(R.id.setDate);
+        setDate = (TextView) findViewById(R.id.setDate);
 
         Calendar currentDate = Calendar.getInstance();
         year = currentDate.get(Calendar.YEAR);
-        month = currentDate.get(Calendar.MONTH)+1;
+        month = currentDate.get(Calendar.MONTH) + 1;
         day = currentDate.get(Calendar.DAY_OF_MONTH);
         setDate.setText(day + "/" + month + "/" + year);
-        month = month-1;
+        month = month - 1;
 
         setDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,12 +77,12 @@ public class AddTaskActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         setDate.setText(dayOfMonth + "/" + month + "/" + year);
                     }
-                },year, month, day);
+                }, year, month, day);
                 datePickerDialog.show();
             }
         });
 
-        setTime = (TextView)findViewById(R.id.setTime);
+        setTime = (TextView) findViewById(R.id.setTime);
 
         Calendar currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
@@ -107,8 +103,6 @@ public class AddTaskActivity extends AppCompatActivity {
                 timePickerDialog.show();
             }
         });
-
-
     }
 
     public void selectedTimeFormat(int hour){
@@ -149,7 +143,7 @@ public class AddTaskActivity extends AppCompatActivity {
             case R.id.doneTask:
 
                 EditText editTextSummary = (EditText)findViewById(R.id.summary);
-                String summary = editTextSummary.getText().toString();
+                summary = editTextSummary.getText().toString();
 
                 TextView textViewDate = (TextView)findViewById(R.id.setDate);
                 String deadline1 = textViewDate.getText().toString();

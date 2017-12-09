@@ -12,11 +12,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +36,11 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public final static int INTENT_REQUEST_CODE = 1;
+    public final static int INTENT_REQUEST_CODE_TWO = 2;
     public final static int INTENT_RESULT_CODE = 1;
+    public final static int INTENT_RESULT_CODE_TWO = 2;
     public final static int INTENT_EMPTY_CODE = 0;
+    public final static String INTENT_POSITION = "position";
     String result;
 
     private ListView listView;
@@ -91,6 +93,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         deadlineActivityAdapter = new DeadlineActivityAdapter(this, list);
         listView.setAdapter(deadlineActivityAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, EditTaskActivity.class);
+                intent.putExtra("summary_data", list.get(position).toString());
+                intent.putExtra(INTENT_POSITION, position);
+                startActivityForResult(intent, INTENT_REQUEST_CODE_TWO);
+            }
+        });
 
     }
 
