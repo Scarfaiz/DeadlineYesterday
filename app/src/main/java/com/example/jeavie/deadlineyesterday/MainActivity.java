@@ -24,13 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-//TODO: main - "add deadline" message or "listview" events with dates etc.
-//TODO: save, modify, delete tasks
+//TODO: main - "listview" deadline, tags in listview.
+//TODO: delete tasks
 //TODO: history activity, clear history - snackbar: cancel
-//TODO: tags activity
 //TODO: notifications activity
 //TODO: about
 //TODO: week activity
+//TODO: tags activity?
 //TODO: sort by?
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,10 +41,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public final static int INTENT_RESULT_CODE_TWO = 2;
     public final static int INTENT_EMPTY_CODE = 0;
     public final static String INTENT_POSITION = "position";
-    String result;
 
     private ListView listView;
     DeadlineActivityAdapter deadlineActivityAdapter;
+    int position;
     List<DeadlineActivity> list;
     String summary, getData, getTime, tags;
 
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, EditTaskActivity.class);
-                intent.putExtra("summary_data", list.get(position).toString());
+                intent.putExtra("summary_data", list.get(position).getSummary());
                 intent.putExtra(INTENT_POSITION, position);
                 startActivityForResult(intent, INTENT_REQUEST_CODE_TWO);
             }
@@ -115,6 +115,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 list.add(new DeadlineActivity(summary, "", ""));
                 deadlineActivityAdapter.notifyDataSetChanged();
                 super.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+        else if (requestCode == INTENT_RESULT_CODE_TWO){
+            if (resultCode == INTENT_RESULT_CODE_TWO) {
+                Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
+                summary = data.getStringExtra("changedSummary");
+                position = data.getIntExtra(INTENT_POSITION, -1);
+                list.remove(position);
+                list.add(position, new DeadlineActivity(summary, "", ""));
+                deadlineActivityAdapter.notifyDataSetChanged();
             }
         }
     }

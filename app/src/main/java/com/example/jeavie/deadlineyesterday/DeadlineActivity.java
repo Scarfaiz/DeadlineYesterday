@@ -13,9 +13,9 @@ public class DeadlineActivity extends AppCompatActivity {
     //Constructor
 
 
-    public DeadlineActivity(String summary, String dealine, String tags) {
+    public DeadlineActivity(String summary, String deadline, String tags) {
         this.summary = summary;
-        this.deadline = dealine;
+        this.deadline = deadline;
         this.tags = tags;
     }
 
