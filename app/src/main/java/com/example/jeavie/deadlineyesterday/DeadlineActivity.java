@@ -9,9 +9,9 @@ public class DeadlineActivity extends AppCompatActivity {
     private String date;
     private String time;
     private String deadline;
-    private ArrayList<String> tags;
+    private String tags;
 
-    public DeadlineActivity(String summary, String deadline, ArrayList<String> tags) {
+    public DeadlineActivity(String summary, String deadline, String tags) {
         this.summary = summary;
 //        this.date = date;
 //        this.time = time;
@@ -51,11 +51,11 @@ public class DeadlineActivity extends AppCompatActivity {
         this.deadline = deadline;
     }
 
-    public ArrayList<String> getTags() {
+    public String getTags() {
         return tags;
     }
 
-    public void setTags(ArrayList<String> tags) {
+    public void setTags(String tags) {
         this.tags = tags;
     }
 }

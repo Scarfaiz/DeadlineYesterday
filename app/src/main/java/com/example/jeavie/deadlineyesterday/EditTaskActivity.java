@@ -21,6 +21,7 @@ import com.wafflecopter.charcounttextview.CharCountTextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import mabbas007.tagsedittext.TagsEditText;
 
@@ -31,6 +32,7 @@ public class EditTaskActivity extends AppCompatActivity{
     int minute, hour, year, month, day;
     String format, summaryData, changedSummary, deadlineData, changedDeadline;
     ArrayList<String> tagsData, changedTags;
+    int check;
 
     int position;
 
@@ -55,10 +57,15 @@ public class EditTaskActivity extends AppCompatActivity{
 
         Intent intent = getIntent();
         summaryData = intent.getStringExtra("summary_data");
+        deadlineData = intent.getStringExtra("deadline_data");
+        tagsData = intent.getStringArrayListExtra("tags_data");
 
         position = intent.getIntExtra(MainActivity.INTENT_POSITION, -1);
         EditText editTextSummary = findViewById(R.id.summary);
         editTextSummary.setText(summaryData);
+        TagsEditText editTextTags = findViewById(R.id.tags);
+        editTextTags.setText(String.valueOf(tagsData));
+
 
         CharCountTextView charCountTextView = findViewById(R.id.tvTextCounter);
         charCountTextView.setEditText(editTextSummary);
@@ -71,12 +78,13 @@ public class EditTaskActivity extends AppCompatActivity{
 
         setDate = findViewById(R.id.setDate);
 
-        Calendar currentDate = Calendar.getInstance();
+        final Calendar currentDate = Calendar.getInstance();
         year = currentDate.get(Calendar.YEAR);
         month = currentDate.get(Calendar.MONTH) + 1;
         day = currentDate.get(Calendar.DAY_OF_MONTH);
         setDate.setText(day + "/" + month + "/" + year);
-        month = month - 1;
+        month -= 1;
+        currentDate.set(Calendar.DAY_OF_MONTH, day + 1);
 
         setDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,11 +92,13 @@ public class EditTaskActivity extends AppCompatActivity{
                 DatePickerDialog datePickerDialog = new DatePickerDialog(EditTaskActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        month = month + 1;
+                        month += 1;
                         setDate.setText(dayOfMonth + "/" + month + "/" + year);
                     }
                 }, year, month, day);
+                datePickerDialog.getDatePicker().setMinDate(currentDate.getTimeInMillis() - 1000);
                 datePickerDialog.show();
+                check = 1;
             }
         });
 
@@ -97,7 +107,7 @@ public class EditTaskActivity extends AppCompatActivity{
         Calendar currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
         minute = currentTime.get(Calendar.MINUTE);
-        selectedTimeFormat(hour);
+        hour = selectedTimeFormat(hour);
         setTime.setText(hour + " : " + minute + " " + format);
 
         setTime.setOnClickListener(new View.OnClickListener() {
@@ -117,11 +127,8 @@ public class EditTaskActivity extends AppCompatActivity{
 
     public int selectedTimeFormat(int hour){
         if (hour == 0){
-            hour += 12;
             format = "AM";
-        } else if (hour == 12){
-            format = "PM";
-        } else if (hour > 12){
+        } else if (hour >= 12){
             hour -= 12;
             format = "PM";
         } else {
@@ -129,6 +136,17 @@ public class EditTaskActivity extends AppCompatActivity{
         }
         return hour;
     }
+
+    public int codeToReturn(){
+        EditText editTextSummary = findViewById(R.id.summary);
+        changedSummary = editTextSummary.getText().toString();
+        if (TextUtils.isEmpty(changedSummary.trim())) {
+            return 2;
+        } else if (check == 0){
+            return 3;
+        } else return 1;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_task, menu);
@@ -150,31 +168,29 @@ public class EditTaskActivity extends AppCompatActivity{
                 return true;
 
             case R.id.doneTask:
-
-                EditText editTextSummary = findViewById(R.id.summary);
-                changedSummary = editTextSummary.getText().toString();
-
                 TextView textViewDate = findViewById(R.id.setDate);
-                String deadline1 = textViewDate.getText().toString();
+                String date = textViewDate.getText().toString();
+
                 TextView textViewTime = findViewById(R.id.setTime);
-                String deadline2 = textViewTime.getText().toString();
+                String time = textViewTime.getText().toString();
 
                 TagsEditText tagsEditText = findViewById(R.id.tags);
-                tagsEditText.getTags();
-
-                if (TextUtils.isEmpty(changedSummary.trim())) {
-                    Toast.makeText(this, "You did not new enter a summary", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-                else {
+                List<String> tags = tagsEditText.getTags();
+                MainActivity.INTENT_RESULT_CODE = codeToReturn();
+                if (MainActivity.INTENT_RESULT_CODE == 1){
                     Intent intent = new Intent();
                     intent.putExtra("changedSummary", changedSummary);
+                    intent.putExtra("date", date);
+                    intent.putExtra("time", time);
+                    intent.putStringArrayListExtra("tags", (ArrayList<String>) tags);
                     intent.putExtra(MainActivity.INTENT_POSITION, position);
                     setResult(MainActivity.INTENT_RESULT_CODE_TWO, intent);
                     finish();
-                    return true;
+                } else if (MainActivity.INTENT_RESULT_CODE == 2) {
+                    Toast.makeText(this, "You did not enter a summary", Toast.LENGTH_SHORT).show();
+                } else if (MainActivity.INTENT_RESULT_CODE == 3) {
+                    Toast.makeText(this, "Invalid date", Toast.LENGTH_SHORT).show();
                 }
-
         }
         return super.onOptionsItemSelected(item);
     }

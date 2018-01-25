@@ -15,9 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.wafflecopter.charcounttextview.CharCountTextView;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -125,6 +123,16 @@ public class AddTaskActivity extends AppCompatActivity {
         return hour;
     }
 
+    public int codeToReturn(){
+        EditText editTextSummary = findViewById(R.id.summary);
+        summary = editTextSummary.getText().toString();
+        if (TextUtils.isEmpty(summary.trim())) {
+            return 2;
+        } else if (check == 0){
+            return 3;
+        } else return 1;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_task, menu);
@@ -136,16 +144,6 @@ public class AddTaskActivity extends AppCompatActivity {
         Intent intent = new Intent();
         setResult(MainActivity.INTENT_EMPTY_CODE, intent);
         super.onBackPressed();
-    }
-
-    public int codeToReturn(){
-        EditText editTextSummary = findViewById(R.id.summary);
-        summary = editTextSummary.getText().toString();
-        if (TextUtils.isEmpty(summary.trim())) {
-            return 2;
-        } else if (check == 0){
-            return 3;
-        } else return 1;
     }
 
     @Override

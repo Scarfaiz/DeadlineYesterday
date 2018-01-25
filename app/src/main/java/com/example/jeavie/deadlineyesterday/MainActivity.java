@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     int position;
     List<DeadlineActivity> list;
     String summary, getData, getTime;
-    ArrayList <String> tags;
+    ArrayList <String> tagsArrList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.setClass(MainActivity.this, EditTaskActivity.class);
                 intent.putExtra("summary_data", list.get(position).getSummary());
                 intent.putExtra("deadline_data", list.get(position).getDeadline());
-                intent.putExtra("tags_data", list.get(position).getTags());
+                //intent.putStringArrayListExtra("tags_data", list.get(position).getTags());
                 intent.putExtra(INTENT_POSITION, position);
                 startActivityForResult(intent, INTENT_REQUEST_CODE_TWO);
             }
@@ -126,7 +126,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 summary = data.getStringExtra("summary");
                 getData = data.getStringExtra("date");
                 getTime = data.getStringExtra("time");
-                tags = data.getStringArrayListExtra("tags");
+                tagsArrList = data.getStringArrayListExtra("tags");
+                String tags = getTags(tagsArrList);
                 String deadline = getDeadline(getData, getTime);
                 list.add(new DeadlineActivity(summary, deadline, tags));
                 deadlineActivityAdapter.notifyDataSetChanged();
@@ -139,11 +140,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 summary = data.getStringExtra("changedSummary");
                 position = data.getIntExtra(INTENT_POSITION, -1);
                 list.remove(position);
-                list.add(position, new DeadlineActivity(summary, "", tags));
+                list.add(position, new DeadlineActivity(summary, "", String.valueOf(tagsArrList)));
                 deadlineActivityAdapter.notifyDataSetChanged();
             }
         }
     }
+
     public String getDeadline (String date, String time){
         String format = date + " " + time;
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh : mm a");
@@ -162,13 +164,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         long diffDays = diff / (24 * 60 * 60 * 1000);
 
-        if (diffDays>=1){
-            return String.valueOf(diffDays) + " days";
-        } else if (diffHours>=1){
+        if (diffDays>1 && diffHours > 24){
+            return String.valueOf(diffDays) + " days " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
+        } else if (diffDays==1 && diffHours > 24) {
+            return String.valueOf(diffDays) + " day " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
+        }else if (diffHours>1){
             return String.valueOf(diffHours) + " hrs";
-        }
-        else return String.valueOf(diffMinutes) + " min";
+        }else if (diffHours==1){
+            return String.valueOf(diffHours) + " hour";
+        } else return String.valueOf(diffMinutes) + " min";
     }
+    public String getTags(ArrayList<String> tags){
+        String parsedTags = String.valueOf(tags).replace("[", "").replace("]", "");
+        return parsedTags;
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
