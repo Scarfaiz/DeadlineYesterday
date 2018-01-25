@@ -20,29 +20,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.joda.time.DateTimeUtils;
-
-import android.text.format.Time;
-
 import java.text.DateFormat;
-import java.text.FieldPosition;
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-//TODO: main - "listview" deadline, tags in listview.
-//TODO: delete tasks
-//TODO: history activity, clear history - snackbar: cancel
-//TODO: notifications activity
-//TODO: about
+//TODO: upd time in listview - runnable?
+//TODO: complete tasks
+//TODO: history activity
+//TODO: clear history - snackbar: cancel
 //TODO: week activity
-//TODO: tags activity?
-//TODO: sort by?
+//TODO: notifications settings
+//TODO: about activity
+//TODO: sort by order/deadlines
+//TODO: vector images
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

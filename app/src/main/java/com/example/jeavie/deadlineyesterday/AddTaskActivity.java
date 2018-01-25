@@ -16,20 +16,22 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import com.wafflecopter.charcounttextview.CharCountTextView;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import mabbas007.tagsedittext.TagsEditText;
 
 public class AddTaskActivity extends AppCompatActivity {
 
-    TextView setDate;
-    TextView setTime;
-    int minute, hour, year, month, day;
-    String format;
-    String summary;
-    int check;
+    int minute, hour, year, month, day, check;
+    String format, summary, date, time;
+    TextView setDate, setTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +71,7 @@ public class AddTaskActivity extends AppCompatActivity {
         day = currentDate.get(Calendar.DAY_OF_MONTH);
         setDate.setText(day + "/" + month + "/" + year);
         month -= 1;
-        currentDate.set(Calendar.DAY_OF_MONTH, day + 1);
+        currentDate.set(Calendar.DAY_OF_MONTH, day);
 
         setDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +85,6 @@ public class AddTaskActivity extends AppCompatActivity {
                 }, year, month, day);
                 datePickerDialog.getDatePicker().setMinDate(currentDate.getTimeInMillis() - 1000);
                 datePickerDialog.show();
-                check = 1;
             }
         });
 
@@ -126,11 +127,34 @@ public class AddTaskActivity extends AppCompatActivity {
     public int codeToReturn(){
         EditText editTextSummary = findViewById(R.id.summary);
         summary = editTextSummary.getText().toString();
+
+        TextView textViewDate = findViewById(R.id.setDate);
+        date = textViewDate.getText().toString();
+
+        TextView textViewTime = findViewById(R.id.setTime);
+        time = textViewTime.getText().toString();
+
+        boolean check = isDateCorrect(date, time);
+        if (!check){
+            return 3;
+        }
         if (TextUtils.isEmpty(summary.trim())) {
             return 2;
-        } else if (check == 0){
-            return 3;
         } else return 1;
+    }
+
+    public boolean isDateCorrect (String date, String time){
+        String format = date + " " + time;
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh : mm a");
+        Date cal1 = new Date();
+        Date cal2 = null;
+        try {
+            cal2 = df.parse(format);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long diff = cal2.getTime() - cal1.getTime();
+        return (diff > 0);
     }
 
     @Override
@@ -155,13 +179,6 @@ public class AddTaskActivity extends AppCompatActivity {
                 return true;
 
             case R.id.doneTask:
-
-                TextView textViewDate = findViewById(R.id.setDate);
-                String date = textViewDate.getText().toString();
-
-                TextView textViewTime = findViewById(R.id.setTime);
-                String time = textViewTime.getText().toString();
-
                 TagsEditText tagsEditText = findViewById(R.id.tags);
                 List<String> tags = tagsEditText.getTags();
 

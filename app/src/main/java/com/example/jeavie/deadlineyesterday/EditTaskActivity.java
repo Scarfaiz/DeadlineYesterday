@@ -19,22 +19,22 @@ import android.widget.Toast;
 
 import com.wafflecopter.charcounttextview.CharCountTextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import mabbas007.tagsedittext.TagsEditText;
 
 public class EditTaskActivity extends AppCompatActivity{
 
-    TextView setDate;
-    TextView setTime;
-    int minute, hour, year, month, day;
+    int minute, hour, year, month, day, position;
     String format, summaryData, changedSummary, dateData, changedDate, timeData, changedTime;
-    ArrayList<String> tagsData, changedTags;
-    int check;
-
-    int position;
+    TextView setDate, setTime;
+    ArrayList<String> tagsData;
 
 
     @Override
@@ -50,7 +50,6 @@ public class EditTaskActivity extends AppCompatActivity{
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 onBackPressed();
             }
         });
@@ -65,8 +64,6 @@ public class EditTaskActivity extends AppCompatActivity{
 
         EditText editTextSummary = findViewById(R.id.summary);
         editTextSummary.setText(summaryData);
-
-
 
         TagsEditText editTextTags = findViewById(R.id.tags);
         String[] tags = setTags(tagsData);
@@ -89,7 +86,7 @@ public class EditTaskActivity extends AppCompatActivity{
         day = currentDate.get(Calendar.DAY_OF_MONTH);
         setDate.setText(dateData);
         month -= 1;
-        currentDate.set(Calendar.DAY_OF_MONTH, day + 1);
+        currentDate.set(Calendar.DAY_OF_MONTH, day);
 
         setDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,9 +146,34 @@ public class EditTaskActivity extends AppCompatActivity{
     public int codeToReturn(){
         EditText editTextSummary = findViewById(R.id.summary);
         changedSummary = editTextSummary.getText().toString();
+
+        TextView textViewDate = findViewById(R.id.setDate);
+        changedDate = textViewDate.getText().toString();
+
+        TextView textViewTime = findViewById(R.id.setTime);
+        changedTime = textViewTime.getText().toString();
+
+        boolean check = isDateCorrect(changedDate, changedTime);
+        if (!check){
+            return 3;
+        }
         if (TextUtils.isEmpty(changedSummary.trim())) {
-            return 2;
-        } else return 1;
+            return 1;
+        } else return 2;
+    }
+
+    public boolean isDateCorrect (String date, String time){
+        String format = date + " " + time;
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh : mm a");
+        Date cal1 = new Date();
+        Date cal2 = null;
+        try {
+            cal2 = df.parse(format);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long diff = cal2.getTime() - cal1.getTime();
+        return (diff > 0);
     }
 
     @Override
@@ -175,31 +197,26 @@ public class EditTaskActivity extends AppCompatActivity{
                 return true;
 
             case R.id.doneTask:
-                TextView textViewDate = findViewById(R.id.setDate);
-                String date = textViewDate.getText().toString();
-
-                TextView textViewTime = findViewById(R.id.setTime);
-                String time = textViewTime.getText().toString();
 
                 TagsEditText tagsEditText = findViewById(R.id.tags);
                 List<String> tags = tagsEditText.getTags();
 
-                MainActivity.INTENT_RESULT_CODE = codeToReturn();
-                if (MainActivity.INTENT_RESULT_CODE == 1){
+                MainActivity.INTENT_RESULT_CODE_TWO = codeToReturn();
+                if (MainActivity.INTENT_RESULT_CODE_TWO == 2){
                     Intent intent = new Intent();
                     intent.putExtra("changedSummary", changedSummary);
-                    intent.putExtra("changedDate", date);
-                    intent.putExtra("changedTime", time);
+                    intent.putExtra("changedDate", changedDate);
+                    intent.putExtra("changedTime", changedTime);
                     intent.putStringArrayListExtra("changedTags", (ArrayList<String>) tags);
                     intent.putExtra(MainActivity.INTENT_POSITION, position);
                     setResult(MainActivity.INTENT_RESULT_CODE_TWO, intent);
                     finish();
-                } else if (MainActivity.INTENT_RESULT_CODE == 2) {
+                } else if (MainActivity.INTENT_RESULT_CODE_TWO == 1) {
                     Toast.makeText(this, "You did not enter a summary", Toast.LENGTH_SHORT).show();
+                } else if (MainActivity.INTENT_RESULT_CODE_TWO == 3){
+                    Toast.makeText(this, "Invalid date", Toast.LENGTH_SHORT).show();
                 }
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }
