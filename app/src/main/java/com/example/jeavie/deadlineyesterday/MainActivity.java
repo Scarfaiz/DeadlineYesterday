@@ -20,7 +20,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.joda.time.DateTimeUtils;
+
+import android.text.format.Time;
+
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public final static int INTENT_REQUEST_CODE = 1;
     public final static int INTENT_REQUEST_CODE_TWO = 2;
-    public final static int INTENT_RESULT_CODE = 1;
-    public final static int INTENT_RESULT_CODE_TWO = 2;
+    public static int INTENT_RESULT_CODE = 1;
+    public static int INTENT_RESULT_CODE_TWO = 2;
     public final static int INTENT_EMPTY_CODE = 0;
     public final static String INTENT_POSITION = "position";
 
@@ -46,7 +57,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DeadlineActivityAdapter deadlineActivityAdapter;
     int position;
     List<DeadlineActivity> list;
-    String summary, getData, getTime, tags;
+    String summary, getData, getTime;
+    ArrayList <String> tags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +74,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, null);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton addTask = (FloatingActionButton)findViewById(R.id.addTask);
+        FloatingActionButton addTask = findViewById(R.id.addTask);
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,21 +87,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+        NavigationView navigationView = findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
 
-        listView = (ListView)findViewById(R.id.listDeadlines);
+        listView = findViewById(R.id.listDeadlines);
 
-        TextView emptyText = (TextView)findViewById(android.R.id.empty);
+        TextView emptyText = findViewById(android.R.id.empty);
         listView.setEmptyView(emptyText);
 
-        list = new ArrayList<DeadlineActivity>();
+        list = new ArrayList<>();
         deadlineActivityAdapter = new DeadlineActivityAdapter(this, list);
         listView.setAdapter(deadlineActivityAdapter);
 
@@ -99,20 +111,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, EditTaskActivity.class);
                 intent.putExtra("summary_data", list.get(position).getSummary());
+                intent.putExtra("deadline_data", list.get(position).getDeadline());
+                intent.putExtra("tags_data", list.get(position).getTags());
                 intent.putExtra(INTENT_POSITION, position);
                 startActivityForResult(intent, INTENT_REQUEST_CODE_TWO);
             }
         });
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == INTENT_RESULT_CODE){
             if(resultCode == INTENT_RESULT_CODE) {
-                Toast.makeText(this, "Deadline saved", Toast.LENGTH_SHORT).show();
                 summary = data.getStringExtra("summary");
-                list.add(new DeadlineActivity(summary, "", ""));
+                getData = data.getStringExtra("date");
+                getTime = data.getStringExtra("time");
+                tags = data.getStringArrayListExtra("tags");
+                String deadline = getDeadline(getData, getTime);
+                list.add(new DeadlineActivity(summary, deadline, tags));
                 deadlineActivityAdapter.notifyDataSetChanged();
                 super.onActivityResult(requestCode, resultCode, data);
             }
@@ -123,15 +139,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 summary = data.getStringExtra("changedSummary");
                 position = data.getIntExtra(INTENT_POSITION, -1);
                 list.remove(position);
-                list.add(position, new DeadlineActivity(summary, "", ""));
+                list.add(position, new DeadlineActivity(summary, "", tags));
                 deadlineActivityAdapter.notifyDataSetChanged();
             }
         }
     }
+    public String getDeadline (String date, String time){
+        String format = date + " " + time;
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh : mm a");
+        Date cal1 = new Date();
+        Date cal2 = null;
+        try {
+            cal2 = df.parse(format);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long diff = cal2.getTime() - cal1.getTime();
 
+        long diffMinutes = diff / (60 * 1000);
+
+        long diffHours = diff / (60 * 60 * 1000);
+
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        if (diffDays>=1){
+            return String.valueOf(diffDays) + " days";
+        } else if (diffHours>=1){
+            return String.valueOf(diffHours) + " hrs";
+        }
+        else return String.valueOf(diffMinutes) + " min";
+    }
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

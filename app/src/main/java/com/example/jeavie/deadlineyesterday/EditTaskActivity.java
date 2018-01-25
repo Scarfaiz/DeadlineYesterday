@@ -19,22 +19,18 @@ import android.widget.Toast;
 
 import com.wafflecopter.charcounttextview.CharCountTextView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import mabbas007.tagsedittext.TagsEditText;
-
-/**
- * Created by jeavie on 09/12/2017.
- */
 
 public class EditTaskActivity extends AppCompatActivity{
 
     TextView setDate;
     TextView setTime;
     int minute, hour, year, month, day;
-    String format;
-    String summaryData;
-    String changedSummary;
+    String format, summaryData, changedSummary, deadlineData, changedDeadline;
+    ArrayList<String> tagsData, changedTags;
 
     int position;
 
@@ -44,7 +40,7 @@ public class EditTaskActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_add_task_activity);
+        Toolbar toolbar = findViewById(R.id.toolbar_add_task_activity);
         toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.ic_back));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -59,11 +55,12 @@ public class EditTaskActivity extends AppCompatActivity{
 
         Intent intent = getIntent();
         summaryData = intent.getStringExtra("summary_data");
+
         position = intent.getIntExtra(MainActivity.INTENT_POSITION, -1);
-        EditText editTextSummary = (EditText)findViewById(R.id.summary);
+        EditText editTextSummary = findViewById(R.id.summary);
         editTextSummary.setText(summaryData);
 
-        CharCountTextView charCountTextView = (CharCountTextView) findViewById(R.id.tvTextCounter);
+        CharCountTextView charCountTextView = findViewById(R.id.tvTextCounter);
         charCountTextView.setEditText(editTextSummary);
         charCountTextView.setCharCountChangedListener(new CharCountTextView.CharCountChangedListener() {
             @Override
@@ -72,7 +69,7 @@ public class EditTaskActivity extends AppCompatActivity{
             }
         });
 
-        setDate = (TextView) findViewById(R.id.setDate);
+        setDate = findViewById(R.id.setDate);
 
         Calendar currentDate = Calendar.getInstance();
         year = currentDate.get(Calendar.YEAR);
@@ -87,6 +84,7 @@ public class EditTaskActivity extends AppCompatActivity{
                 DatePickerDialog datePickerDialog = new DatePickerDialog(EditTaskActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        month = month + 1;
                         setDate.setText(dayOfMonth + "/" + month + "/" + year);
                     }
                 }, year, month, day);
@@ -94,7 +92,7 @@ public class EditTaskActivity extends AppCompatActivity{
             }
         });
 
-        setTime = (TextView) findViewById(R.id.setTime);
+        setTime = findViewById(R.id.setTime);
 
         Calendar currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
@@ -108,16 +106,16 @@ public class EditTaskActivity extends AppCompatActivity{
                 TimePickerDialog timePickerDialog = new TimePickerDialog(EditTaskActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        selectedTimeFormat(hourOfDay);
+                        hourOfDay = selectedTimeFormat(hourOfDay);
                         setTime.setText(hourOfDay + " : " + minute + " " + format);
                     }
-                }, hour, minute, true);
+                }, hour, minute, false);
                 timePickerDialog.show();
             }
         });
     }
 
-    public void selectedTimeFormat(int hour){
+    public int selectedTimeFormat(int hour){
         if (hour == 0){
             hour += 12;
             format = "AM";
@@ -129,6 +127,7 @@ public class EditTaskActivity extends AppCompatActivity{
         } else {
             format = "AM";
         }
+        return hour;
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -152,15 +151,15 @@ public class EditTaskActivity extends AppCompatActivity{
 
             case R.id.doneTask:
 
-                EditText editTextSummary = (EditText)findViewById(R.id.summary);
+                EditText editTextSummary = findViewById(R.id.summary);
                 changedSummary = editTextSummary.getText().toString();
 
-                TextView textViewDate = (TextView)findViewById(R.id.setDate);
+                TextView textViewDate = findViewById(R.id.setDate);
                 String deadline1 = textViewDate.getText().toString();
-                TextView textViewTime = (TextView)findViewById(R.id.setTime);
+                TextView textViewTime = findViewById(R.id.setTime);
                 String deadline2 = textViewTime.getText().toString();
 
-                TagsEditText tagsEditText = (TagsEditText)findViewById(R.id.tags);
+                TagsEditText tagsEditText = findViewById(R.id.tags);
                 tagsEditText.getTags();
 
                 if (TextUtils.isEmpty(changedSummary.trim())) {

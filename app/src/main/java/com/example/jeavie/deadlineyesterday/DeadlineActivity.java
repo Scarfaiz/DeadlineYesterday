@@ -1,20 +1,20 @@
 package com.example.jeavie.deadlineyesterday;
 
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.EditText;
+import java.util.ArrayList;
 
 public class DeadlineActivity extends AppCompatActivity {
 
     private String summary;
+    private String date;
+    private String time;
     private String deadline;
-    private String tags;
+    private ArrayList<String> tags;
 
-    //Constructor
-
-
-    public DeadlineActivity(String summary, String deadline, String tags) {
+    public DeadlineActivity(String summary, String deadline, ArrayList<String> tags) {
         this.summary = summary;
+//        this.date = date;
+//        this.time = time;
         this.deadline = deadline;
         this.tags = tags;
     }
@@ -27,19 +27,35 @@ public class DeadlineActivity extends AppCompatActivity {
         this.summary = summary;
     }
 
-    public String getDeadline() {
+//    public String getDate() {
+//        return date;
+//    }
+//
+//    public void setDate(String date) {
+//        this.date = date;
+//    }
+//
+//    public String getTime(){
+//        return time;
+//    }
+//
+//    public void setTime(String time){
+//        this.time = time;
+//    }
+
+    public String getDeadline(){
         return deadline;
     }
 
-    public void setDealine(String dealine) {
-        this.deadline = dealine;
+    public void setDeadline(String deadline){
+        this.deadline = deadline;
     }
 
-    public String getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(ArrayList<String> tags) {
         this.tags = tags;
     }
 }

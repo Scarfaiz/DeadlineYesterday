@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeadlineActivityAdapter extends BaseAdapter {
@@ -42,16 +43,14 @@ public class DeadlineActivityAdapter extends BaseAdapter {
 
         }
 
-        TextView customSummary = (TextView) view.findViewById(R.id.customSummary);
+        TextView customSummary = view.findViewById(R.id.customSummary);
         customSummary.setText(mDeadlineList.get(position).getSummary());
 
-
-        TextView customDeadline = (TextView) view.findViewById(R.id.customDeadline);
+        TextView customDeadline = view.findViewById(R.id.customDeadline);
         customDeadline.setText(mDeadlineList.get(position).getDeadline());
 
-
-        TextView customTags = (TextView) view.findViewById(R.id.customTags);
-        customTags.setText(mDeadlineList.get(position).getTags());
+        TextView customTags = view.findViewById(R.id.customTags);
+        customTags.setText(String.valueOf(mDeadlineList.get(position).getTags()));
 
         return view;
     }
