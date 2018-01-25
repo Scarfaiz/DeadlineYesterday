@@ -10,13 +10,15 @@ public class DeadlineActivity extends AppCompatActivity {
     private String time;
     private String deadline;
     private String tags;
+    private  ArrayList tagsArrList;
 
-    public DeadlineActivity(String summary, String deadline, String tags) {
+    public DeadlineActivity(String summary, String date, String time, String deadline, String tags, ArrayList tagsArrList) {
         this.summary = summary;
-//        this.date = date;
-//        this.time = time;
+        this.date = date;
+        this.time = time;
         this.deadline = deadline;
         this.tags = tags;
+        this.tagsArrList = tagsArrList;
     }
 
     public String getSummary() {
@@ -27,21 +29,21 @@ public class DeadlineActivity extends AppCompatActivity {
         this.summary = summary;
     }
 
-//    public String getDate() {
-//        return date;
-//    }
-//
-//    public void setDate(String date) {
-//        this.date = date;
-//    }
-//
-//    public String getTime(){
-//        return time;
-//    }
-//
-//    public void setTime(String time){
-//        this.time = time;
-//    }
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime(){
+        return time;
+    }
+
+    public void setTime(String time){
+        this.time = time;
+    }
 
     public String getDeadline(){
         return deadline;
@@ -57,5 +59,13 @@ public class DeadlineActivity extends AppCompatActivity {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public ArrayList getTagsArrList() {
+        return tagsArrList;
+    }
+
+    public void setTagsArrList(ArrayList tagsArrList) {
+        this.tagsArrList = tagsArrList;
     }
 }

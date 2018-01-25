@@ -30,7 +30,7 @@ public class EditTaskActivity extends AppCompatActivity{
     TextView setDate;
     TextView setTime;
     int minute, hour, year, month, day;
-    String format, summaryData, changedSummary, deadlineData, changedDeadline;
+    String format, summaryData, changedSummary, dateData, changedDate, timeData, changedTime;
     ArrayList<String> tagsData, changedTags;
     int check;
 
@@ -57,15 +57,20 @@ public class EditTaskActivity extends AppCompatActivity{
 
         Intent intent = getIntent();
         summaryData = intent.getStringExtra("summary_data");
-        deadlineData = intent.getStringExtra("deadline_data");
+        dateData = intent.getStringExtra("date_data");
+        timeData = intent.getStringExtra("time_data");
         tagsData = intent.getStringArrayListExtra("tags_data");
 
         position = intent.getIntExtra(MainActivity.INTENT_POSITION, -1);
+
         EditText editTextSummary = findViewById(R.id.summary);
         editTextSummary.setText(summaryData);
-        TagsEditText editTextTags = findViewById(R.id.tags);
-        editTextTags.setText(String.valueOf(tagsData));
 
+
+
+        TagsEditText editTextTags = findViewById(R.id.tags);
+        String[] tags = setTags(tagsData);
+        editTextTags.setTags(tags);
 
         CharCountTextView charCountTextView = findViewById(R.id.tvTextCounter);
         charCountTextView.setEditText(editTextSummary);
@@ -82,7 +87,7 @@ public class EditTaskActivity extends AppCompatActivity{
         year = currentDate.get(Calendar.YEAR);
         month = currentDate.get(Calendar.MONTH) + 1;
         day = currentDate.get(Calendar.DAY_OF_MONTH);
-        setDate.setText(day + "/" + month + "/" + year);
+        setDate.setText(dateData);
         month -= 1;
         currentDate.set(Calendar.DAY_OF_MONTH, day + 1);
 
@@ -98,7 +103,6 @@ public class EditTaskActivity extends AppCompatActivity{
                 }, year, month, day);
                 datePickerDialog.getDatePicker().setMinDate(currentDate.getTimeInMillis() - 1000);
                 datePickerDialog.show();
-                check = 1;
             }
         });
 
@@ -108,7 +112,7 @@ public class EditTaskActivity extends AppCompatActivity{
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
         minute = currentTime.get(Calendar.MINUTE);
         hour = selectedTimeFormat(hour);
-        setTime.setText(hour + " : " + minute + " " + format);
+        setTime.setText(timeData);
 
         setTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +127,11 @@ public class EditTaskActivity extends AppCompatActivity{
                 timePickerDialog.show();
             }
         });
+    }
+
+    public String[] setTags(ArrayList<String> tags){
+        String [] parsed = tags.toArray(new String[0]);
+        return parsed;
     }
 
     public int selectedTimeFormat(int hour){
@@ -142,8 +151,6 @@ public class EditTaskActivity extends AppCompatActivity{
         changedSummary = editTextSummary.getText().toString();
         if (TextUtils.isEmpty(changedSummary.trim())) {
             return 2;
-        } else if (check == 0){
-            return 3;
         } else return 1;
     }
 
@@ -176,20 +183,19 @@ public class EditTaskActivity extends AppCompatActivity{
 
                 TagsEditText tagsEditText = findViewById(R.id.tags);
                 List<String> tags = tagsEditText.getTags();
+
                 MainActivity.INTENT_RESULT_CODE = codeToReturn();
                 if (MainActivity.INTENT_RESULT_CODE == 1){
                     Intent intent = new Intent();
                     intent.putExtra("changedSummary", changedSummary);
-                    intent.putExtra("date", date);
-                    intent.putExtra("time", time);
-                    intent.putStringArrayListExtra("tags", (ArrayList<String>) tags);
+                    intent.putExtra("changedDate", date);
+                    intent.putExtra("changedTime", time);
+                    intent.putStringArrayListExtra("changedTags", (ArrayList<String>) tags);
                     intent.putExtra(MainActivity.INTENT_POSITION, position);
                     setResult(MainActivity.INTENT_RESULT_CODE_TWO, intent);
                     finish();
                 } else if (MainActivity.INTENT_RESULT_CODE == 2) {
                     Toast.makeText(this, "You did not enter a summary", Toast.LENGTH_SHORT).show();
-                } else if (MainActivity.INTENT_RESULT_CODE == 3) {
-                    Toast.makeText(this, "Invalid date", Toast.LENGTH_SHORT).show();
                 }
         }
         return super.onOptionsItemSelected(item);

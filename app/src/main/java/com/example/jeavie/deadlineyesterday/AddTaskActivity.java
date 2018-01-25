@@ -164,6 +164,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
                 TagsEditText tagsEditText = findViewById(R.id.tags);
                 List<String> tags = tagsEditText.getTags();
+
                 MainActivity.INTENT_RESULT_CODE = codeToReturn();
                 if (MainActivity.INTENT_RESULT_CODE == 1){
                     Intent intent = new Intent();

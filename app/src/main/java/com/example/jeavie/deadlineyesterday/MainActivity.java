@@ -111,8 +111,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, EditTaskActivity.class);
                 intent.putExtra("summary_data", list.get(position).getSummary());
-                intent.putExtra("deadline_data", list.get(position).getDeadline());
-                //intent.putStringArrayListExtra("tags_data", list.get(position).getTags());
+                intent.putExtra("date_data", list.get(position).getDate());
+                intent.putExtra("time_data", list.get(position).getTime());
+                intent.putStringArrayListExtra("tags_data", list.get(position).getTagsArrList());
                 intent.putExtra(INTENT_POSITION, position);
                 startActivityForResult(intent, INTENT_REQUEST_CODE_TWO);
             }
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 tagsArrList = data.getStringArrayListExtra("tags");
                 String tags = getTags(tagsArrList);
                 String deadline = getDeadline(getData, getTime);
-                list.add(new DeadlineActivity(summary, deadline, tags));
+                list.add(new DeadlineActivity(summary, getData, getTime, deadline, tags, tagsArrList));
                 deadlineActivityAdapter.notifyDataSetChanged();
                 super.onActivityResult(requestCode, resultCode, data);
             }
@@ -138,9 +139,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (resultCode == INTENT_RESULT_CODE_TWO) {
                 Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
                 summary = data.getStringExtra("changedSummary");
+                getData = data.getStringExtra("changedDate");
+                getTime = data.getStringExtra("changedTime");
+                tagsArrList = data.getStringArrayListExtra("changedTags");
+                String tags = getTags(tagsArrList);
+                String deadline = getDeadline(getData, getTime);
                 position = data.getIntExtra(INTENT_POSITION, -1);
                 list.remove(position);
-                list.add(position, new DeadlineActivity(summary, "", String.valueOf(tagsArrList)));
+                list.add(position, new DeadlineActivity(summary, getData, getTime, deadline, tags, tagsArrList));
                 deadlineActivityAdapter.notifyDataSetChanged();
             }
         }
@@ -174,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return String.valueOf(diffHours) + " hour";
         } else return String.valueOf(diffMinutes) + " min";
     }
+
     public String getTags(ArrayList<String> tags){
         String parsedTags = String.valueOf(tags).replace("[", "").replace("]", "");
         return parsedTags;
