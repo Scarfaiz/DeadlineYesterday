@@ -13,10 +13,12 @@ public class DeadlineActivityAdapter extends BaseAdapter {
 
     List<DeadlineActivity> mDeadlineList;
     private LayoutInflater layoutInflater;
+    View.OnTouchListener mTouchListener;
 
-    public DeadlineActivityAdapter(Context context, List<DeadlineActivity> mDeadlineList) {
+    public DeadlineActivityAdapter(Context context, List<DeadlineActivity> mDeadlineList, View.OnTouchListener listener) {
         this.mDeadlineList = mDeadlineList;
         layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mTouchListener = listener;
     }
 
     @Override
@@ -39,7 +41,7 @@ public class DeadlineActivityAdapter extends BaseAdapter {
         View view = convertView;
         if(view == null){
             view = layoutInflater.inflate(R.layout.activity_main_item, parent, false);
-
+            view.setOnTouchListener(mTouchListener);
         }
 
         TextView customSummary = view.findViewById(R.id.customSummary);

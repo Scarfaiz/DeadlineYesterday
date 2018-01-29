@@ -57,7 +57,7 @@ public class WeekActivity extends AppCompatActivity implements CalendarPrepareCa
 
         setContentView(R.layout.activity_week);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_week);
+        Toolbar toolbar = findViewById(R.id.toolbar_week);
         toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.ic_back));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -70,7 +70,7 @@ public class WeekActivity extends AppCompatActivity implements CalendarPrepareCa
         });
         //events.add(new EventModel());
 
-        listCalendar = (ListCalendar) findViewById(R.id.listCalendar);
+        listCalendar = findViewById(R.id.listCalendar);
 
         ListCalendarConfiguration.Builder listBuilder = new ListCalendarConfiguration.Builder();
 
@@ -119,13 +119,16 @@ public class WeekActivity extends AppCompatActivity implements CalendarPrepareCa
                 Log.i("onEventLongClick", String.valueOf(event));
             }
         });
-        FloatingActionButton addTask=(FloatingActionButton)findViewById(R.id.addTask);
+
+        FloatingActionButton addTask=findViewById(R.id.addTask);
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(WeekActivity.this, AddTaskActivity.class));
             }
         });
+
+
     }
 
     @Override
@@ -156,8 +159,8 @@ public class WeekActivity extends AppCompatActivity implements CalendarPrepareCa
         private Custom custom;
 
         public MonthDecoratorImpl(View parent) {
-            monthBackground = (ImageView) parent.findViewById(R.id.month_background);
-            monthTitle = (TextView) parent.findViewById(R.id.month_label);
+            monthBackground = parent.findViewById(R.id.month_background);
+            monthTitle = parent.findViewById(R.id.month_label);
         }
 
         @Override
@@ -195,7 +198,7 @@ public class WeekActivity extends AppCompatActivity implements CalendarPrepareCa
         private TextView textView;
 
         public EventDecoratorImpl(View parent) {
-            textView = (TextView) parent.findViewById(R.id.day_title);
+            textView = parent.findViewById(R.id.day_title);
         }
 
         @Override
@@ -210,7 +213,7 @@ public class WeekActivity extends AppCompatActivity implements CalendarPrepareCa
         private TextView title;
 
         public WeeDecoratorImpl(View parent) {
-            title = (TextView) parent.findViewById(io.github.memfis19.cadar.R.id.week_title);
+            title = parent.findViewById(io.github.memfis19.cadar.R.id.week_title);
         }
 
         @Override
@@ -258,7 +261,7 @@ public class WeekActivity extends AppCompatActivity implements CalendarPrepareCa
         }
 
         return backgroundId;
-    }
+    } //background
 
     private class Custom extends RecyclerView.OnScrollListener {
 
