@@ -43,7 +43,7 @@ public class EditTaskActivity extends AppCompatActivity{
         setContentView(R.layout.activity_add_task);
 
         Toolbar toolbar = findViewById(R.id.toolbar_add_task_activity);
-        toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.ic_back));
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

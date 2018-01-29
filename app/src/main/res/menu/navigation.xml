@@ -5,10 +5,10 @@
         <menu android:checkableBehavior="single">
             <item android:id="@+id/tags"
                 android:title="@string/tags"
-                android:icon="@mipmap/ic_tags"/>
+                android:icon="@drawable/ic_tags"/>
             <item android:id="@+id/notifications"
                 android:title="@string/notifications"
-                android:icon="@mipmap/ic_notifications"/>
+                android:icon="@drawable/ic_notifications"/>
         </menu>
     </item>
 
@@ -16,7 +16,7 @@
         <menu>
             <item android:id="@+id/info"
                 android:title="@string/info"
-                android:icon="@mipmap/ic_info"/>
+                android:icon="@drawable/ic_info"/>
         </menu>
     </item>
 

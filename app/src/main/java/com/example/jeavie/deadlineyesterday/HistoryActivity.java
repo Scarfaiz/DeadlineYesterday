@@ -36,7 +36,7 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         Toolbar toolbar = findViewById(R.id.toolbar_history);
-        toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.ic_back));
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

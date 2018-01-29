@@ -58,7 +58,7 @@ public class WeekActivity extends AppCompatActivity implements CalendarPrepareCa
         setContentView(R.layout.activity_week);
 
         Toolbar toolbar = findViewById(R.id.toolbar_week);
-        toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.ic_back));
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

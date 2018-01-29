@@ -5,7 +5,7 @@
     <item
         android:id="@+id/doneTask"
         android:title="@string/doneTask"
-        android:icon="@mipmap/ic_done"
+        android:icon="@drawable/ic_done"
         app:showAsAction="ifRoom" />
 
 </menu>
