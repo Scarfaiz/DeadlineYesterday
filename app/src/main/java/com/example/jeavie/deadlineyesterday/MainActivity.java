@@ -35,6 +35,7 @@ import java.util.Locale;
 //TODO: upd time in listview?
 //TODO: history activity
 //TODO: clear history - snackbar: cancel
+
 //TODO: week activity
 //TODO: notifications settings
 //TODO: about activity
