@@ -3,10 +3,12 @@ package com.example.jeavie.deadlineyesterday;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -157,6 +159,44 @@ public class AddTaskActivity extends AppCompatActivity {
         return (diff > 0);
     }
 
+    public String getDeadline (String date, String time){
+        String format = date + " " + time;
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh : mm a");
+        Date cal1 = new Date();
+        Date cal2 = null;
+        try {
+            cal2 = df.parse(format);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long diff = cal2.getTime() - cal1.getTime();
+
+        long diffSeconds = diff/(1000);
+
+        long diffMinutes = diff / (60 * 1000);
+
+        long diffHours = diff / (60 * 60 * 1000);
+
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        if (diffDays>1 && diffHours > 24){
+            return String.valueOf(diffDays) + " days " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
+        } else if (diffDays==1 && diffHours > 24) {
+            return String.valueOf(diffDays) + " day " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
+        }else if (diffHours>1){
+            return String.valueOf(diffHours) + " hrs";
+        }else if (diffHours==1){
+            return String.valueOf(diffHours) + " hour";
+        } else if (diffSeconds > 0)
+            return String.valueOf(diffSeconds) + " sec";
+        else return String.valueOf(diffMinutes) + " min";
+    }
+
+    public String getTags(List<String> tags){
+        String parsedTags = String.valueOf(tags).replace("[", "").replace("]", "");
+        return parsedTags;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_task, menu);
@@ -182,14 +222,15 @@ public class AddTaskActivity extends AppCompatActivity {
                 TagsEditText tagsEditText = findViewById(R.id.tags);
                 List<String> tags = tagsEditText.getTags();
 
+
                 MainActivity.INTENT_RESULT_CODE = codeToReturn();
                 if (MainActivity.INTENT_RESULT_CODE == 1){
-                    Intent intent = new Intent();
-                    intent.putExtra("summary", summary);
-                    intent.putExtra("date", date);
-                    intent.putExtra("time", time);
-                    intent.putStringArrayListExtra("tags", (ArrayList<String>) tags);
-                    setResult(MainActivity.INTENT_RESULT_CODE, intent);
+                    DbActivity db = new DbActivity(this);
+                    String deadline = getDeadline(date, time);
+                    String tagstostring = getTags(tags);
+                    db.createNewTable(summary, date, time, deadline, tagstostring);
+                    MainActivity.number++;
+                    setResult(MainActivity.INTENT_RESULT_CODE);
                     finish();
                 } else if (MainActivity.INTENT_RESULT_CODE == 2) {
                     Toast.makeText(this, "You did not enter a summary", Toast.LENGTH_SHORT).show();

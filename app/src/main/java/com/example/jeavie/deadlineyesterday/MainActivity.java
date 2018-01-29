@@ -3,10 +3,10 @@ package com.example.jeavie.deadlineyesterday;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+//TODO: SQLite database - in progress
 //TODO: upd time in listview?
 //TODO: history activity
 //TODO: clear history - snackbar: cancel
@@ -46,12 +47,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public final static int INTENT_REQUEST_CODE = 1;
     public final static int INTENT_REQUEST_CODE_TWO = 2;
-    public final static int INTENT_REQUEST_CODE_THREE = 3;
     public static int INTENT_RESULT_CODE = 1;
     public static int INTENT_RESULT_CODE_TWO = 2;
-    public static int INTENT_RESULT_CODE_THREE = 3;
     public final static int INTENT_EMPTY_CODE = 0;
     public final static String INTENT_POSITION = "position";
+    public static Integer number = 1;
 
     //Swiping
     private boolean mSwiping = false; // detects if user is swiping on ACTION_UP
@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     List<DeadlineActivity> list;
     String summary, getData, getTime;
     ArrayList <String> tagsArrList;
+    DbActivity db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         TextView emptyText = findViewById(android.R.id.empty);
         listView.setEmptyView(emptyText);
+
+        db = new DbActivity(this);
 
         list = new ArrayList<>();
         deadlineActivityAdapter = new DeadlineActivityAdapter(this, list, mTouchListener);
@@ -157,6 +160,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+//    private void loadDeadlineList() {
+//        ArrayList arrayList = db.getDeadlineList();
+//        if(deadlineActivityAdapter == null) {
+//            deadlineActivityAdapter = new DeadlineActivityAdapter(this, list, mTouchListener);
+//            listView.setAdapter(deadlineActivityAdapter);
+//        } else {
+////            deadlineActivityAdapter.clear();
+////            deadlineActivityAdapter.addAll();
+//            deadlineActivityAdapter.notifyDataSetChanged();
+//
+//        }
+//    }
+
+
 //    public List<DeadlineActivity> changeDeadline(List<DeadlineActivity> arrayList){
 //        for (int i = listView.getPositionForView(listView); i <= arrayList.size(); i++){
 //            String s = list.get(i).getSummary();
@@ -172,34 +189,68 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        return arrayList;
 //    }
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == INTENT_RESULT_CODE){
+//            if(resultCode == INTENT_RESULT_CODE) {
+//                summary = data.getStringExtra("summary");
+//                getData = data.getStringExtra("date");
+//                getTime = data.getStringExtra("time");
+//                tagsArrList = data.getStringArrayListExtra("tags");
+//                String tags = getTags(tagsArrList);
+//                String deadline = getDeadline(getData, getTime);
+//                list.add(new DeadlineActivity(summary, getData, getTime, deadline, tags, tagsArrList));
+//                deadlineActivityAdapter.notifyDataSetChanged();
+//                super.onActivityResult(requestCode, resultCode, data);
+//            }
+//        }
+//        else if (requestCode == INTENT_RESULT_CODE_TWO){
+//            if (resultCode == INTENT_RESULT_CODE_TWO) {
+//                Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
+//                summary = data.getStringExtra("changedSummary");
+//                getData = data.getStringExtra("changedDate");
+//                getTime = data.getStringExtra("changedTime");
+//                tagsArrList = data.getStringArrayListExtra("changedTags");
+//                String tags = getTags(tagsArrList);
+//                String deadline = getDeadline(getData, getTime);
+//                position = data.getIntExtra(INTENT_POSITION, -1);
+//                list.remove(position);
+//                list.add(position, new DeadlineActivity(summary, getData, getTime, deadline, tags, tagsArrList));
+//                deadlineActivityAdapter.notifyDataSetChanged();
+//            }
+//        }
+//    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == INTENT_RESULT_CODE){
             if(resultCode == INTENT_RESULT_CODE) {
-                summary = data.getStringExtra("summary");
-                getData = data.getStringExtra("date");
-                getTime = data.getStringExtra("time");
-                tagsArrList = data.getStringArrayListExtra("tags");
-                String tags = getTags(tagsArrList);
-                String deadline = getDeadline(getData, getTime);
-                list.add(new DeadlineActivity(summary, getData, getTime, deadline, tags, tagsArrList));
+                Cursor newtable = db.getTable(number);
+                summary=newtable.getString(0);
+                getData=newtable.getString(1);
+                getTime=newtable.getString(2);
+                String deadline=newtable.getString(3);
+                String tags=newtable.getString(4);
+                Toast.makeText(this, "list is: " + summary + getData + getTime + deadline + tags, Toast.LENGTH_SHORT).show();
+                list.add(new DeadlineActivity(summary, getData, getTime, deadline,
+                         tags));
                 deadlineActivityAdapter.notifyDataSetChanged();
                 super.onActivityResult(requestCode, resultCode, data);
             }
         }
         else if (requestCode == INTENT_RESULT_CODE_TWO){
             if (resultCode == INTENT_RESULT_CODE_TWO) {
-                Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
-                summary = data.getStringExtra("changedSummary");
-                getData = data.getStringExtra("changedDate");
-                getTime = data.getStringExtra("changedTime");
-                tagsArrList = data.getStringArrayListExtra("changedTags");
-                String tags = getTags(tagsArrList);
-                String deadline = getDeadline(getData, getTime);
-                position = data.getIntExtra(INTENT_POSITION, -1);
-                list.remove(position);
-                list.add(position, new DeadlineActivity(summary, getData, getTime, deadline, tags, tagsArrList));
-                deadlineActivityAdapter.notifyDataSetChanged();
+//                Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
+//                summary = data.getStringExtra("changedSummary");
+//                getData = data.getStringExtra("changedDate");
+//                getTime = data.getStringExtra("changedTime");
+//                tagsArrList = data.getStringArrayListExtra("changedTags");
+//                String tags = getTags(tagsArrList);
+//                String deadline = getDeadline(getData, getTime);
+//                position = data.getIntExtra(INTENT_POSITION, -1);
+//                list.remove(position);
+//                list.add(position, new DeadlineActivity(summary, getData, getTime, deadline, tags, tagsArrList));
+//                deadlineActivityAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -430,7 +481,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         intent.putExtra("summary_data", list.get(i).getSummary());
                         intent.putExtra("date_data", list.get(i).getDate());
                         intent.putExtra("time_data", list.get(i).getTime());
-                        intent.putStringArrayListExtra("tags_data", list.get(i).getTagsArrList());
+                        //intent.putStringArrayListExtra("tags_data", list.get(i).getTagsArrList());
                         intent.putExtra(INTENT_POSITION, i);
                         startActivityForResult(intent, INTENT_REQUEST_CODE_TWO);
 
