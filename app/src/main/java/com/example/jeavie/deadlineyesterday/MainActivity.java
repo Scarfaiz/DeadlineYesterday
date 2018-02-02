@@ -215,14 +215,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (requestCode == INTENT_RESULT_CODE_TWO){
             if (resultCode == INTENT_RESULT_CODE_TWO) {
-                Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
                 Cursor newDeadline = db.getData(String.valueOf(changingNumber + 1));
                 summary=newDeadline.getString(0);
                 getData=newDeadline.getString(1);
                 getTime=newDeadline.getString(2);
                 String deadline=newDeadline.getString(3);
                 String tags=newDeadline.getString(4);
-                list.remove(changingNumber);
                 list.add(changingNumber, new DeadlineActivity(summary, getData, getTime, deadline, tags));
                 list.remove(changingNumber + 1);
                 deadlineActivityAdapter.notifyDataSetChanged();

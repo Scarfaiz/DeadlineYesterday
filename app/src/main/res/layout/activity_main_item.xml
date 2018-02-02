@@ -11,11 +11,11 @@
     <TextView
         android:id="@+id/customSummary"
         android:layout_width="0dp"
-        android:layout_height="34dp"
+        android:layout_height="43dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:textSize="18sp"
         android:singleLine="true"
+        android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/customDeadline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,10 +23,11 @@
     <TextView
         android:id="@+id/customDeadline"
         android:layout_width="wrap_content"
-        android:layout_height="34dp"
+        android:layout_height="43dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:textColor="@color/light_grey"
+        android:singleLine="true"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/customSummary"
@@ -35,13 +36,12 @@
     <TextView
         android:id="@+id/customTags"
         android:layout_width="0dp"
-        android:layout_height="22dp"
+        android:layout_height="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
+        android:singleLine="true"
         android:textColor="@color/blue"
         android:textSize="16sp"
-        android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/customSummary" />

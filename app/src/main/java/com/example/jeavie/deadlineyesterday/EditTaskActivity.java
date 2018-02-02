@@ -249,7 +249,7 @@ public class EditTaskActivity extends AppCompatActivity{
                     DbActivity db = new DbActivity(this);
                     boolean isInserted = db.updateData(String.valueOf(MainActivity.changingNumber + 1), changedSummary, changedDate, changedTime, deadline, tagstostring, "list");
                     if (isInserted)
-                        Toast.makeText(this, "Deadline saved", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
                     setResult(MainActivity.INTENT_RESULT_CODE_TWO);
                     finish();
                 } else if (MainActivity.INTENT_RESULT_CODE_TWO == 1) {
