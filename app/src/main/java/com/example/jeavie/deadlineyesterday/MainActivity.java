@@ -24,11 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static int INTENT_RESULT_CODE = 1;
     public static int INTENT_RESULT_CODE_TWO = 2;
     public final static int INTENT_EMPTY_CODE = 0;
-    public final static String INTENT_POSITION = "position";
     public static Integer number = 1;
+    public static Integer changingNumber = 1;
 
     //Swiping
     private boolean mSwiping = false; // detects if user is swiping on ACTION_UP
@@ -59,17 +55,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ListView listView;
     DeadlineActivityAdapter deadlineActivityAdapter;
-    int position;
     List<DeadlineActivity> list;
     String summary, getData, getTime;
-    ArrayList <String> tagsArrList;
+
     DbActivity db;
+    Cursor fullData;
+    boolean full;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
+
+        db = new DbActivity(this);
+
+        fullData = db.getAllData();
+        if (fullData.getCount() > 0){
+            if (fullData.moveToFirst()) {
+                list = new ArrayList<>();
+            do {
+                summary=fullData.getString(1);
+                getData=fullData.getString(2);
+                getTime=fullData.getString(3);
+                String deadline=fullData.getString(4);
+                String tags=fullData.getString(5);
+                list.add(new DeadlineActivity(summary, getData, getTime, deadline,
+                         tags));
+                full = true;
+                number++;
+            } while (fullData.moveToNext());
+            }
+        }
+
+        if (!full) list = new ArrayList<>();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);// language configuration
         String lang = getResources().getConfiguration().locale.getDisplayLanguage(Locale.CHINESE);
@@ -106,9 +125,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView emptyText = findViewById(android.R.id.empty);
         listView.setEmptyView(emptyText);
 
-        db = new DbActivity(this);
-
-        list = new ArrayList<>();
         deadlineActivityAdapter = new DeadlineActivityAdapter(this, list, mTouchListener);
         listView.setAdapter(deadlineActivityAdapter);
 
@@ -160,20 +176,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-//    private void loadDeadlineList() {
-//        ArrayList arrayList = db.getDeadlineList();
-//        if(deadlineActivityAdapter == null) {
-//            deadlineActivityAdapter = new DeadlineActivityAdapter(this, list, mTouchListener);
-//            listView.setAdapter(deadlineActivityAdapter);
-//        } else {
-////            deadlineActivityAdapter.clear();
-////            deadlineActivityAdapter.addAll();
-//            deadlineActivityAdapter.notifyDataSetChanged();
-//
-//        }
-//    }
-
-
 //    public List<DeadlineActivity> changeDeadline(List<DeadlineActivity> arrayList){
 //        for (int i = listView.getPositionForView(listView); i <= arrayList.size(); i++){
 //            String s = list.get(i).getSummary();
@@ -189,49 +191,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        return arrayList;
 //    }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == INTENT_RESULT_CODE){
-//            if(resultCode == INTENT_RESULT_CODE) {
-//                summary = data.getStringExtra("summary");
-//                getData = data.getStringExtra("date");
-//                getTime = data.getStringExtra("time");
-//                tagsArrList = data.getStringArrayListExtra("tags");
-//                String tags = getTags(tagsArrList);
-//                String deadline = getDeadline(getData, getTime);
-//                list.add(new DeadlineActivity(summary, getData, getTime, deadline, tags, tagsArrList));
-//                deadlineActivityAdapter.notifyDataSetChanged();
-//                super.onActivityResult(requestCode, resultCode, data);
-//            }
-//        }
-//        else if (requestCode == INTENT_RESULT_CODE_TWO){
-//            if (resultCode == INTENT_RESULT_CODE_TWO) {
-//                Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
-//                summary = data.getStringExtra("changedSummary");
-//                getData = data.getStringExtra("changedDate");
-//                getTime = data.getStringExtra("changedTime");
-//                tagsArrList = data.getStringArrayListExtra("changedTags");
-//                String tags = getTags(tagsArrList);
-//                String deadline = getDeadline(getData, getTime);
-//                position = data.getIntExtra(INTENT_POSITION, -1);
-//                list.remove(position);
-//                list.add(position, new DeadlineActivity(summary, getData, getTime, deadline, tags, tagsArrList));
-//                deadlineActivityAdapter.notifyDataSetChanged();
-//            }
-//        }
+//    public String[] setTags(ArrayList<String> tags){
+//        String [] parsed = tags.toArray(new String[0]);
+//        return parsed;
 //    }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
         if (requestCode == INTENT_RESULT_CODE){
             if(resultCode == INTENT_RESULT_CODE) {
-                Cursor newtable = db.getTable(number);
-                summary=newtable.getString(0);
-                getData=newtable.getString(1);
-                getTime=newtable.getString(2);
-                String deadline=newtable.getString(3);
-                String tags=newtable.getString(4);
-                Toast.makeText(this, "list is: " + summary + getData + getTime + deadline + tags, Toast.LENGTH_SHORT).show();
+                Cursor newDeadline = db.getAllData();
+                newDeadline.moveToLast();
+                summary=newDeadline.getString(1);
+                getData=newDeadline.getString(2);
+                getTime=newDeadline.getString(3);
+                String deadline=newDeadline.getString(4);
+                String tags=newDeadline.getString(5);
                 list.add(new DeadlineActivity(summary, getData, getTime, deadline,
                          tags));
                 deadlineActivityAdapter.notifyDataSetChanged();
@@ -240,70 +215,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (requestCode == INTENT_RESULT_CODE_TWO){
             if (resultCode == INTENT_RESULT_CODE_TWO) {
-//                Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
-//                summary = data.getStringExtra("changedSummary");
-//                getData = data.getStringExtra("changedDate");
-//                getTime = data.getStringExtra("changedTime");
-//                tagsArrList = data.getStringArrayListExtra("changedTags");
-//                String tags = getTags(tagsArrList);
-//                String deadline = getDeadline(getData, getTime);
-//                position = data.getIntExtra(INTENT_POSITION, -1);
-//                list.remove(position);
-//                list.add(position, new DeadlineActivity(summary, getData, getTime, deadline, tags, tagsArrList));
-//                deadlineActivityAdapter.notifyDataSetChanged();
+                Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
+                Cursor newDeadline = db.getData(String.valueOf(changingNumber + 1));
+                summary=newDeadline.getString(0);
+                getData=newDeadline.getString(1);
+                getTime=newDeadline.getString(2);
+                String deadline=newDeadline.getString(3);
+                String tags=newDeadline.getString(4);
+                list.remove(changingNumber);
+                list.add(changingNumber, new DeadlineActivity(summary, getData, getTime, deadline, tags));
+                list.remove(changingNumber + 1);
+                deadlineActivityAdapter.notifyDataSetChanged();
             }
         }
     }
-
-    public String getDeadline (String date, String time){
-        String format = date + " " + time;
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh : mm a");
-        Date cal1 = new Date();
-        Date cal2 = null;
-        try {
-            cal2 = df.parse(format);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        long diff = cal2.getTime() - cal1.getTime();
-
-        long diffSeconds = diff/(1000);
-
-        long diffMinutes = diff / (60 * 1000);
-
-        long diffHours = diff / (60 * 60 * 1000);
-
-        long diffDays = diff / (24 * 60 * 60 * 1000);
-
-        if (diffDays>1 && diffHours > 24){
-            return String.valueOf(diffDays) + " days " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
-        } else if (diffDays==1 && diffHours > 24) {
-            return String.valueOf(diffDays) + " day " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
-        }else if (diffHours>1){
-            return String.valueOf(diffHours) + " hrs";
-        }else if (diffHours==1){
-            return String.valueOf(diffHours) + " hour";
-        } else if (diffSeconds > 0)
-            return String.valueOf(diffSeconds) + " sec";
-        else return String.valueOf(diffMinutes) + " min";
-    }
-
-    public String getTags(ArrayList<String> tags){
-        String parsedTags = String.valueOf(tags).replace("[", "").replace("]", "");
-        return parsedTags;
-    }
-
-//    public Intent getIntent(Activity from, int i) {
-//        Intent intent = new Intent();
-//        intent.setClass(from, HistoryActivity.class);
-//        intent.putExtra("summary_data_to_history", list.get(i).getSummary());
-//        intent.putExtra("date_data_to_history", list.get(i).getDate());
-//        intent.putExtra("time_data_to_history", list.get(i).getTime());
-//        intent.putStringArrayListExtra("tags_data_to_history", list.get(i).getTagsArrList());
-//        intent.putExtra(INTENT_POSITION, i);
-//        setResult(INTENT_RESULT_CODE_THREE, intent);
-//        return intent;
-//    }
 
     @Override
     public void onBackPressed() {
@@ -424,15 +349,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             v.animate().setDuration(300).translationX(-v.getWidth()/2);
 
                             int i = listView.getPositionForView(v);
-                            //data to history
-//                            intentHistory = new Intent();
-//                            intentHistory.setClass(MainActivity.this, HistoryActivity.class);
-//                            intentHistory.putExtra("summary_data_to_history", list.get(i).getSummary());
-//                            intentHistory.putExtra("date_data_to_history", list.get(i).getDate());
-//                            intentHistory.putExtra("time_data_to_history", list.get(i).getTime());
-//                            intentHistory.putStringArrayListExtra("tags_data_to_history", list.get(i).getTagsArrList());
-//                            intentHistory.putExtra(INTENT_POSITION, i);
-//                            setResult(INTENT_RESULT_CODE_THREE, intentHistory);
 
                             list.remove(i);
                             deadlineActivityAdapter.notifyDataSetChanged();
@@ -456,8 +372,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                     else { // user was not swiping; registers as a click
 
-                        int i = listView.getPositionForView(v);
-
                         //set item click "animation"
                         ColorDrawable[] color = {
                                 new ColorDrawable(getColor(R.color.grey)),
@@ -476,13 +390,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         v.setBackground(trans2);
                         trans2.startTransition(1000); // duration 2 seconds
 
+                        changingNumber = listView.getPositionForView(v);
                         Intent intent = new Intent();
                         intent.setClass(MainActivity.this, EditTaskActivity.class);
-                        intent.putExtra("summary_data", list.get(i).getSummary());
-                        intent.putExtra("date_data", list.get(i).getDate());
-                        intent.putExtra("time_data", list.get(i).getTime());
-                        //intent.putStringArrayListExtra("tags_data", list.get(i).getTagsArrList());
-                        intent.putExtra(INTENT_POSITION, i);
                         startActivityForResult(intent, INTENT_REQUEST_CODE_TWO);
 
                         mItemPressed = false;

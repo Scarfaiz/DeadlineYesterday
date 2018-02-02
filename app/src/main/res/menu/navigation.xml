@@ -3,7 +3,7 @@
 
     <item android:title="@string/settings">
         <menu android:checkableBehavior="single">
-            <item android:id="@+id/tags"
+            <item android:id="@+id/allTags"
                 android:title="@string/tags"
                 android:icon="@drawable/ic_tags"/>
             <item android:id="@+id/notifications"

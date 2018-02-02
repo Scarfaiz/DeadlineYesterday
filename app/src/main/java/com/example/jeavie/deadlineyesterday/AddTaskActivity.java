@@ -222,14 +222,15 @@ public class AddTaskActivity extends AppCompatActivity {
                 TagsEditText tagsEditText = findViewById(R.id.tags);
                 List<String> tags = tagsEditText.getTags();
 
-
                 MainActivity.INTENT_RESULT_CODE = codeToReturn();
                 if (MainActivity.INTENT_RESULT_CODE == 1){
-                    DbActivity db = new DbActivity(this);
                     String deadline = getDeadline(date, time);
                     String tagstostring = getTags(tags);
-                    db.createNewTable(summary, date, time, deadline, tagstostring);
+                    DbActivity db = new DbActivity(this);
+                    boolean isInserted = db.insertData(summary, date, time, deadline, tagstostring, "list");
                     MainActivity.number++;
+                    if (isInserted)
+                        Toast.makeText(this, "Deadline saved", Toast.LENGTH_SHORT).show();
                     setResult(MainActivity.INTENT_RESULT_CODE);
                     finish();
                 } else if (MainActivity.INTENT_RESULT_CODE == 2) {

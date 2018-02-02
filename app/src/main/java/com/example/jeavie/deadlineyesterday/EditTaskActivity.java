@@ -3,6 +3,7 @@ package com.example.jeavie.deadlineyesterday;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -26,15 +27,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import mabbas007.tagsedittext.TagsEditText;
 
 public class EditTaskActivity extends AppCompatActivity{
 
-    int minute, hour, year, month, day, position;
-    String format, summaryData, changedSummary, dateData, changedDate, timeData, changedTime;
+    int minute, hour, year, month, day, number;
+    String format, summaryData, changedSummary, dateData, changedDate, timeData, changedTime, deadline, tagsData;
     TextView setDate, setTime;
-    ArrayList<String> tagsData;
+
+    DbActivity db;
+    Cursor data;
 
 
     @Override
@@ -54,20 +58,24 @@ public class EditTaskActivity extends AppCompatActivity{
             }
         });
 
-        Intent intent = getIntent();
-        summaryData = intent.getStringExtra("summary_data");
-        dateData = intent.getStringExtra("date_data");
-        timeData = intent.getStringExtra("time_data");
-        tagsData = intent.getStringArrayListExtra("tags_data");
-
-        position = intent.getIntExtra(MainActivity.INTENT_POSITION, -1);
+        db = new DbActivity(this);
+        data = db.getData(String.valueOf(MainActivity.changingNumber + 1));
+        summaryData = data.getString(0);
+        dateData = data.getString(1);
+        timeData = data.getString(2);
+        deadline = data.getString(3);
+        tagsData = data.getString(4);
 
         EditText editTextSummary = findViewById(R.id.summary);
         editTextSummary.setText(summaryData);
 
         TagsEditText editTextTags = findViewById(R.id.tags);
-        String[] tags = setTags(tagsData);
-        editTextTags.setTags(tags);
+        if (!TextUtils.isEmpty(tagsData.trim())) {
+            String[] tags = tagsData.split(", ");
+            editTextTags.setTags(tags);
+        } else {
+            editTextTags.setHint(getResources().getString(R.string.addTags));
+        }
 
         CharCountTextView charCountTextView = findViewById(R.id.tvTextCounter);
         charCountTextView.setEditText(editTextSummary);
@@ -126,11 +134,6 @@ public class EditTaskActivity extends AppCompatActivity{
         });
     }
 
-    public String[] setTags(ArrayList<String> tags){
-        String [] parsed = tags.toArray(new String[0]);
-        return parsed;
-    }
-
     public int selectedTimeFormat(int hour){
         if (hour == 0){
             format = "AM";
@@ -176,6 +179,44 @@ public class EditTaskActivity extends AppCompatActivity{
         return (diff > 0);
     }
 
+    public String getDeadline (String date, String time){
+        String format = date + " " + time;
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh : mm a");
+        Date cal1 = new Date();
+        Date cal2 = null;
+        try {
+            cal2 = df.parse(format);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long diff = cal2.getTime() - cal1.getTime();
+
+        long diffSeconds = diff/(1000);
+
+        long diffMinutes = diff / (60 * 1000);
+
+        long diffHours = diff / (60 * 60 * 1000);
+
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        if (diffDays>1 && diffHours > 24){
+            return String.valueOf(diffDays) + " days " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
+        } else if (diffDays==1 && diffHours > 24) {
+            return String.valueOf(diffDays) + " day " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
+        }else if (diffHours>1){
+            return String.valueOf(diffHours) + " hrs";
+        }else if (diffHours==1){
+            return String.valueOf(diffHours) + " hour";
+        } else if (diffSeconds > 0)
+            return String.valueOf(diffSeconds) + " sec";
+        else return String.valueOf(diffMinutes) + " min";
+    }
+
+    public String getTags(List<String> tags){
+        String parsedTags = String.valueOf(tags).replace("[", "").replace("]", "");
+        return parsedTags;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_task, menu);
@@ -203,17 +244,17 @@ public class EditTaskActivity extends AppCompatActivity{
 
                 MainActivity.INTENT_RESULT_CODE_TWO = codeToReturn();
                 if (MainActivity.INTENT_RESULT_CODE_TWO == 2){
-                    Intent intent = new Intent();
-                    intent.putExtra("changedSummary", changedSummary);
-                    intent.putExtra("changedDate", changedDate);
-                    intent.putExtra("changedTime", changedTime);
-                    intent.putStringArrayListExtra("changedTags", (ArrayList<String>) tags);
-                    intent.putExtra(MainActivity.INTENT_POSITION, position);
-                    setResult(MainActivity.INTENT_RESULT_CODE_TWO, intent);
+                    deadline = getDeadline(changedDate, changedTime);
+                    String tagstostring = getTags(tags);
+                    DbActivity db = new DbActivity(this);
+                    boolean isInserted = db.updateData(String.valueOf(MainActivity.changingNumber + 1), changedSummary, changedDate, changedTime, deadline, tagstostring, "list");
+                    if (isInserted)
+                        Toast.makeText(this, "Deadline saved", Toast.LENGTH_SHORT).show();
+                    setResult(MainActivity.INTENT_RESULT_CODE_TWO);
                     finish();
                 } else if (MainActivity.INTENT_RESULT_CODE_TWO == 1) {
                     Toast.makeText(this, "You did not enter a summary", Toast.LENGTH_SHORT).show();
-                } else if (MainActivity.INTENT_RESULT_CODE_TWO == 3){
+                } else if (MainActivity.INTENT_RESULT_CODE_TWO == 3) {
                     Toast.makeText(this, "Invalid date", Toast.LENGTH_SHORT).show();
                 }
         }

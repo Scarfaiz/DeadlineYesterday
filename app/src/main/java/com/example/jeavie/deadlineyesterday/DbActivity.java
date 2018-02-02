@@ -7,8 +7,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
-
 /**
  * Created by jeavie on 29.01.2018.
  */
@@ -17,18 +15,18 @@ public class DbActivity extends SQLiteOpenHelper {
 
 
     private static final String DB_NAME = "JDB";
-    private static final int DB_VER = 1;
     public static final String DB_TABLE = "Deadlines";
+    private static final int DB_VER = 1;
 
-    // поля таблицы для хранения данных (id формируется автоматически)
-    public static final String DB_ID = "_id";
+    public static final String DB_ID = "id";
     public static final String DB_SUMMARY = "summary";
     public static final String DB_DATE = "date";
     public static final String DB_TIME = "time";
     public static final String DB_DEADLINE = "deadline";
     public static final String DB_TAGS = "tags";
+    public static final String DB_LIST = "list";
 
-    private static final String DATABASE_CREATE = "create table " + DB_TABLE + "(" + DB_ID + " integer primary key autoincrement, " + DB_SUMMARY + " text not null, " + DB_DATE + " text not null, " + DB_TIME + " text not null, " + DB_DEADLINE + " text not null, " + DB_TAGS + " text not null " + ");";
+    private static final String DATABASE_CREATE = "create table " + DB_TABLE + " ( " + DB_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + DB_SUMMARY + " TEXT NOT NULL, " + DB_DATE + " TEXT NOT NULL, " + DB_TIME + " TEXT NOT NULL, " + DB_DEADLINE + " TEXT NOT NULL, " + DB_TAGS + " TEXT NOT NULL, " + DB_LIST + " TEXT NOT NULL" + " )";
 
     public DbActivity(Context context) {
         super(context, DB_NAME, null, DB_VER);
@@ -37,70 +35,68 @@ public class DbActivity extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DATABASE_CREATE);
-
-        ContentValues initialValues = createContentValues("kmkmsdkad","","", "", "");
-        db.insert(DB_TABLE, null, initialValues);
-    }
-
-    private ContentValues createContentValues(String summary, String date,
-                                              String time, String deadline, String tags) {
-        ContentValues values = new ContentValues();
-        values.put(DB_SUMMARY, summary);
-        values.put(DB_DATE, date);
-        values.put(DB_TIME, time);
-        values.put(DB_DEADLINE, deadline);
-        values.put(DB_TAGS, tags);
-        return values;
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS table1");
+        db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE);
         onCreate(db);
     }
 
-    public long createNewTable(String summary, String date,
-                               String time, String deadline, String tags) {
+    public boolean insertData (String summary, String date,
+                               String time, String deadline, String tags, String list) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues initialValues = createContentValues(summary, date, time, deadline, tags);
-
-        long row = db.insert(DB_TABLE, null, initialValues);
-        db.close();
-
-        return row;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DB_SUMMARY, summary);
+        contentValues.put(DB_DATE, date);
+        contentValues.put(DB_TIME, time);
+        contentValues.put(DB_DEADLINE, deadline);
+        contentValues.put(DB_TAGS, tags);
+        contentValues.put(DB_LIST, list);
+        long result = db.insert(DB_TABLE, null, contentValues);
+        return (result != -1);
     }
 
-    public boolean updateTable(long rowId, String summary, String date,
-                               String time, String deadline, String tags) {
+    public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues updateValues = createContentValues(summary, date, time, deadline, tags);
-
-        return db.update(DB_TABLE, updateValues, DB_ID + "=" + rowId,
-                null) > 0;
+        return db.rawQuery("select * from " + DB_TABLE, null);
     }
 
-    public Cursor getTable(long rowId) throws SQLException {
+    public boolean updateData(String id, String summary, String date,
+                              String time, String deadline, String tags, String list) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DB_SUMMARY, summary);
+        contentValues.put(DB_DATE, date);
+        contentValues.put(DB_TIME, time);
+        contentValues.put(DB_DEADLINE, deadline);
+        contentValues.put(DB_TAGS, tags);
+        contentValues.put(DB_LIST, list);
+        db.update(DB_TABLE, contentValues, DB_ID + " = ?", new String[] { id });
+        return true;
+    }
+
+    public Integer deleteData (String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(DB_TABLE, DB_ID + " = ?", new String[]{id});
+    }
+
+    public Cursor getData(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor mCursor = db.query(true, DB_TABLE,
+        Cursor data = db.query(true, DB_TABLE,
                 new String[] { DB_SUMMARY,
-                        DB_DATE, DB_TIME, DB_DEADLINE, DB_TAGS}, DB_ID + "=" + rowId, null,
+                        DB_DATE, DB_TIME, DB_DEADLINE, DB_TAGS}, DB_ID + "=" + id, null,
                 null, null, null, null);
-        if (mCursor != null) {
-            mCursor.moveToFirst();
+        if (data != null) {
+            data.moveToFirst();
         }
-        return mCursor;
+        return data;
     }
 
-    public void deleteTable(long rowId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(DB_TABLE, DB_ID + "=" + rowId, null);
-        db.close();
-    }
-
-    public Cursor getFullTable() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.query(DB_TABLE, new String[] { DB_SUMMARY,
-                        DB_DATE, DB_TIME, DB_DEADLINE, DB_TAGS}, null,
-                null, null, null, null);
-    }
+//    public void deleteTable(long rowId) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        db.delete(DB_TABLE, DB_ID + "=" + rowId, null);
+//        db.close();
+//    }
+//
 }
