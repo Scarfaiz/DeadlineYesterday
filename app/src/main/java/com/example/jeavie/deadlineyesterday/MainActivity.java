@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -28,16 +29,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+//TODO: vector images +
 //TODO: SQLite database - in progress
 //TODO: upd time in listview?
-//TODO: history activity
-//TODO: clear history - snackbar: cancel
+//TODO: history activity - delete full data btn, clear history - snackbar: cancel?
 
-//TODO: week activity
-//TODO: notifications settings
+//TODO: week activity - all?
+//TODO: notifications settings activity
 //TODO: about activity
-//TODO: sort by order/deadlines
-//TODO: vector images
+//TODO: sort by order/deadlines/tags?
+//TODO: vector icon
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -46,8 +47,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static int INTENT_RESULT_CODE = 1;
     public static int INTENT_RESULT_CODE_TWO = 2;
     public final static int INTENT_EMPTY_CODE = 0;
-    public static Integer number = 1;
-    public static Integer changingNumber = 1;
+    public static Integer listNumber = 0;
+    public static Integer dataNumber = 0;
+    public static Integer editNumber = 1;
 
     //Swiping
     private boolean mSwiping = false; // detects if user is swiping on ACTION_UP
@@ -75,19 +77,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (fullData.moveToFirst()) {
                 list = new ArrayList<>();
             do {
-                summary=fullData.getString(1);
-                getData=fullData.getString(2);
-                getTime=fullData.getString(3);
-                String deadline=fullData.getString(4);
-                String tags=fullData.getString(5);
-                list.add(new DeadlineActivity(summary, getData, getTime, deadline,
+                String check = fullData.getString(6);
+                if (check.startsWith("li")){
+                    summary=fullData.getString(1);
+                    getData=fullData.getString(2);
+                    getTime=fullData.getString(3);
+                    String deadline=fullData.getString(4);
+                    String tags=fullData.getString(5);
+                    list.add(new DeadlineActivity(summary, getData, getTime, deadline,
                          tags));
-                full = true;
-                number++;
+                    full = true;
+                    listNumber++;
+                }
             } while (fullData.moveToNext());
             }
         }
-
         if (!full) list = new ArrayList<>();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);// language configuration
@@ -176,21 +180,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-//    public List<DeadlineActivity> changeDeadline(List<DeadlineActivity> arrayList){
-//        for (int i = listView.getPositionForView(listView); i <= arrayList.size(); i++){
-//            String s = list.get(i).getSummary();
-//            String d = list.get(i).getDate();
-//            String t = list.get(i).getTime();
-//            String dd = getDeadline(d, t);
-//            ArrayList tgarr = list.get(i).getTagsArrList();
-//            String tg = getTags(tgarr);
-//            list.remove(i);
-//            list.add(i, new DeadlineActivity(s, d, t, dd, tg, tgarr));
-//            Toast.makeText(this, "UPD", Toast.LENGTH_SHORT).show();
-//        }
-//        return arrayList;
-//    }
-
 //    public String[] setTags(ArrayList<String> tags){
 //        String [] parsed = tags.toArray(new String[0]);
 //        return parsed;
@@ -215,14 +204,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (requestCode == INTENT_RESULT_CODE_TWO){
             if (resultCode == INTENT_RESULT_CODE_TWO) {
-                Cursor newDeadline = db.getData(String.valueOf(changingNumber + 1));
+                Cursor newDeadline = db.getData(String.valueOf(editNumber + 1));
                 summary=newDeadline.getString(0);
                 getData=newDeadline.getString(1);
                 getTime=newDeadline.getString(2);
                 String deadline=newDeadline.getString(3);
                 String tags=newDeadline.getString(4);
-                list.add(changingNumber, new DeadlineActivity(summary, getData, getTime, deadline, tags));
-                list.remove(changingNumber + 1);
+                list.add(editNumber, new DeadlineActivity(summary, getData, getTime, deadline, tags));
+                list.remove(editNumber + 1);
                 deadlineActivityAdapter.notifyDataSetChanged();
             }
         }
@@ -322,33 +311,73 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (mSwiping && !swiped) { // Need to make sure the user is both swiping and has not already completed a swipe action (hence mSwiping and swiped)
                         v.setTranslationX((x - mDownX)); // moves the view as long as the user is swiping and has not already swiped
 
-                        if (deltaX > v.getWidth() / 2) { // swipe to right
+                        if (deltaX > v.getWidth() / 3) { // swipe to right
                             mDownX = x;
                             swiped = true;
                             mSwiping = false;
                             mItemPressed = false;
 
-                            v.animate().setDuration(300).translationX(v.getWidth()/2);
+                            v.animate().setDuration(300).translationX(v.getWidth()/3);
 
-                            int i = listView.getPositionForView(v);
-
-                            list.remove(i);
+                            int i = listView.getPositionForView(v) + 1;
+                            int j = i;
+                            Cursor checkedDeadline = db.getAllData();
+                            checkedDeadline.moveToFirst();
+                            do {
+                                if (i == j)
+                                    for (int k = 1; k<i; k++) checkedDeadline.moveToNext();
+                                String check = checkedDeadline.getString(6);
+                                if (check.startsWith("hi"))
+                                    i++;
+                                else if (check.startsWith("li"))
+                                    break;
+                            }while (checkedDeadline.moveToNext());
+                            Cursor newDeadline = db.getData(String.valueOf(i));
+                            summary=newDeadline.getString(0);
+                            getData=newDeadline.getString(1);
+                            getTime=newDeadline.getString(2);
+                            String deadline=newDeadline.getString(3);
+                            String tags=newDeadline.getString(4);
+                            boolean isInserted = db.updateData(String.valueOf(i), summary, getData, getTime, deadline, tags, "history");
+                            if (isInserted)
+                                Toast.makeText(getApplicationContext(), "Deadline completed", Toast.LENGTH_SHORT).show();
+                            list.remove(j-1);
                             deadlineActivityAdapter.notifyDataSetChanged();
 
                             return true;
                         }
-                        else if (deltaX < -1 * (v.getWidth() / 2)) { // swipe to left
+                        else if (deltaX < -1 * (v.getWidth() / 3)) { // swipe to left
 
                             mDownX = x;
                             swiped = true;
                             mSwiping = false;
                             mItemPressed = false;
 
-                            v.animate().setDuration(300).translationX(-v.getWidth()/2);
+                            v.animate().setDuration(300).translationX(-v.getWidth()/3);
 
-                            int i = listView.getPositionForView(v);
-
-                            list.remove(i);
+                            int i = listView.getPositionForView(v) + 1;
+                            int j = i;
+                            Cursor checkedDeadline = db.getAllData();
+                            checkedDeadline.moveToFirst();
+                            do {
+                                if (i == j)
+                                    for (int k = 1; k<i; k++) checkedDeadline.moveToNext();
+                                String check = checkedDeadline.getString(6);
+                                if (check.startsWith("hi"))
+                                    i++;
+                                else if (check.startsWith("li"))
+                                    break;
+                            }while (checkedDeadline.moveToNext());
+                            Cursor newDeadline = db.getData(String.valueOf(i));
+                            summary=newDeadline.getString(0);
+                            getData=newDeadline.getString(1);
+                            getTime=newDeadline.getString(2);
+                            String deadline=newDeadline.getString(3);
+                            String tags=newDeadline.getString(4);
+                            boolean isInserted = db.updateData(String.valueOf(i), summary, getData, getTime, deadline, tags, "history");
+                            if (isInserted)
+                                Toast.makeText(getApplicationContext(), "Deadline completed", Toast.LENGTH_SHORT).show();
+                            list.remove(j-1);
                             deadlineActivityAdapter.notifyDataSetChanged();
 
                             return true;
@@ -388,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         v.setBackground(trans2);
                         trans2.startTransition(1000); // duration 2 seconds
 
-                        changingNumber = listView.getPositionForView(v);
+                        editNumber = listView.getPositionForView(v);
                         Intent intent = new Intent();
                         intent.setClass(MainActivity.this, EditTaskActivity.class);
                         startActivityForResult(intent, INTENT_REQUEST_CODE_TWO);

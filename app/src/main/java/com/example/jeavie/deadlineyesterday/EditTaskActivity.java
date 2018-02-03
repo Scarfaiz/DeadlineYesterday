@@ -23,11 +23,9 @@ import com.wafflecopter.charcounttextview.CharCountTextView;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import mabbas007.tagsedittext.TagsEditText;
 
@@ -59,7 +57,7 @@ public class EditTaskActivity extends AppCompatActivity{
         });
 
         db = new DbActivity(this);
-        data = db.getData(String.valueOf(MainActivity.changingNumber + 1));
+        data = db.getData(String.valueOf(MainActivity.editNumber + 1));
         summaryData = data.getString(0);
         dateData = data.getString(1);
         timeData = data.getString(2);
@@ -247,7 +245,7 @@ public class EditTaskActivity extends AppCompatActivity{
                     deadline = getDeadline(changedDate, changedTime);
                     String tagstostring = getTags(tags);
                     DbActivity db = new DbActivity(this);
-                    boolean isInserted = db.updateData(String.valueOf(MainActivity.changingNumber + 1), changedSummary, changedDate, changedTime, deadline, tagstostring, "list");
+                    boolean isInserted = db.updateData(String.valueOf(MainActivity.editNumber + 1), changedSummary, changedDate, changedTime, deadline, tagstostring, "list");
                     if (isInserted)
                         Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
                     setResult(MainActivity.INTENT_RESULT_CODE_TWO);
