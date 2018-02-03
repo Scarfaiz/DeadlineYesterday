@@ -30,15 +30,16 @@ import java.util.List;
 import java.util.Locale;
 
 //TODO: vector images +
-//TODO: SQLite database - in progress
-//TODO: upd time in listview?
-//TODO: history activity - delete full data btn, clear history - snackbar: cancel?
+//TODO: SQLite database +-
 
-//TODO: week activity - all?
+//TODO: history activity - delete full data btn, clear history - snackbar: cancel, return to uncompleted?
 //TODO: notifications settings activity
 //TODO: about activity
-//TODO: sort by order/deadlines/tags?
 //TODO: vector icon
+//TODO: upd time in listview or dates or smth?
+//TODO: sort by order/deadlines/tags?
+//TODO: week activity - all?
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

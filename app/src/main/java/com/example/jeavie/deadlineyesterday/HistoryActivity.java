@@ -1,6 +1,7 @@
 package com.example.jeavie.deadlineyesterday;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.support.v7.app.AppCompatActivity;
@@ -24,17 +25,46 @@ public class HistoryActivity extends AppCompatActivity {
     DeadlineActivityAdapter deadlineActivityAdapter;
     List<DeadlineActivity> list;
     String summaryData, dateData, timeData;
-    ArrayList<String> tagsData;
 
     //Swiping
     private boolean mSwiping = false; // detects if user is swiping on ACTION_UP
     private boolean mItemPressed = false; // Detects if user is currently holding down a view
+
+    DbActivity db;
+    Cursor fullData;
+    boolean full;
+    public static Integer listNumber = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+
+        db = new DbActivity(this);
+
+        fullData = db.getAllData();
+        if (fullData.getCount() > 0){
+            if (fullData.moveToFirst()) {
+                list = new ArrayList<>();
+                do {
+                    String check = fullData.getString(6);
+                    if (check.startsWith("hi")){
+                        summaryData=fullData.getString(1);
+                        dateData=fullData.getString(2);
+                        timeData=fullData.getString(3);
+                        String deadline=fullData.getString(4);
+                        String tags=fullData.getString(5);
+                        list.add(new DeadlineActivity(summaryData, dateData, timeData, deadline,
+                                tags));
+                        full = true;
+                        listNumber++;
+                    }
+                } while (fullData.moveToNext());
+            }
+        }
+        if (!full) list = new ArrayList<>();
+
         Toolbar toolbar = findViewById(R.id.toolbar_history);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         setSupportActionBar(toolbar);
@@ -52,34 +82,11 @@ public class HistoryActivity extends AppCompatActivity {
         TextView emptyText = findViewById(android.R.id.empty);
         listView.setEmptyView(emptyText);
 
-        list = new ArrayList<>();
         deadlineActivityAdapter = new DeadlineActivityAdapter(this, list, mTouchListener);
         listView.setAdapter(deadlineActivityAdapter);
 
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == MainActivity.INTENT_REQUEST_CODE_THREE){
-//            Toast.makeText(this, "Well done", Toast.LENGTH_SHORT).show();
-//            if(resultCode == MainActivity.INTENT_RESULT_CODE_THREE) {
-//                Intent intent = getIntent();
-//                summaryData = intent.getStringExtra("summary_data_to_history");
-//                dateData = intent.getStringExtra("date_data_to_history");
-//                timeData = intent.getStringExtra("time_data_to_history");
-//                tagsData = intent.getStringArrayListExtra("tags_data_to_history");
-//                String tags = getTags(tagsData);
-//                list.add(new DeadlineActivity(summaryData, dateData, timeData, getResources().getString(R.string.completed), tags, tagsData));
-//                deadlineActivityAdapter.notifyDataSetChanged();
-//                super.onActivityResult(requestCode, resultCode, data);
-//            }
-//        }
-//    }
-
-    public String getTags(ArrayList<String> tags){
-        String parsedTags = String.valueOf(tags).replace("[", "").replace("]", "");
-        return parsedTags;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
