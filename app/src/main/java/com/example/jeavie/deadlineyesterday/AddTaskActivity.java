@@ -224,8 +224,7 @@ public class AddTaskActivity extends AppCompatActivity {
                     String deadline = getDeadline(date, time);
                     String tagstostring = getTags(tags);
                     DbActivity db = new DbActivity(this);
-                    boolean isInserted = db.insertData(summary, date, time, deadline, tagstostring, "list");
-                    MainActivity.dataNumber++;
+                    boolean isInserted = db.insertData(String.valueOf(MainActivity.dataNumber), summary, date, time, deadline, tagstostring, "list");
                     if (isInserted)
                         Toast.makeText(this, "Deadline saved", Toast.LENGTH_SHORT).show();
                     setResult(MainActivity.INTENT_RESULT_CODE);

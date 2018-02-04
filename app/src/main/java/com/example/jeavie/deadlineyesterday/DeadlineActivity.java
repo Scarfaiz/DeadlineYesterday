@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class DeadlineActivity extends AppCompatActivity {
 
+    private String id;
     private String summary;
     private String date;
     private String time;
@@ -12,12 +13,21 @@ public class DeadlineActivity extends AppCompatActivity {
     private String tags;
     //private  ArrayList tagsArrList;
 
-    public DeadlineActivity(String summary, String date, String time, String deadline, String tags) {
+    public DeadlineActivity(String id, String summary, String date, String time, String deadline, String tags) {
+        this.id = id;
         this.summary = summary;
         this.date = date;
         this.time = time;
         this.deadline = deadline;
         this.tags = tags;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getSummary() {
@@ -60,11 +70,4 @@ public class DeadlineActivity extends AppCompatActivity {
         this.tags = tags;
     }
 
-//    public ArrayList getTagsArrList() {
-//        return tagsArrList;
-//    }
-//
-//    public void setTagsArrList(ArrayList tagsArrList) {
-//        this.tagsArrList = tagsArrList;
-//    }
 }

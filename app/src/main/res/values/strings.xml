@@ -21,5 +21,6 @@
     <string name="noDeadlines">No deadlines</string>
     <string name="noCompletedDeadlines">No completed deadlines</string>
     <string name="completed">Completed</string>
+    <string name="cleanHistory">Clean history</string>
     <string name="invalidDate">Invalid date</string>
 </resources>

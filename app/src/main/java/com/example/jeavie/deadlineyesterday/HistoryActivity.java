@@ -1,6 +1,5 @@
 package com.example.jeavie.deadlineyesterday;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -33,7 +32,7 @@ public class HistoryActivity extends AppCompatActivity {
     DbActivity db;
     Cursor fullData;
     boolean full;
-    public static Integer listNumber = 0;
+    public static int listNumber = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +47,15 @@ public class HistoryActivity extends AppCompatActivity {
             if (fullData.moveToFirst()) {
                 list = new ArrayList<>();
                 do {
-                    String check = fullData.getString(6);
+                    String check = fullData.getString(7);
                     if (check.startsWith("hi")){
-                        summaryData=fullData.getString(1);
-                        dateData=fullData.getString(2);
-                        timeData=fullData.getString(3);
-                        String deadline=fullData.getString(4);
-                        String tags=fullData.getString(5);
-                        list.add(new DeadlineActivity(summaryData, dateData, timeData, deadline,
+                        String id = fullData.getString(1);
+                        summaryData=fullData.getString(2);
+                        dateData=fullData.getString(3);
+                        timeData=fullData.getString(4);
+                        String deadline=fullData.getString(5);
+                        String tags=fullData.getString(6);
+                        list.add(new DeadlineActivity(id, summaryData, dateData, timeData, deadline,
                                 tags));
                         full = true;
                         listNumber++;
@@ -84,7 +84,6 @@ public class HistoryActivity extends AppCompatActivity {
 
         deadlineActivityAdapter = new DeadlineActivityAdapter(this, list, mTouchListener);
         listView.setAdapter(deadlineActivityAdapter);
-
     }
 
 
@@ -102,6 +101,10 @@ public class HistoryActivity extends AppCompatActivity {
 
             case android.R.id.home:
                 finish();
+                return true;
+
+            case R.id.clearHistory:
+                //
                 return true;
 
         }
@@ -153,8 +156,22 @@ public class HistoryActivity extends AppCompatActivity {
 
                             v.animate().setDuration(300).translationX(v.getWidth()/2);
 
-                            int i = listView.getPositionForView(v);
-                            list.remove(i);
+                            int i = listView.getPositionForView(v) + 1;
+                            int j = i;
+                            Cursor checkedDeadline = db.getAllData();
+                            checkedDeadline.moveToFirst();
+                            int k = 0, l = 0;
+                            do{
+                                String check = checkedDeadline.getString(6);
+                                if (check.startsWith("li")) k++;
+                                //if (del.contains(k+1)) l++;
+                                if (k==j) break;
+                            }while (checkedDeadline.moveToNext());
+                            Toast.makeText(getApplicationContext(), "DELETE " + String.valueOf(k) + " + " + String.valueOf(l), Toast.LENGTH_SHORT).show();
+                            //del.add(k + l);
+                            int done = db.deleteData(String.valueOf(k + l));
+                            //Toast.makeText(getApplicationContext(), "Deadline deleted", Toast.LENGTH_SHORT).show();
+                            list.remove(j-1);
                             deadlineActivityAdapter.notifyDataSetChanged();
 
                             return true;

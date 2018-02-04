@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static int INTENT_RESULT_CODE_TWO = 2;
     public final static int INTENT_EMPTY_CODE = 0;
     public static Integer listNumber = 0;
-    public static Integer dataNumber = 0;
+    public static Integer dataNumber = 1;
     public static Integer editNumber = 1;
 
     //Swiping
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DbActivity db;
     Cursor fullData;
     boolean full;
+    public List<Integer> del;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,14 +79,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (fullData.moveToFirst()) {
                 list = new ArrayList<>();
             do {
-                String check = fullData.getString(6);
+                String check = fullData.getString(7);
                 if (check.startsWith("li")){
-                    summary=fullData.getString(1);
-                    getData=fullData.getString(2);
-                    getTime=fullData.getString(3);
-                    String deadline=fullData.getString(4);
-                    String tags=fullData.getString(5);
-                    list.add(new DeadlineActivity(summary, getData, getTime, deadline,
+                    summary=fullData.getString(2);
+                    getData=fullData.getString(3);
+                    getTime=fullData.getString(4);
+                    String deadline=fullData.getString(5);
+                    String tags=fullData.getString(6);
+                    list.add(new DeadlineActivity(String.valueOf(dataNumber - 1), summary, getData, getTime, deadline,
                          tags));
                     full = true;
                     listNumber++;
@@ -132,6 +133,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         deadlineActivityAdapter = new DeadlineActivityAdapter(this, list, mTouchListener);
         listView.setAdapter(deadlineActivityAdapter);
+
+        del = new ArrayList<>();
 
 //        final Handler handler = new Handler();
 //        handler.postDelayed( new Runnable() {
@@ -192,13 +195,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(resultCode == INTENT_RESULT_CODE) {
                 Cursor newDeadline = db.getAllData();
                 newDeadline.moveToLast();
-                summary=newDeadline.getString(1);
-                getData=newDeadline.getString(2);
-                getTime=newDeadline.getString(3);
-                String deadline=newDeadline.getString(4);
-                String tags=newDeadline.getString(5);
-                list.add(new DeadlineActivity(summary, getData, getTime, deadline,
+                summary=newDeadline.getString(2);
+                getData=newDeadline.getString(3);
+                getTime=newDeadline.getString(4);
+                String deadline=newDeadline.getString(5);
+                String tags=newDeadline.getString(6);
+                list.add(new DeadlineActivity(String.valueOf(dataNumber), summary, getData, getTime, deadline,
                          tags));
+                dataNumber++;
                 deadlineActivityAdapter.notifyDataSetChanged();
                 super.onActivityResult(requestCode, resultCode, data);
             }
@@ -206,13 +210,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else if (requestCode == INTENT_RESULT_CODE_TWO){
             if (resultCode == INTENT_RESULT_CODE_TWO) {
                 Cursor newDeadline = db.getData(String.valueOf(editNumber + 1));
-                summary=newDeadline.getString(0);
-                getData=newDeadline.getString(1);
-                getTime=newDeadline.getString(2);
-                String deadline=newDeadline.getString(3);
-                String tags=newDeadline.getString(4);
-                list.add(editNumber, new DeadlineActivity(summary, getData, getTime, deadline, tags));
-                list.remove(editNumber + 1);
+                String id = newDeadline.getString(0);
+                summary=newDeadline.getString(1);
+                getData=newDeadline.getString(2);
+                getTime=newDeadline.getString(3);
+                String deadline=newDeadline.getString(4);
+                String tags=newDeadline.getString(5);
+                list.add(Integer.valueOf(id), new DeadlineActivity(id, summary, getData, getTime, deadline, tags));
+                list.remove(Integer.valueOf(id) + 1);
                 deadlineActivityAdapter.notifyDataSetChanged();
             }
         }
@@ -320,29 +325,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             v.animate().setDuration(300).translationX(v.getWidth()/3);
 
-                            int i = listView.getPositionForView(v) + 1;
-                            int j = i;
-                            Cursor checkedDeadline = db.getAllData();
-                            checkedDeadline.moveToFirst();
-                            do {
-                                if (i == j)
-                                    for (int k = 1; k<i; k++) checkedDeadline.moveToNext();
-                                String check = checkedDeadline.getString(6);
-                                if (check.startsWith("hi"))
-                                    i++;
-                                else if (check.startsWith("li"))
-                                    break;
-                            }while (checkedDeadline.moveToNext());
-                            Cursor newDeadline = db.getData(String.valueOf(i));
-                            summary=newDeadline.getString(0);
-                            getData=newDeadline.getString(1);
-                            getTime=newDeadline.getString(2);
-                            String deadline=newDeadline.getString(3);
-                            String tags=newDeadline.getString(4);
-                            boolean isInserted = db.updateData(String.valueOf(i), summary, getData, getTime, deadline, tags, "history");
+                            int i = listView.getPositionForView(v);
+                            String a = list.get(i).getId();
+                            Cursor newDeadline = db.getData(a);
+                            String id = newDeadline.getString(0);
+                            Toast.makeText(getApplicationContext(), id, Toast.LENGTH_SHORT).show();
+                            summary=newDeadline.getString(1);
+                            getData=newDeadline.getString(2);
+                            getTime=newDeadline.getString(3);
+                            String deadline=newDeadline.getString(4);
+                            String tags=newDeadline.getString(5);
+                            boolean isInserted = db.updateData(id, id, summary, getData, getTime, deadline, tags, "history");
                             if (isInserted)
                                 Toast.makeText(getApplicationContext(), "Deadline completed", Toast.LENGTH_SHORT).show();
-                            list.remove(j-1);
+                            list.remove(i);
                             deadlineActivityAdapter.notifyDataSetChanged();
 
                             return true;
@@ -356,29 +352,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             v.animate().setDuration(300).translationX(-v.getWidth()/3);
 
-                            int i = listView.getPositionForView(v) + 1;
-                            int j = i;
-                            Cursor checkedDeadline = db.getAllData();
-                            checkedDeadline.moveToFirst();
-                            do {
-                                if (i == j)
-                                    for (int k = 1; k<i; k++) checkedDeadline.moveToNext();
-                                String check = checkedDeadline.getString(6);
-                                if (check.startsWith("hi"))
-                                    i++;
-                                else if (check.startsWith("li"))
-                                    break;
-                            }while (checkedDeadline.moveToNext());
-                            Cursor newDeadline = db.getData(String.valueOf(i));
-                            summary=newDeadline.getString(0);
-                            getData=newDeadline.getString(1);
-                            getTime=newDeadline.getString(2);
-                            String deadline=newDeadline.getString(3);
-                            String tags=newDeadline.getString(4);
-                            boolean isInserted = db.updateData(String.valueOf(i), summary, getData, getTime, deadline, tags, "history");
+                            int i = listView.getPositionForView(v);
+                            String a = list.get(i).getId();
+                            Cursor newDeadline = db.getData(a);
+                            String id = newDeadline.getString(0);
+                            Toast.makeText(getApplicationContext(), id, Toast.LENGTH_SHORT).show();
+                            summary=newDeadline.getString(1);
+                            getData=newDeadline.getString(2);
+                            getTime=newDeadline.getString(3);
+                            String deadline=newDeadline.getString(4);
+                            String tags=newDeadline.getString(5);
+                            boolean isInserted = db.updateData(id, id, summary, getData, getTime, deadline, tags, "history");
                             if (isInserted)
                                 Toast.makeText(getApplicationContext(), "Deadline completed", Toast.LENGTH_SHORT).show();
-                            list.remove(j-1);
+                            list.remove(i);
                             deadlineActivityAdapter.notifyDataSetChanged();
 
                             return true;
@@ -419,7 +406,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         trans2.startTransition(1000); // duration 2 seconds
 
                         editNumber = listView.getPositionForView(v);
+                        String a = list.get(editNumber).getId();
+                        Cursor newDeadline = db.getData(a);
+                        String id = newDeadline.getString(0);
                         Intent intent = new Intent();
+                        intent.putExtra("number", id);
                         intent.setClass(MainActivity.this, EditTaskActivity.class);
                         startActivityForResult(intent, INTENT_REQUEST_CODE_TWO);
 
