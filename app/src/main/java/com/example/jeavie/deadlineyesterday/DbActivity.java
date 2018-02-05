@@ -84,7 +84,7 @@ public class DbActivity extends SQLiteOpenHelper {
     }
 
     public Cursor getData(String id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         return db.query(true, DB_TABLE,
                 new String[] { DB_NUMBER, DB_SUMMARY,
                         DB_DATE, DB_TIME, DB_DEADLINE, DB_TAGS},
@@ -94,10 +94,4 @@ public class DbActivity extends SQLiteOpenHelper {
         );
     }
 
-//    public void deleteTable(long rowId) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        db.delete(DB_TABLE, DB_ID + "=" + rowId, null);
-//        db.close();
-//    }
-//
 }

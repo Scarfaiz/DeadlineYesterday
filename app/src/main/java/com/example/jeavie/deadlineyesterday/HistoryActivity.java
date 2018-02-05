@@ -103,7 +103,11 @@ public class HistoryActivity extends AppCompatActivity {
                 return true;
 
             case R.id.clearHistory:
-                //
+                list.clear();
+                deadlineActivityAdapter.notifyDataSetChanged();
+                db.getAllData();
+                db.close();
+                getApplicationContext().deleteDatabase(DbActivity.DB_NAME);
                 return true;
 
         }

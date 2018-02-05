@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 //TODO: vector images +
-//TODO: SQLite database +-
+//TODO: SQLite database +
 
 //TODO: history activity - delete full data btn, clear history - snackbar: cancel, return to uncompleted?
 //TODO: notifications settings activity
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(resultCode == INTENT_RESULT_CODE) {
                 DbActivity db = new DbActivity(getApplicationContext());
                 Cursor newDeadline = db.getAllData();
-                newDeadline.moveToFirst();
+                newDeadline.moveToLast();
                 String id = newDeadline.getString(1);
                 summary = newDeadline.getString(2);
                 getData = newDeadline.getString(3);
@@ -323,6 +323,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             v.animate().setDuration(300).translationX(v.getWidth()/4);
 
+                            DbActivity db = new DbActivity(getApplicationContext());
                             int i = listView.getPositionForView(v);
                             String a = list.get(i).getId();
                             Cursor newDeadline = db.getData(a);
@@ -355,6 +356,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             v.animate().setDuration(300).translationX(-v.getWidth()/4);
 
+                            DbActivity db = new DbActivity(getApplicationContext());
                             int i = listView.getPositionForView(v);
                             String a = list.get(i).getId();
                             Cursor newDeadline = db.getData(a);
@@ -411,6 +413,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         v.setBackground(trans2);
                         trans2.startTransition(1000); // duration 2 seconds
 
+                        DbActivity db = new DbActivity(getApplicationContext());
                         int i = listView.getPositionForView(v);
                         String a = list.get(i).getId();
                         Cursor newDeadline = db.getData(a);
