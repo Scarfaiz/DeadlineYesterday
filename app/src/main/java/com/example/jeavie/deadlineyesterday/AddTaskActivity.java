@@ -3,6 +3,7 @@ package com.example.jeavie.deadlineyesterday;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -224,9 +225,17 @@ public class AddTaskActivity extends AppCompatActivity {
                     String deadline = getDeadline(date, time);
                     String tagstostring = getTags(tags);
                     DbActivity db = new DbActivity(this);
-                    boolean isInserted = db.insertData(String.valueOf(MainActivity.dataNumber), summary, date, time, deadline, tagstostring, "list");
+                    Cursor fullData = db.getAllData();
+                    String id;
+                    if (fullData.getCount() > 0){
+                        fullData.moveToLast();
+                        id = fullData.getString(1);
+                        int i = Integer.valueOf(id) + 1;
+                        id = String.valueOf(i);
+                    } else id = "1";
+                    boolean isInserted = db.insertData(id, summary, date, time, deadline, tagstostring, "list");
                     if (isInserted)
-                        Toast.makeText(this, "Deadline saved", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
                     setResult(MainActivity.INTENT_RESULT_CODE);
                     finish();
                 } else if (MainActivity.INTENT_RESULT_CODE == 2) {

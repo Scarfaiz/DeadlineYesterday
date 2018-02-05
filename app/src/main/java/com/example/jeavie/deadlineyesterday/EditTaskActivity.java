@@ -32,11 +32,12 @@ import mabbas007.tagsedittext.TagsEditText;
 public class EditTaskActivity extends AppCompatActivity{
 
     int minute, hour, year, month, day;
+    public static int number;
     String format, id, summaryData, changedSummary, dateData, changedDate, timeData, changedTime, deadline, tagsData, numberData;
     TextView setDate, setTime;
 
     DbActivity db;
-    Cursor data, dataHelper;
+    Cursor data;
 
 
     @Override
@@ -61,12 +62,14 @@ public class EditTaskActivity extends AppCompatActivity{
 
         db = new DbActivity(this);
         data = db.getData(id);
-        numberData = data.getString(0);
-        summaryData = data.getString(1);
-        dateData = data.getString(2);
-        timeData = data.getString(3);
-        deadline = data.getString(4);
-        tagsData = data.getString(5);
+        if(data.moveToFirst()) {
+            numberData = data.getString(0);
+            summaryData = data.getString(1);
+            dateData = data.getString(2);
+            timeData = data.getString(3);
+            deadline = data.getString(4);
+            tagsData = data.getString(5);
+        }
 
         EditText editTextSummary = findViewById(R.id.summary);
         editTextSummary.setText(summaryData);
@@ -249,6 +252,8 @@ public class EditTaskActivity extends AppCompatActivity{
                     deadline = getDeadline(changedDate, changedTime);
                     String tagstostring = getTags(tags);
                     DbActivity db = new DbActivity(this);
+                    String a = id;
+                    number = Integer.valueOf(a);
                     boolean isInserted = db.updateData(id, numberData, changedSummary, changedDate, changedTime, deadline, tagstostring, "list");
                     if (isInserted)
                         Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();

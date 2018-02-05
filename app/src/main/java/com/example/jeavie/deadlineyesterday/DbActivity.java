@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbActivity extends SQLiteOpenHelper {
 
 
-    private static final String DB_NAME = "JDB";
+    public static final String DB_NAME = "JDB";
     public static final String DB_TABLE = "Deadlines";
     private static final int DB_VER = 1;
 
@@ -85,14 +85,13 @@ public class DbActivity extends SQLiteOpenHelper {
 
     public Cursor getData(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor data = db.query(true, DB_TABLE,
+        return db.query(true, DB_TABLE,
                 new String[] { DB_NUMBER, DB_SUMMARY,
-                        DB_DATE, DB_TIME, DB_DEADLINE, DB_TAGS}, DB_ID + "=" + id, null,
-                null, null, null, null);
-        if (data != null) {
-            data.moveToFirst();
-        }
-        return data;
+                        DB_DATE, DB_TIME, DB_DEADLINE, DB_TAGS},
+                DB_ID + " = ?",
+                new String[]{id},
+                null,null,null,null
+        );
     }
 
 //    public void deleteTable(long rowId) {

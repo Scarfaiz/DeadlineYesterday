@@ -31,8 +31,6 @@ public class HistoryActivity extends AppCompatActivity {
 
     DbActivity db;
     Cursor fullData;
-    boolean full;
-    public static int listNumber = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +40,8 @@ public class HistoryActivity extends AppCompatActivity {
 
         db = new DbActivity(this);
 
+        db = new DbActivity(this);
+        int i = 1;
         fullData = db.getAllData();
         if (fullData.getCount() > 0){
             if (fullData.moveToFirst()) {
@@ -57,13 +57,12 @@ public class HistoryActivity extends AppCompatActivity {
                         String tags=fullData.getString(6);
                         list.add(new DeadlineActivity(id, summaryData, dateData, timeData, deadline,
                                 tags));
-                        full = true;
-                        listNumber++;
+                        i++;
                     }
                 } while (fullData.moveToNext());
             }
         }
-        if (!full) list = new ArrayList<>();
+        else list = new ArrayList<>();
 
         Toolbar toolbar = findViewById(R.id.toolbar_history);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
@@ -148,47 +147,63 @@ public class HistoryActivity extends AppCompatActivity {
                     if (mSwiping && !swiped) { // Need to make sure the user is both swiping and has not already completed a swipe action (hence mSwiping and swiped)
                         v.setTranslationX((x - mDownX)); // moves the view as long as the user is swiping and has not already swiped
 
-                        if (deltaX > v.getWidth() / 2) { // swipe to right
+                        if (deltaX > v.getWidth() / 4) { // swipe to right
                             mDownX = x;
                             swiped = true;
                             mSwiping = false;
                             mItemPressed = false;
 
-                            v.animate().setDuration(300).translationX(v.getWidth()/2);
+                            v.animate().setDuration(300).translationX(v.getWidth()/4);
 
-                            int i = listView.getPositionForView(v) + 1;
-                            int j = i;
-                            Cursor checkedDeadline = db.getAllData();
-                            checkedDeadline.moveToFirst();
-                            int k = 0, l = 0;
-                            do{
-                                String check = checkedDeadline.getString(6);
-                                if (check.startsWith("li")) k++;
-                                //if (del.contains(k+1)) l++;
-                                if (k==j) break;
-                            }while (checkedDeadline.moveToNext());
-                            Toast.makeText(getApplicationContext(), "DELETE " + String.valueOf(k) + " + " + String.valueOf(l), Toast.LENGTH_SHORT).show();
-                            //del.add(k + l);
-                            int done = db.deleteData(String.valueOf(k + l));
-                            //Toast.makeText(getApplicationContext(), "Deadline deleted", Toast.LENGTH_SHORT).show();
-                            list.remove(j-1);
-                            deadlineActivityAdapter.notifyDataSetChanged();
+                            int i = listView.getPositionForView(v);
+                            String a = list.get(i).getId();
+                            Cursor newDeadline = db.getData(a);
+                            if(newDeadline.moveToFirst()) {
+                                String id = newDeadline.getString(0);
+                                int done = db.deleteData(id);
+                                Toast.makeText(getApplicationContext(), "Deadline deleted", Toast.LENGTH_SHORT).show();
+                                list.remove(i);
+                                deadlineActivityAdapter.notifyDataSetChanged();
+                            } else {
+                                //code, if needed, to handle no row being found.
+                            }
+
+                            Cursor cursor = db.getAllData();
+                            if (cursor.getCount() == 0){
+                                db.close();
+                                getApplicationContext().deleteDatabase(DbActivity.DB_NAME);
+                            }
 
                             return true;
                         }
-                        else if (deltaX < -1 * (v.getWidth() / 2)) { // swipe to left
+                        else if (deltaX < -1 * (v.getWidth() / 4)) { // swipe to left
 
                             mDownX = x;
                             swiped = true;
                             mSwiping = false;
                             mItemPressed = false;
 
-                            v.animate().setDuration(300).translationX(-v.getWidth()/2);
+                            v.animate().setDuration(300).translationX(-v.getWidth()/4);
 
                             int i = listView.getPositionForView(v);
+                            String a = list.get(i).getId();
+                            Cursor newDeadline = db.getData(a);
+                            if(newDeadline.moveToFirst()) {
+                                String id = newDeadline.getString(0);
+                                int done = db.deleteData(id);
+                                Toast.makeText(getApplicationContext(), "Deadline deleted", Toast.LENGTH_SHORT).show();
+                                list.remove(i);
+                                deadlineActivityAdapter.notifyDataSetChanged();
+                            } else {
+                                //code, if needed, to handle no row being found.
+                            }
 
-                            list.remove(i);
-                            deadlineActivityAdapter.notifyDataSetChanged();
+                            Cursor cursor = db.getAllData();
+
+                            if (cursor.getCount() == 0){
+                                db.close();
+                                getApplicationContext().deleteDatabase(DbActivity.DB_NAME);
+                            }
 
                             return true;
                         }
