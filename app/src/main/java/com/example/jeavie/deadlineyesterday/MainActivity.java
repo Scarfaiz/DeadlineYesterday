@@ -10,7 +10,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +36,7 @@ import java.util.Locale;
 //TODO: vector images +
 //TODO: SQLite database +
 
-//TODO: history activity - delete full data btn, clear history - snackbar: cancel, return to uncompleted?
+//TODO: history activity - delete full data btn +, clear history - snackbar: cancel, return to uncompleted?
 //TODO: notifications settings activity
 //TODO: about activity
 //TODO: vector icon
@@ -53,13 +58,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean mItemPressed = false; // Detects if user is currently holding down a view
 
     private ListView listView;
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
     DeadlineActivityAdapter deadlineActivityAdapter;
     List<DeadlineActivity> list;
     String summary, getData, getTime;
 
     DbActivity db;
     Cursor fullData;
-    boolean full;
     public List<Integer> del;
 
     @Override
@@ -100,8 +107,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, null);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
+
+        viewPager = findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+        tabLayout = findViewById(R.id.tabs);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        tabLayout.setupWithViewPager(viewPager);
+        setupTabIcons();
 
         FloatingActionButton addTask = findViewById(R.id.addTask);
         addTask.setOnClickListener(new View.OnClickListener() {
@@ -129,8 +159,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         deadlineActivityAdapter = new DeadlineActivityAdapter(this, list, mTouchListener);
         listView.setAdapter(deadlineActivityAdapter);
-
-        del = new ArrayList<>();
 
 //        final Handler handler = new Handler();
 //        handler.postDelayed( new Runnable() {
@@ -184,6 +212,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        String [] parsed = tags.toArray(new String[0]);
 //        return parsed;
 //    }
+
+    private void setupTabIcons() {
+        int[] tabIcons = {
+                R.drawable.ic_home,
+                R.drawable.ic_week,
+                R.drawable.ic_history
+        };
+
+        if (tabLayout!=null){
+            if (tabLayout.getTabAt(0)!=null)
+                tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+            if (tabLayout.getTabAt(1)!=null)
+                tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+            if (tabLayout.getTabAt(2)!=null)
+                tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+        }
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new OneFragment(), "ONE");
+        adapter.addFrag(new TwoFragment(), "TWO");
+        adapter.addFrag(new ThreeFragment(), "THREE");
+        viewPager.setAdapter(adapter);
+    }
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+
+            // return null to display only the icon
+            return null;
+        }
+    }
 
     @Override
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {
@@ -244,13 +328,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (item.getItemId()){
 
-            case R.id.toWeek:
-                startActivity(new Intent(this, WeekActivity.class));
-                return true;
-
-            case R.id.history:
-                startActivity(new Intent(this, HistoryActivity.class));
-                return true;
+//            case R.id.toWeek:
+//                startActivity(new Intent(this, WeekActivity.class));
+//                return true;
+//
+//            case R.id.history:
+//                startActivity(new Intent(this, HistoryActivity.class));
+//                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -395,23 +479,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                     else { // user was not swiping; registers as a click
 
-                        //set item click "animation"
-                        ColorDrawable[] color = {
-                                new ColorDrawable(getColor(R.color.grey)),
-                                new ColorDrawable(getColor(R.color.dark_dark_grey))
-                        };
-                        TransitionDrawable trans = new TransitionDrawable(color);
-                        v.setBackground(trans);
-                        trans.startTransition(1000); // duration 2 seconds
-
-                        // Go back to the default background color of Item
-                        ColorDrawable[] color2 = {
-                                new ColorDrawable(getColor(R.color.dark_dark_grey)),
-                                new ColorDrawable(getColor(R.color.the_darkest_grey))
-                        };
-                        TransitionDrawable trans2 = new TransitionDrawable(color2);
-                        v.setBackground(trans2);
-                        trans2.startTransition(1000); // duration 2 seconds
+//                        //set item click "animation"
+//                        ColorDrawable[] color = {
+//                                new ColorDrawable(getColor(R.color.LIGHT)),
+//                                new ColorDrawable(getColor(R.color.WHITE))
+//                        };
+//                        TransitionDrawable trans = new TransitionDrawable(color);
+//                        v.setBackground(trans);
+//                        trans.startTransition(1000); // duration 2 seconds
+//
+//                        // Go back to the default background color of Item
+//                        ColorDrawable[] color2 = {
+//                                new ColorDrawable(getColor(R.color.WHITE)),
+//                                new ColorDrawable(getColor(R.color.LIGHT))
+//                        };
+//                        TransitionDrawable trans2 = new TransitionDrawable(color2);
+//                        v.setBackground(trans2);
+//                        trans2.startTransition(1000); // duration 2 seconds
 
                         DbActivity db = new DbActivity(getApplicationContext());
                         int i = listView.getPositionForView(v);

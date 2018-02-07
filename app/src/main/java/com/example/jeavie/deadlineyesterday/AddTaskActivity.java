@@ -181,13 +181,11 @@ public class AddTaskActivity extends AppCompatActivity {
             return String.valueOf(diffDays) + " days " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
         } else if (diffDays==1 && diffHours > 24) {
             return String.valueOf(diffDays) + " day " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
-        }else if (diffHours>1){
-            return String.valueOf(diffHours) + " hrs";
-        }else if (diffHours==1){
-            return String.valueOf(diffHours) + " hour";
+        }else if (diffHours>=1){
+            return String.valueOf(diffHours) + " h";
         } else if (diffSeconds > 0)
-            return String.valueOf(diffSeconds) + " sec";
-        else return String.valueOf(diffMinutes) + " min";
+            return String.valueOf(diffSeconds) + " s";
+        else return String.valueOf(diffMinutes) + " m";
     }
 
     public String getTags(List<String> tags){

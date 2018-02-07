@@ -7,7 +7,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/DeadlineTheme">
 
         <activity
             android:name=".MainActivity"
@@ -44,8 +44,7 @@
             android:name=".HistoryActivity"
             android:label="@string/history"
             android:parentActivityName=".MainActivity"
-            android:configChanges="locale"
-            android:theme="@style/DeadlineTheme">
+            android:configChanges="locale">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>

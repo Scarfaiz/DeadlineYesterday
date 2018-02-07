@@ -3,6 +3,8 @@ package com.example.jeavie.deadlineyesterday;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +23,7 @@ import java.util.List;
 public class HistoryActivity extends AppCompatActivity {
 
     private ListView listView;
+    private ConstraintLayout constraintLayout;
     DeadlineActivityAdapter deadlineActivityAdapter;
     List<DeadlineActivity> list;
     String summaryData, dateData, timeData;
@@ -31,6 +34,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     DbActivity db;
     Cursor fullData;
+    boolean undo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,7 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        db = new DbActivity(this);
+        constraintLayout = findViewById(R.id.historyActivity);
 
         db = new DbActivity(this);
         int i = 1;
@@ -103,13 +107,71 @@ public class HistoryActivity extends AppCompatActivity {
                 return true;
 
             case R.id.clearHistory:
-                list.clear();
-                deadlineActivityAdapter.notifyDataSetChanged();
-                db.getAllData();
-                db.close();
-                getApplicationContext().deleteDatabase(DbActivity.DB_NAME);
-                return true;
+                DbActivity db = new DbActivity(getApplicationContext());
+                fullData = db.getAllData();
 
+                if (fullData.getCount() == 0) return true;
+                deadlineActivityAdapter.notifyDataSetChanged();
+                Snackbar snackbar = Snackbar.make(constraintLayout, "History is cleaned", Snackbar.LENGTH_SHORT)
+                        .setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                undo = true;
+                                Toast.makeText(getApplicationContext(),"CLICKED", Toast.LENGTH_SHORT).show();
+                                DbActivity db = new DbActivity(getApplicationContext());
+                                int i = 1;
+                                fullData = db.getAllData();
+                                if (fullData.getCount() > 0){
+                                    if (fullData.moveToFirst()) {
+                                        list = new ArrayList<>();
+                                        do {
+                                            String check = fullData.getString(7);
+                                            if (check.startsWith("hi")){
+                                                String id = fullData.getString(1);
+                                                summaryData=fullData.getString(2);
+                                                dateData=fullData.getString(3);
+                                                timeData=fullData.getString(4);
+                                                String deadline=fullData.getString(5);
+                                                String tags=fullData.getString(6);
+                                                list.add(new DeadlineActivity(id, summaryData, dateData, timeData, deadline,
+                                                        tags));
+                                                i++;
+                                            }
+                                        } while (fullData.moveToNext());
+                                    }
+                                }
+                                else list = new ArrayList<>();
+                                ListView view = findViewById(R.id.listCompletedDeadlines);
+                                view.setAdapter(deadlineActivityAdapter);
+                                deadlineActivityAdapter.notifyDataSetChanged();
+                                Toast.makeText(getApplicationContext(),"CLICKED", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                snackbar.show();
+                if (undo) return true;
+                else {
+                    Toast.makeText(getApplicationContext(),"WAT", Toast.LENGTH_SHORT).show();
+                    list.clear();
+                    DbActivity dtb = new DbActivity(getApplicationContext());
+                    fullData = dtb.getAllData();
+                    if (fullData.getCount() > 0){
+                        if (fullData.moveToFirst()) {
+                            do {
+                                String check = fullData.getString(7);
+                                if (check.startsWith("hi")){
+                                    String id = fullData.getString(1);
+                                    int done = dtb.deleteData(id);
+                                }
+                            } while (fullData.moveToNext());
+                        }
+                    }
+                    else if (fullData.getCount() == 0) {
+                        db.getAllData();
+                        db.close();
+                        getApplicationContext().deleteDatabase(DbActivity.DB_NAME);
+                    }
+                    return true;
+                }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -232,8 +294,8 @@ public class HistoryActivity extends AppCompatActivity {
 
                         //set item click "animation"
                         ColorDrawable[] color = {
-                                new ColorDrawable(getColor(R.color.grey)),
-                                new ColorDrawable(getColor(R.color.dark_dark_grey))
+                                new ColorDrawable(getColor(R.color.GREY)),
+                                new ColorDrawable(getColor(R.color.LIGHT))
                         };
                         TransitionDrawable trans = new TransitionDrawable(color);
                         v.setBackground(trans);
@@ -241,8 +303,8 @@ public class HistoryActivity extends AppCompatActivity {
 
                         // Go back to the default background color of Item
                         ColorDrawable[] color2 = {
-                                new ColorDrawable(getColor(R.color.dark_dark_grey)),
-                                new ColorDrawable(getColor(R.color.the_darkest_grey))
+                                new ColorDrawable(getColor(R.color.LIGHT)),
+                                new ColorDrawable(getColor(R.color.WHITE))
                         };
                         TransitionDrawable trans2 = new TransitionDrawable(color2);
                         v.setBackground(trans2);

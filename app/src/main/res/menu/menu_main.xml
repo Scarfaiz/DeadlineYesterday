@@ -2,15 +2,15 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/toWeek"
-        android:icon="@drawable/ic_week"
-        android:title="@string/week"
-        app:showAsAction="ifRoom" />
+    <!--<item-->
+        <!--android:id="@+id/toWeek"-->
+        <!--android:icon="@drawable/ic_week"-->
+        <!--android:title="@string/week"-->
+        <!--app:showAsAction="ifRoom" />-->
 
-    <item
-        android:id="@+id/history"
-        android:orderInCategory="100"
-        android:title="@string/history"
-        app:showAsAction="never" />
+    <!--<item-->
+        <!--android:id="@+id/history"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="@string/history"-->
+        <!--app:showAsAction="never" />-->
 </menu>
