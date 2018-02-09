@@ -26,6 +26,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -110,28 +111,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        viewPager = findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-
-        tabLayout = findViewById(R.id.tabs);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-        tabLayout.setupWithViewPager(viewPager);
-        setupTabIcons();
+//        TabHost tabHost = findViewById(R.id.tabHost);
+//        tabHost.setup();
+//
+//        TabHost.TabSpec tabSpec = tabHost.newTabSpec("Tag One");
+//        tabSpec.setContent(R.id.tab1);
+//        tabSpec.setIndicator("Tab 1");
+//        tabHost.addTab(tabSpec);
+//
+//        tabSpec = tabHost.newTabSpec("Tag Two");
+//        tabSpec.setContent(R.id.tab2);
+//        tabSpec.setIndicator("Tab 2");
+//        tabHost.addTab(tabSpec);
+//
+//        tabSpec = tabHost.newTabSpec("Tag Three");
+//        tabSpec.setContent(R.id.tab3);
+//        tabSpec.setIndicator("Tab 3");
+//        tabHost.addTab(tabSpec);
+//        viewPager = findViewById(R.id.viewpager);
+//        setupViewPager(viewPager);
+//
+//        tabLayout = findViewById(R.id.tabs);
+//        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+//            @Override
+//            public void onTabSelected(TabLayout.Tab tab) {
+//
+//            }
+//
+//            @Override
+//            public void onTabUnselected(TabLayout.Tab tab) {
+//
+//            }
+//
+//            @Override
+//            public void onTabReselected(TabLayout.Tab tab) {
+//
+//            }
+//        });
+//        tabLayout.setupWithViewPager(viewPager);
+//        setupTabIcons();
 
         FloatingActionButton addTask = findViewById(R.id.addTask);
         addTask.setOnClickListener(new View.OnClickListener() {
@@ -213,61 +231,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        return parsed;
 //    }
 
-    private void setupTabIcons() {
-        int[] tabIcons = {
-                R.drawable.ic_week,
-                R.drawable.ic_home,
-                R.drawable.ic_history
-        };
-
-        if (tabLayout!=null){
-            if (tabLayout.getTabAt(0)!=null)
-                tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-            if (tabLayout.getTabAt(1)!=null)
-                tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-            if (tabLayout.getTabAt(2)!=null)
-                tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-        }
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new OneFragment(), "ONE");
-        adapter.addFrag(new TwoFragment(), "TWO");
-        adapter.addFrag(new ThreeFragment(), "THREE");
-        viewPager.setAdapter(adapter);
-    }
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFrag(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-
-            // return null to display only the icon
-            return null;
-        }
-    }
+//    private void setupTabIcons() {
+//        int[] tabIcons = {
+//                R.drawable.ic_week,
+//                R.drawable.ic_home,
+//                R.drawable.ic_history
+//        };
+//
+//        if (tabLayout!=null){
+//            if (tabLayout.getTabAt(0)!=null)
+//                tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+//            if (tabLayout.getTabAt(1)!=null)
+//                tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+//            if (tabLayout.getTabAt(2)!=null)
+//                tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+//        }
+//    }
+//
+//    private void setupViewPager(ViewPager viewPager) {
+//        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+//        adapter.addFrag(new OneFragment(), "ONE");
+//        adapter.addFrag(new TwoFragment(), "TWO");
+//        adapter.addFrag(new ThreeFragment(), "THREE");
+//        viewPager.setAdapter(adapter);
+//    }
+//
+//    class ViewPagerAdapter extends FragmentPagerAdapter {
+//        private final List<Fragment> mFragmentList = new ArrayList<>();
+//        private final List<String> mFragmentTitleList = new ArrayList<>();
+//
+//        public ViewPagerAdapter(FragmentManager manager) {
+//            super(manager);
+//        }
+//
+//        @Override
+//        public Fragment getItem(int position) {
+//            return mFragmentList.get(position);
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return mFragmentList.size();
+//        }
+//
+//        public void addFrag(Fragment fragment, String title) {
+//            mFragmentList.add(fragment);
+//            mFragmentTitleList.add(title);
+//        }
+//
+//        @Override
+//        public CharSequence getPageTitle(int position) {
+//
+//            // return null to display only the icon
+//            return null;
+//        }
+//    }
 
     @Override
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {
