@@ -8,7 +8,7 @@
         <item name="colorPrimary">@color/colorP</item>
         <item name="colorPrimaryDark">@color/colorPD</item>
         <!--<item name="android:navigationBarColor">@color/the_darkest_grey</item>-->
-        <item name="android:colorBackground">@color/LIGHT</item>
+        <item name="android:colorBackground">@color/WHITE</item>
         <!--<item name="android:colorForeground">@color/dark_dark_grey</item>-->
         <!--<item name="android:colorButtonNormal">@color/dark_dark_grey</item>-->
         <item name="colorAccent">@color/colorA</item>

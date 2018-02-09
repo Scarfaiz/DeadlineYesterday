@@ -74,7 +74,7 @@ public class EditTaskActivity extends AppCompatActivity{
         EditText editTextSummary = findViewById(R.id.summary);
         editTextSummary.setText(summaryData);
 
-        TagsEditText editTextTags = findViewById(R.id.tags);
+        TagsEditText editTextTags = findViewById(R.id.labels);
         if (!TextUtils.isEmpty(tagsData.trim())) {
             String[] tags = tagsData.split(", ");
             editTextTags.setTags(tags);
@@ -244,7 +244,7 @@ public class EditTaskActivity extends AppCompatActivity{
 
             case R.id.doneTask:
 
-                TagsEditText tagsEditText = findViewById(R.id.tags);
+                TagsEditText tagsEditText = findViewById(R.id.labels);
                 List<String> tags = tagsEditText.getTags();
 
                 MainActivity.INTENT_RESULT_CODE_TWO = codeToReturn();

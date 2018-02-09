@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                                    String t = list.get(position).getTime();
 //                                    String dd = getDeadline(d, t);
 //                                    ArrayList tgarr = list.get(position).getTagsArrList();
-//                                    String tg = getTags(tgarr);
+//                                    String tg = getLabels(tgarr);
 //                                    list.remove(position);
 //                                    list.add(new DeadlineActivity(s, getData, getTime, dd, tg, tgarr));
 //                                    deadlineActivityAdapter.notifyDataSetChanged();
@@ -208,15 +208,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-//    public String[] setTags(ArrayList<String> tags){
+//    public String[] setLabels(ArrayList<String> tags){
 //        String [] parsed = tags.toArray(new String[0]);
 //        return parsed;
 //    }
 
     private void setupTabIcons() {
         int[] tabIcons = {
-                R.drawable.ic_home,
                 R.drawable.ic_week,
+                R.drawable.ic_home,
                 R.drawable.ic_history
         };
 
@@ -344,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.tags:
+            case R.id.labels:
                 startActivity(new Intent(this, TagsActivity.class));
                 return true;
 

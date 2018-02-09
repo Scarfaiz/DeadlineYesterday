@@ -1,7 +1,6 @@
 package com.example.jeavie.deadlineyesterday;
 
 import android.support.v7.app.AppCompatActivity;
-import java.util.ArrayList;
 
 public class DeadlineActivity extends AppCompatActivity {
 
@@ -10,16 +9,16 @@ public class DeadlineActivity extends AppCompatActivity {
     private String date;
     private String time;
     private String deadline;
-    private String tags;
+    private String labels;
     //private  ArrayList tagsArrList;
 
-    public DeadlineActivity(String id, String summary, String date, String time, String deadline, String tags) {
+    public DeadlineActivity(String id, String summary, String date, String time, String deadline, String labels) {
         this.id = id;
         this.summary = summary;
         this.date = date;
         this.time = time;
         this.deadline = deadline;
-        this.tags = tags;
+        this.labels = labels;
     }
 
     public String getId() {
@@ -62,12 +61,12 @@ public class DeadlineActivity extends AppCompatActivity {
         this.deadline = deadline;
     }
 
-    public String getTags() {
-        return tags;
+    public String getLabels() {
+        return labels;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setLabels(String labels) {
+        this.labels = labels;
     }
 
 }

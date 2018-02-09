@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    app:elevation="10dp">
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -38,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
         android:layout_marginBottom="56dp"
+        android:dividerHeight="0.5dp"
         android:divider="@color/LIGHT"
         android:paddingBottom="4dp"
         app:layout_constraintEnd_toEndOf="parent"

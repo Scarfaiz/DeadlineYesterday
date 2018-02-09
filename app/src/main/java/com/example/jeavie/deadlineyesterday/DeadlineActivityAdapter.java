@@ -51,7 +51,7 @@ public class DeadlineActivityAdapter extends BaseAdapter {
         customDeadline.setText(mDeadlineList.get(position).getDeadline());
 
         TextView customTags = view.findViewById(R.id.customTags);
-        customTags.setText(String.valueOf(mDeadlineList.get(position).getTags()));
+        customTags.setText(String.valueOf(mDeadlineList.get(position).getLabels()));
 
         return view;
     }

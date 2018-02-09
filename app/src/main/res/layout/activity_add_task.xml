@@ -78,8 +78,8 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
     <mabbas007.tagsedittext.TagsEditText
-        android:id="@+id/tags"
-        app:tagsBackground="@drawable/tags"
+        android:id="@+id/labels"
+        app:tagsBackground="@drawable/labels"
         app:tagsCloseImagePadding="@dimen/defaultTagsCloseImagePadding"
         app:tagsCloseImageRight="@drawable/tag_close"
         app:tagsTextSize="18sp"

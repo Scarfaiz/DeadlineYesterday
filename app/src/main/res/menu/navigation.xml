@@ -4,7 +4,7 @@
     <item android:title="@string/settings">
         <menu android:checkableBehavior="single">
             <item android:id="@+id/allTags"
-                android:title="@string/tags"
+                android:title="@string/labels"
                 android:icon="@drawable/ic_label"/>
             <item android:id="@+id/notifications"
                 android:title="@string/notifications"

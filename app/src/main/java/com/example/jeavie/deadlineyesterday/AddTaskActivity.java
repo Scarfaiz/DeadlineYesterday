@@ -215,7 +215,7 @@ public class AddTaskActivity extends AppCompatActivity {
                 return true;
 
             case R.id.doneTask:
-                TagsEditText tagsEditText = findViewById(R.id.tags);
+                TagsEditText tagsEditText = findViewById(R.id.labels);
                 List<String> tags = tagsEditText.getTags();
 
                 MainActivity.INTENT_RESULT_CODE = codeToReturn();
