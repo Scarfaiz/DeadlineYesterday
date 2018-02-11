@@ -1,4 +1,4 @@
-package com.example.jeavie.deadlineyesterday;
+package com.example.jeavie.deadlineyesterday.data;
 
 import android.content.ContentValues;
 import android.content.Context;

@@ -4,33 +4,28 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.example.jeavie.deadlineyesterday.data.DbActivity;
+import com.example.jeavie.deadlineyesterday.data.Deadline;
+import com.example.jeavie.deadlineyesterday.data.ViewPagerAdapter;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -62,43 +57,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    DeadlineActivityAdapter deadlineActivityAdapter;
-    List<DeadlineActivity> list;
+    List<Deadline> list;
     String summary, getData, getTime;
 
-    DbActivity db;
-    Cursor fullData;
-    public List<Integer> del;
+    public static FloatingActionButton addDeadline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
-
-        db = new DbActivity(this);
-        fullData = db.getAllData();
-        if (fullData.getCount() > 0){
-            if (fullData.moveToFirst()) {
-                list = new ArrayList<>();
-                int i = 1;
-            do {
-                String check = fullData.getString(7);
-                if (check.startsWith("li")){
-                    String id = fullData.getString(1);
-                    summary=fullData.getString(2);
-                    getData=fullData.getString(3);
-                    getTime=fullData.getString(4);
-                    String deadline=fullData.getString(5);
-                    String tags=fullData.getString(6);
-                    list.add(new DeadlineActivity(id, summary, getData, getTime, deadline,
-                         tags));
-                    i++;
-                }
-            } while (fullData.moveToNext());
-            }
-        }
-        else list = new ArrayList<>();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);// language configuration
         String lang = getResources().getConfiguration().locale.getDisplayLanguage(Locale.CHINESE);
@@ -111,53 +79,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-//        TabHost tabHost = findViewById(R.id.tabHost);
-//        tabHost.setup();
-//
-//        TabHost.TabSpec tabSpec = tabHost.newTabSpec("Tag One");
-//        tabSpec.setContent(R.id.tab1);
-//        tabSpec.setIndicator("Tab 1");
-//        tabHost.addTab(tabSpec);
-//
-//        tabSpec = tabHost.newTabSpec("Tag Two");
-//        tabSpec.setContent(R.id.tab2);
-//        tabSpec.setIndicator("Tab 2");
-//        tabHost.addTab(tabSpec);
-//
-//        tabSpec = tabHost.newTabSpec("Tag Three");
-//        tabSpec.setContent(R.id.tab3);
-//        tabSpec.setIndicator("Tab 3");
-//        tabHost.addTab(tabSpec);
-//        viewPager = findViewById(R.id.viewpager);
-//        setupViewPager(viewPager);
-//
-//        tabLayout = findViewById(R.id.tabs);
-//        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(TabLayout.Tab tab) {
-//
-//            }
-//
-//            @Override
-//            public void onTabUnselected(TabLayout.Tab tab) {
-//
-//            }
-//
-//            @Override
-//            public void onTabReselected(TabLayout.Tab tab) {
-//
-//            }
-//        });
-//        tabLayout.setupWithViewPager(viewPager);
-//        setupTabIcons();
+        viewPager = findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
 
-        FloatingActionButton addTask = findViewById(R.id.addTask);
-        addTask.setOnClickListener(new View.OnClickListener() {
+        tabLayout = findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        setupTabIcons();
+
+        addDeadline = findViewById(R.id.addTask);
+        addDeadline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, AddTaskActivity.class);
                 startActivityForResult(intent, INTENT_REQUEST_CODE);
+            }
+        });
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        addDeadline.show();
+                        break;
+                    case 1:
+                        addDeadline.show();
+                        break;
+                    case 3:
+                        addDeadline.hide();
+                        break;
+                    default:
+                        addDeadline.hide();
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
 
@@ -170,157 +135,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
 
-        listView = findViewById(R.id.listDeadlines);
-
-        TextView emptyText = findViewById(android.R.id.empty);
-        listView.setEmptyView(emptyText);
-
-        deadlineActivityAdapter = new DeadlineActivityAdapter(this, list, mTouchListener);
-        listView.setAdapter(deadlineActivityAdapter);
-
-//        final Handler handler = new Handler();
-//        handler.postDelayed( new Runnable() {
-//            @Override
-//            public void run() {
-//                int i = listView.getCount();
-//                if (i>0){
-//                    list = changeDeadline(list);
-//                    deadlineActivityAdapter.notifyDataSetChanged();
-//                    handler.postDelayed( this, 1000 );
-//                }
-//
-//            }
-//        }, 1000 );
-
-//        Thread timer = new Thread(){
-//            @Override
-//            public void run (){
-//                try{
-//                    while (!isInterrupted()){
-//                        Thread.sleep(1000);
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                for (int i = 0; i<=list.size(); i++){
-//                                    position = i;
-//                                    String s = list.get(position).getSummary();
-//                                    String d = list.get(position).getDate();
-//                                    String t = list.get(position).getTime();
-//                                    String dd = getDeadline(d, t);
-//                                    ArrayList tgarr = list.get(position).getTagsArrList();
-//                                    String tg = getLabels(tgarr);
-//                                    list.remove(position);
-//                                    list.add(new DeadlineActivity(s, getData, getTime, dd, tg, tgarr));
-//                                    deadlineActivityAdapter.notifyDataSetChanged();
-//                                }
-//                            }
-//                        });
-//                    }
-//                }
-//                catch (InterruptedException e) {
-//
-//                }
-//            }
-//        };
-//        timer.start();
-
     }
 
-//    public String[] setLabels(ArrayList<String> tags){
-//        String [] parsed = tags.toArray(new String[0]);
-//        return parsed;
-//    }
+    private void setupTabIcons() {
+        int[] tabIcons = {
+                R.drawable.ic_agenda,
+                R.drawable.ic_home,
+                R.drawable.ic_history
+        };
 
-//    private void setupTabIcons() {
-//        int[] tabIcons = {
-//                R.drawable.ic_week,
-//                R.drawable.ic_home,
-//                R.drawable.ic_history
-//        };
-//
-//        if (tabLayout!=null){
-//            if (tabLayout.getTabAt(0)!=null)
-//                tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-//            if (tabLayout.getTabAt(1)!=null)
-//                tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-//            if (tabLayout.getTabAt(2)!=null)
-//                tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-//        }
-//    }
-//
-//    private void setupViewPager(ViewPager viewPager) {
-//        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-//        adapter.addFrag(new OneFragment(), "ONE");
-//        adapter.addFrag(new TwoFragment(), "TWO");
-//        adapter.addFrag(new ThreeFragment(), "THREE");
-//        viewPager.setAdapter(adapter);
-//    }
-//
-//    class ViewPagerAdapter extends FragmentPagerAdapter {
-//        private final List<Fragment> mFragmentList = new ArrayList<>();
-//        private final List<String> mFragmentTitleList = new ArrayList<>();
-//
-//        public ViewPagerAdapter(FragmentManager manager) {
-//            super(manager);
-//        }
-//
-//        @Override
-//        public Fragment getItem(int position) {
-//            return mFragmentList.get(position);
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return mFragmentList.size();
-//        }
-//
-//        public void addFrag(Fragment fragment, String title) {
-//            mFragmentList.add(fragment);
-//            mFragmentTitleList.add(title);
-//        }
-//
-//        @Override
-//        public CharSequence getPageTitle(int position) {
-//
-//            // return null to display only the icon
-//            return null;
-//        }
-//    }
-
-    @Override
-    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
-        if (requestCode == INTENT_RESULT_CODE){
-            if(resultCode == INTENT_RESULT_CODE) {
-                DbActivity db = new DbActivity(getApplicationContext());
-                Cursor newDeadline = db.getAllData();
-                newDeadline.moveToLast();
-                String id = newDeadline.getString(1);
-                summary = newDeadline.getString(2);
-                getData = newDeadline.getString(3);
-                getTime = newDeadline.getString(4);
-                String deadline = newDeadline.getString(5);
-                String tags = newDeadline.getString(6);
-                list.add(new DeadlineActivity(id, summary, getData, getTime, deadline, tags));
-                deadlineActivityAdapter.notifyDataSetChanged();
-                super.onActivityResult(requestCode, resultCode, data);
-            }
+        if (tabLayout!=null){
+            if (tabLayout.getTabAt(0)!=null)
+                tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+            if (tabLayout.getTabAt(1)!=null)
+                tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+            if (tabLayout.getTabAt(2)!=null)
+                tabLayout.getTabAt(2).setIcon(tabIcons[2]);
         }
-        else if (requestCode == INTENT_RESULT_CODE_TWO){
-            if (resultCode == INTENT_RESULT_CODE_TWO) {
-                String a = list.get(EditTaskActivity.number).getId();
-                Cursor newDeadline = db.getData(a);
-                String id = newDeadline.getString(0);
-                summary=newDeadline.getString(1);
-                getData=newDeadline.getString(2);
-                getTime=newDeadline.getString(3);
-                String deadline=newDeadline.getString(4);
-                String tags=newDeadline.getString(5);
-                list.remove(Integer.valueOf(id) - 1);
-                list.add(Integer.valueOf(id) - 1, new DeadlineActivity(id, summary, getData, getTime, deadline, tags));
+    }
 
-                deadlineActivityAdapter.notifyDataSetChanged();
-            }
-        }
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new RecyclerViewFragment(), "");
+        adapter.addFrag(new HomeFragment(), "");
+        adapter.addFrag(new HistoryFragment(), "");
+        viewPager.setAdapter(adapter);
     }
 
     @Override
@@ -333,29 +172,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-
-//            case R.id.toWeek:
-//                startActivity(new Intent(this, WeekActivity.class));
-//                return true;
-//
-//            case R.id.history:
-//                startActivity(new Intent(this, HistoryActivity.class));
-//                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -440,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 if (isInserted)
                                     Toast.makeText(getApplicationContext(), "Deadline completed", Toast.LENGTH_SHORT).show();
                                 list.remove(i);
-                                deadlineActivityAdapter.notifyDataSetChanged();
+                                //deadlineActivityAdapter.notifyDataSetChanged();
                             } else {
                                 //code, if needed, to handle no row being found.
                             }
@@ -473,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 if (isInserted)
                                     Toast.makeText(getApplicationContext(), "Deadline completed", Toast.LENGTH_SHORT).show();
                                 list.remove(i);
-                                deadlineActivityAdapter.notifyDataSetChanged();
+                                //deadlineActivityAdapter.notifyDataSetChanged();
                             } else {
                                 //code, if needed, to handle no row being found.
                             }
@@ -496,24 +312,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         });
                     }
                     else { // user was not swiping; registers as a click
-
-//                        //set item click "animation"
-//                        ColorDrawable[] color = {
-//                                new ColorDrawable(getColor(R.color.LIGHT)),
-//                                new ColorDrawable(getColor(R.color.WHITE))
-//                        };
-//                        TransitionDrawable trans = new TransitionDrawable(color);
-//                        v.setBackground(trans);
-//                        trans.startTransition(1000); // duration 2 seconds
-//
-//                        // Go back to the default background color of Item
-//                        ColorDrawable[] color2 = {
-//                                new ColorDrawable(getColor(R.color.WHITE)),
-//                                new ColorDrawable(getColor(R.color.LIGHT))
-//                        };
-//                        TransitionDrawable trans2 = new TransitionDrawable(color2);
-//                        v.setBackground(trans2);
-//                        trans2.startTransition(1000); // duration 2 seconds
 
                         DbActivity db = new DbActivity(getApplicationContext());
                         int i = listView.getPositionForView(v);

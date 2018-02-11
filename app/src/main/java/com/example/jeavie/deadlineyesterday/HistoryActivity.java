@@ -17,6 +17,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jeavie.deadlineyesterday.data.DbActivity;
+import com.example.jeavie.deadlineyesterday.data.Deadline;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +27,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     private ListView listView;
     private ConstraintLayout constraintLayout;
-    DeadlineActivityAdapter deadlineActivityAdapter;
-    List<DeadlineActivity> list;
+    List<Deadline> list;
     String summaryData, dateData, timeData;
 
     //Swiping
@@ -59,7 +61,7 @@ public class HistoryActivity extends AppCompatActivity {
                         timeData=fullData.getString(4);
                         String deadline=fullData.getString(5);
                         String tags=fullData.getString(6);
-                        list.add(new DeadlineActivity(id, summaryData, dateData, timeData, deadline,
+                        list.add(new Deadline(id, summaryData, dateData, timeData, deadline,
                                 tags));
                         i++;
                     }
@@ -85,8 +87,8 @@ public class HistoryActivity extends AppCompatActivity {
         TextView emptyText = findViewById(android.R.id.empty);
         listView.setEmptyView(emptyText);
 
-        deadlineActivityAdapter = new DeadlineActivityAdapter(this, list, mTouchListener);
-        listView.setAdapter(deadlineActivityAdapter);
+//        deadlineActivityAdapter = new DeadlineActivityAdapter(this, list, mTouchListener);
+//        listView.setAdapter(deadlineActivityAdapter);
     }
 
 
@@ -111,7 +113,7 @@ public class HistoryActivity extends AppCompatActivity {
                 fullData = db.getAllData();
 
                 if (fullData.getCount() == 0) return true;
-                deadlineActivityAdapter.notifyDataSetChanged();
+//                deadlineActivityAdapter.notifyDataSetChanged();
                 Snackbar snackbar = Snackbar.make(constraintLayout, "History is cleaned", Snackbar.LENGTH_SHORT)
                         .setAction("UNDO", new View.OnClickListener() {
                             @Override
@@ -133,7 +135,7 @@ public class HistoryActivity extends AppCompatActivity {
                                                 timeData=fullData.getString(4);
                                                 String deadline=fullData.getString(5);
                                                 String tags=fullData.getString(6);
-                                                list.add(new DeadlineActivity(id, summaryData, dateData, timeData, deadline,
+                                                list.add(new Deadline(id, summaryData, dateData, timeData, deadline,
                                                         tags));
                                                 i++;
                                             }
@@ -142,8 +144,8 @@ public class HistoryActivity extends AppCompatActivity {
                                 }
                                 else list = new ArrayList<>();
                                 ListView view = findViewById(R.id.listCompletedDeadlines);
-                                view.setAdapter(deadlineActivityAdapter);
-                                deadlineActivityAdapter.notifyDataSetChanged();
+//                                view.setAdapter(deadlineActivityAdapter);
+//                                deadlineActivityAdapter.notifyDataSetChanged();
                                 Toast.makeText(getApplicationContext(),"CLICKED", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -229,7 +231,7 @@ public class HistoryActivity extends AppCompatActivity {
                                 int done = db.deleteData(id);
                                 Toast.makeText(getApplicationContext(), "Deadline deleted", Toast.LENGTH_SHORT).show();
                                 list.remove(i);
-                                deadlineActivityAdapter.notifyDataSetChanged();
+                                //deadlineActivityAdapter.notifyDataSetChanged();
                             } else {
                                 //code, if needed, to handle no row being found.
                             }
@@ -259,7 +261,7 @@ public class HistoryActivity extends AppCompatActivity {
                                 int done = db.deleteData(id);
                                 Toast.makeText(getApplicationContext(), "Deadline deleted", Toast.LENGTH_SHORT).show();
                                 list.remove(i);
-                                deadlineActivityAdapter.notifyDataSetChanged();
+                                //deadlineActivityAdapter.notifyDataSetChanged();
                             } else {
                                 //code, if needed, to handle no row being found.
                             }

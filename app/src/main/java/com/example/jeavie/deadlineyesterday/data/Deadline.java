@@ -1,8 +1,8 @@
-package com.example.jeavie.deadlineyesterday;
+package com.example.jeavie.deadlineyesterday.data;
 
 import android.support.v7.app.AppCompatActivity;
 
-public class DeadlineActivity extends AppCompatActivity {
+public class Deadline extends AppCompatActivity {
 
     private String id;
     private String summary;
@@ -12,7 +12,7 @@ public class DeadlineActivity extends AppCompatActivity {
     private String labels;
     //private  ArrayList tagsArrList;
 
-    public DeadlineActivity(String id, String summary, String date, String time, String deadline, String labels) {
+    public Deadline(String id, String summary, String date, String time, String deadline, String labels) {
         this.id = id;
         this.summary = summary;
         this.date = date;

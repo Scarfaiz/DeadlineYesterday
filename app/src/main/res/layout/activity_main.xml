@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<RelativeLayout
     android:id="@+id/activity_main"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -19,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     </android.support.design.widget.AppBarLayout>
@@ -29,28 +28,31 @@
         android:layout_height="3dp"
         android:layout_gravity="top"
         android:background="@drawable/shadow_under"
-        android:layout_marginTop="56dp" />
+        android:layout_marginTop="56dp"/>
 
-    <ListView
-        android:id="@+id/listDeadlines"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:layout_marginBottom="56dp"
-        android:dividerHeight="0.5dp"
-        android:divider="@color/LIGHT"
-        android:paddingBottom="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
-
-    <TextView
-        android:id="@android:id/empty"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/noDeadlines"
-        android:textSize="24sp" />
+        android:layout_marginTop="56dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:gravity="center">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/WHITE"
+            app:tabGravity="fill"
+            app:tabMode="fixed" />
+
+    </LinearLayout>
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
@@ -63,89 +65,6 @@
             android:layout_gravity="bottom"
             android:background="@drawable/shadow_above"
             android:layout_marginBottom="48dp"/>
-
-        <TabHost
-            android:id="@+id/tabHost"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TabWidget
-                    android:id="@+id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <LinearLayout
-                        android:id="@+id/tab1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/ic_home"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/tab2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/ic_week"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/tab3"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/ic_history"/>
-
-                    </LinearLayout>
-                </FrameLayout>
-            </LinearLayout>
-
-            
-        </TabHost>
-        <!--<android.support.design.widget.AppBarLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
-            <!--android:layout_gravity="bottom"-->
-            <!--android:id="@+id/appBarLayout2">-->
-
-            <!--<android.support.design.widget.TabLayout-->
-                <!--android:id="@+id/tabs"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="bottom"-->
-                <!--android:background="@color/WHITE"-->
-                <!--app:tabMode="fixed"-->
-                <!--app:tabGravity="fill"/>-->
-
-        <!--</android.support.design.widget.AppBarLayout>-->
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/addTask"
@@ -161,4 +80,4 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>
