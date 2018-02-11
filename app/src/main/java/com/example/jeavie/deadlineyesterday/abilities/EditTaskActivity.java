@@ -1,10 +1,11 @@
-package com.example.jeavie.deadlineyesterday;
+package com.example.jeavie.deadlineyesterday.abilities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.jeavie.deadlineyesterday.MainActivity;
+import com.example.jeavie.deadlineyesterday.R;
 import com.example.jeavie.deadlineyesterday.data.DbActivity;
 import com.wafflecopter.charcounttextview.CharCountTextView;
 
@@ -29,15 +32,19 @@ import java.util.List;
 
 import mabbas007.tagsedittext.TagsEditText;
 
-public class AddTaskActivity extends AppCompatActivity {
+public class EditTaskActivity extends AppCompatActivity{
 
-    int minute, hour, year, month, day, check;
-    String format, summary, date, time;
+    int minute, hour, year, month, day;
+    public static int number;
+    String format, id, summaryData, changedSummary, dateData, changedDate, timeData, changedTime, deadline, tagsData, numberData;
     TextView setDate, setTime;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    DbActivity db;
+    Cursor data;
 
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
@@ -53,10 +60,33 @@ public class AddTaskActivity extends AppCompatActivity {
             }
         });
 
-        final EditText editText = findViewById(R.id.summary);
+        Intent intent = getIntent();
+        id = intent.getStringExtra("number");
+
+        db = new DbActivity(this);
+        data = db.getData(id);
+        if(data.moveToFirst()) {
+            numberData = data.getString(0);
+            summaryData = data.getString(1);
+            dateData = data.getString(2);
+            timeData = data.getString(3);
+            deadline = data.getString(4);
+            tagsData = data.getString(5);
+        }
+
+        EditText editTextSummary = findViewById(R.id.summary);
+        editTextSummary.setText(summaryData);
+
+        TagsEditText editTextTags = findViewById(R.id.labels);
+        if (!TextUtils.isEmpty(tagsData.trim())) {
+            String[] tags = tagsData.split(", ");
+            editTextTags.setTags(tags);
+        } else {
+            editTextTags.setHint(getResources().getString(R.string.addTags));
+        }
 
         CharCountTextView charCountTextView = findViewById(R.id.tvTextCounter);
-        charCountTextView.setEditText(editText);
+        charCountTextView.setEditText(editTextSummary);
         charCountTextView.setCharCountChangedListener(new CharCountTextView.CharCountChangedListener() {
             @Override
             public void onCountChanged(int countRemaining, boolean hasExceededLimit) {
@@ -64,25 +94,24 @@ public class AddTaskActivity extends AppCompatActivity {
             }
         });
 
-        check = 0;
         setDate = findViewById(R.id.setDate);
 
         final Calendar currentDate = Calendar.getInstance();
         year = currentDate.get(Calendar.YEAR);
         month = currentDate.get(Calendar.MONTH) + 1;
         day = currentDate.get(Calendar.DAY_OF_MONTH);
-        setDate.setText(day + "/" + month + "/" + year);
+        setDate.setText(dateData);
         month -= 1;
         currentDate.set(Calendar.DAY_OF_MONTH, day);
 
         setDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(AddTaskActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(EditTaskActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        monthOfYear += 1;
-                        setDate.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        month += 1;
+                        setDate.setText(dayOfMonth + "/" + month + "/" + year);
                     }
                 }, year, month, day);
                 datePickerDialog.getDatePicker().setMinDate(currentDate.getTimeInMillis() - 1000);
@@ -90,19 +119,18 @@ public class AddTaskActivity extends AppCompatActivity {
             }
         });
 
-
         setTime = findViewById(R.id.setTime);
 
         Calendar currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
         minute = currentTime.get(Calendar.MINUTE);
         hour = selectedTimeFormat(hour);
-        setTime.setText(hour + " : " + minute + " " + format);
+        setTime.setText(timeData);
 
         setTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(AddTaskActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(EditTaskActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         hourOfDay = selectedTimeFormat(hourOfDay);
@@ -128,21 +156,21 @@ public class AddTaskActivity extends AppCompatActivity {
 
     public int codeToReturn(){
         EditText editTextSummary = findViewById(R.id.summary);
-        summary = editTextSummary.getText().toString();
+        changedSummary = editTextSummary.getText().toString();
 
         TextView textViewDate = findViewById(R.id.setDate);
-        date = textViewDate.getText().toString();
+        changedDate = textViewDate.getText().toString();
 
         TextView textViewTime = findViewById(R.id.setTime);
-        time = textViewTime.getText().toString();
+        changedTime = textViewTime.getText().toString();
 
-        boolean check = isDateCorrect(date, time);
+        boolean check = isDateCorrect(changedDate, changedTime);
         if (!check){
             return 3;
         }
-        if (TextUtils.isEmpty(summary.trim())) {
-            return 2;
-        } else return 1;
+        if (TextUtils.isEmpty(changedSummary.trim())) {
+            return 1;
+        } else return 2;
     }
 
     public boolean isDateCorrect (String date, String time){
@@ -183,11 +211,13 @@ public class AddTaskActivity extends AppCompatActivity {
             return String.valueOf(diffDays) + " days " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
         } else if (diffDays==1 && diffHours > 24) {
             return String.valueOf(diffDays) + " day " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
-        }else if (diffHours>=1){
-            return String.valueOf(diffHours) + " h";
+        }else if (diffHours>1){
+            return String.valueOf(diffHours) + " hrs";
+        }else if (diffHours==1){
+            return String.valueOf(diffHours) + " hour";
         } else if (diffSeconds > 0)
-            return String.valueOf(diffSeconds) + " s";
-        else return String.valueOf(diffMinutes) + " m";
+            return String.valueOf(diffSeconds) + " sec";
+        else return String.valueOf(diffMinutes) + " min";
     }
 
     public String getTags(List<String> tags){
@@ -207,7 +237,6 @@ public class AddTaskActivity extends AppCompatActivity {
         setResult(MainActivity.INTENT_EMPTY_CODE, intent);
         super.onBackPressed();
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -217,34 +246,28 @@ public class AddTaskActivity extends AppCompatActivity {
                 return true;
 
             case R.id.doneTask:
+
                 TagsEditText tagsEditText = findViewById(R.id.labels);
                 List<String> tags = tagsEditText.getTags();
 
-                MainActivity.INTENT_RESULT_CODE = codeToReturn();
-                if (MainActivity.INTENT_RESULT_CODE == 1){
-                    String deadline = getDeadline(date, time);
+                MainActivity.INTENT_RESULT_CODE_TWO = codeToReturn();
+                if (MainActivity.INTENT_RESULT_CODE_TWO == 2){
+                    deadline = getDeadline(changedDate, changedTime);
                     String tagstostring = getTags(tags);
                     DbActivity db = new DbActivity(this);
-                    Cursor fullData = db.getAllData();
-                    String id;
-                    if (fullData.getCount() > 0){
-                        fullData.moveToLast();
-                        id = fullData.getString(1);
-                        int i = Integer.valueOf(id) + 1;
-                        id = String.valueOf(i);
-                    } else id = "1";
-                    boolean isInserted = db.insertData(id, summary, date, time, deadline, tagstostring, "list");
+                    String a = id;
+                    number = Integer.valueOf(a);
+                    boolean isInserted = db.updateData(id, numberData, changedSummary, changedDate, changedTime, deadline, tagstostring, "list");
                     if (isInserted)
-                        Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
-                    setResult(MainActivity.INTENT_RESULT_CODE);
+                        Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
+                    setResult(MainActivity.INTENT_RESULT_CODE_TWO);
                     finish();
-                } else if (MainActivity.INTENT_RESULT_CODE == 2) {
+                } else if (MainActivity.INTENT_RESULT_CODE_TWO == 1) {
                     Toast.makeText(this, "You did not enter a summary", Toast.LENGTH_SHORT).show();
-                } else if (MainActivity.INTENT_RESULT_CODE == 3) {
+                } else if (MainActivity.INTENT_RESULT_CODE_TWO == 3) {
                     Toast.makeText(this, "Invalid date", Toast.LENGTH_SHORT).show();
                 }
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

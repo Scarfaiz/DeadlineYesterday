@@ -23,4 +23,7 @@
     <string name="completed">Completed</string>
     <string name="cleanHistory">Clean history</string>
     <string name="invalidDate">Invalid date</string>
+    <string name="deadlines">Deadlines</string>
+    <string name="home">Home</string>
+    <string name="empty" />
 </resources>

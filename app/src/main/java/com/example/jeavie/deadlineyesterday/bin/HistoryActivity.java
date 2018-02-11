@@ -1,4 +1,4 @@
-package com.example.jeavie.deadlineyesterday;
+package com.example.jeavie.deadlineyesterday.bin;
 
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jeavie.deadlineyesterday.R;
 import com.example.jeavie.deadlineyesterday.data.DbActivity;
 import com.example.jeavie.deadlineyesterday.data.Deadline;
 

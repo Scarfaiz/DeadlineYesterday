@@ -20,17 +20,7 @@
         </activity>
 
         <activity
-            android:name=".WeekActivity"
-            android:label="@string/week"
-            android:parentActivityName=".MainActivity"
-            android:configChanges="locale">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
-        </activity>
-
-        <activity
-            android:name=".AddTaskActivity"
+            android:name=".abilities.AddTaskActivity"
             android:label="@string/addTask"
             android:parentActivityName=".MainActivity"
             android:configChanges="locale"
@@ -42,7 +32,7 @@
         </activity>
 
         <activity
-            android:name=".HistoryActivity"
+            android:name=".bin.HistoryActivity"
             android:label="@string/history"
             android:parentActivityName=".MainActivity"
             android:configChanges="locale">
@@ -53,7 +43,7 @@
         </activity>
 
         <activity
-            android:name=".EditTaskActivity"
+            android:name=".abilities.EditTaskActivity"
             android:label="@string/addTask"
             android:parentActivityName=".MainActivity"
             android:configChanges="locale">

@@ -1,4 +1,4 @@
-package com.example.jeavie.deadlineyesterday;
+package com.example.jeavie.deadlineyesterday.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class HistoryFragment extends Fragment{
+import com.example.jeavie.deadlineyesterday.R;
+
+public class HomeFragment extends Fragment{
 
     View v;
 
-    public HistoryFragment() {
+    public HomeFragment() {
         // Required empty public constructor
     }
 
@@ -22,8 +24,8 @@ public class HistoryFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_recycler_view, container, false);
-        return inflater.inflate(R.layout.fragment_history, container, false);
+        v = inflater.inflate(R.layout.fragment_home, container, false);
+        return v;
     }
 
 }

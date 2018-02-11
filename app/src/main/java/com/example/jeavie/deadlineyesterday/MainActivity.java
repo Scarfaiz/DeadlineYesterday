@@ -6,15 +6,17 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,9 +24,15 @@ import android.view.ViewConfiguration;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.jeavie.deadlineyesterday.abilities.AddTaskActivity;
+import com.example.jeavie.deadlineyesterday.abilities.EditTaskActivity;
 import com.example.jeavie.deadlineyesterday.data.DbActivity;
 import com.example.jeavie.deadlineyesterday.data.Deadline;
-import com.example.jeavie.deadlineyesterday.data.ViewPagerAdapter;
+import com.example.jeavie.deadlineyesterday.adapters.ViewPagerAdapter;
+import com.example.jeavie.deadlineyesterday.drawer.TagsActivity;
+import com.example.jeavie.deadlineyesterday.fragments.HistoryFragment;
+import com.example.jeavie.deadlineyesterday.fragments.HomeFragment;
+import com.example.jeavie.deadlineyesterday.fragments.RecyclerViewFragment;
 
 import java.util.List;
 import java.util.Locale;
@@ -33,12 +41,11 @@ import java.util.Locale;
 //TODO: SQLite database +
 
 //TODO: history activity - delete full data btn +, clear history - snackbar: cancel, return to uncompleted?
-//TODO: notifications settings activity
+//TODO: notifications activity
 //TODO: about activity
 //TODO: vector icon
-//TODO: upd time in listview or dates or smth?
+//TODO: upd time in recyclerView or dates or smth?
 //TODO: sort by order/deadlines/tags?
-//TODO: week activity - all?
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -55,12 +62,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ListView listView;
     private Toolbar toolbar;
-    private TabLayout tabLayout;
     private ViewPager viewPager;
     List<Deadline> list;
     String summary, getData, getTime;
 
     public static FloatingActionButton addDeadline;
+    BottomNavigationView bottomNavigationView;
+    MenuItem prevMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,11 +88,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         viewPager = findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-
-        tabLayout = findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-        setupTabIcons();
+        bottomNavigationView = findViewById(R.id.navigation_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_home:
+                        viewPager.setCurrentItem(0);
+                        break;
+                    case R.id.nav_deadlines:
+                        viewPager.setCurrentItem(1);
+                        break;
+                    case R.id.nav_history:
+                        viewPager.setCurrentItem(2);
+                        break;
+                }
+                return false;
+            }
+        });
 
         addDeadline = findViewById(R.id.addTask);
         addDeadline.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +125,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onPageSelected(int position) {
+
+                if (prevMenuItem != null) {
+                    prevMenuItem.setChecked(false);
+                }
+                else
+                {
+                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                }
+                Log.d("page ","" + position);
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
                 switch (position) {
                     case 0:
                         addDeadline.show();
@@ -126,6 +158,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        setupViewPager(viewPager);
+
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.open, R.string.close);
@@ -137,27 +171,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void setupTabIcons() {
-        int[] tabIcons = {
-                R.drawable.ic_agenda,
-                R.drawable.ic_home,
-                R.drawable.ic_history
-        };
-
-        if (tabLayout!=null){
-            if (tabLayout.getTabAt(0)!=null)
-                tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-            if (tabLayout.getTabAt(1)!=null)
-                tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-            if (tabLayout.getTabAt(2)!=null)
-                tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-        }
-    }
-
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new RecyclerViewFragment(), "");
         adapter.addFrag(new HomeFragment(), "");
+        adapter.addFrag(new RecyclerViewFragment(), "");
         adapter.addFrag(new HistoryFragment(), "");
         viewPager.setAdapter(adapter);
     }

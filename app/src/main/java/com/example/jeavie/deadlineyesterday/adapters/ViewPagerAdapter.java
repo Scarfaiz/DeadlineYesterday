@@ -1,4 +1,4 @@
-package com.example.jeavie.deadlineyesterday.data;
+package com.example.jeavie.deadlineyesterday.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
