@@ -9,6 +9,7 @@
 
         <!--material colors-->
     <color name="WHITE">#FAFAFA</color>
+    <color name="WHITE_TRANSPARENT">#80FAFAFA</color>
     <color name="BLACK">#000000</color>
     <color name="blue_grey">#37474F</color>
     <color name="dark_grey">#424242</color>

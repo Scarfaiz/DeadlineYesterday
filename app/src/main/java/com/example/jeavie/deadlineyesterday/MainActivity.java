@@ -10,17 +10,18 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,7 +29,6 @@ import com.example.jeavie.deadlineyesterday.abilities.AddTaskActivity;
 import com.example.jeavie.deadlineyesterday.abilities.EditTaskActivity;
 import com.example.jeavie.deadlineyesterday.data.DbActivity;
 import com.example.jeavie.deadlineyesterday.data.Deadline;
-import com.example.jeavie.deadlineyesterday.adapters.ViewPagerAdapter;
 import com.example.jeavie.deadlineyesterday.drawer.TagsActivity;
 import com.example.jeavie.deadlineyesterday.fragments.HistoryFragment;
 import com.example.jeavie.deadlineyesterday.fragments.HomeFragment;
@@ -62,13 +62,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ListView listView;
     private Toolbar toolbar;
-    private ViewPager viewPager;
     List<Deadline> list;
     String summary, getData, getTime;
 
     public static FloatingActionButton addDeadline;
     BottomNavigationView bottomNavigationView;
-    MenuItem prevMenuItem;
+    FrameLayout frameLayout;
+
+    private HomeFragment homeFragment;
+    private RecyclerViewFragment recyclerViewFragment;
+    private HistoryFragment historyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,23 +90,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        viewPager = findViewById(R.id.viewpager);
+        homeFragment = new HomeFragment();
+        recyclerViewFragment = new RecyclerViewFragment();
+        historyFragment = new HistoryFragment();
+
+        frameLayout = findViewById(R.id.main_frame);
         bottomNavigationView = findViewById(R.id.navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_home:
-                        viewPager.setCurrentItem(0);
+                        addDeadline.show();
+                        setFragment(homeFragment);
                         break;
                     case R.id.nav_deadlines:
-                        viewPager.setCurrentItem(1);
+                        addDeadline.show();
+                        setFragment(recyclerViewFragment);
                         break;
                     case R.id.nav_history:
-                        viewPager.setCurrentItem(2);
+                        addDeadline.hide();
+                        setFragment(historyFragment);
                         break;
                 }
-                return false;
+                return true;
             }
         });
 
@@ -116,49 +126,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivityForResult(intent, INTENT_REQUEST_CODE);
             }
         });
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-                if (prevMenuItem != null) {
-                    prevMenuItem.setChecked(false);
-                }
-                else
-                {
-                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
-                }
-                Log.d("page ","" + position);
-                bottomNavigationView.getMenu().getItem(position).setChecked(true);
-                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
-                switch (position) {
-                    case 0:
-                        addDeadline.show();
-                        break;
-                    case 1:
-                        addDeadline.show();
-                        break;
-                    case 3:
-                        addDeadline.hide();
-                        break;
-                    default:
-                        addDeadline.hide();
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        setupViewPager(viewPager);
 
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -171,12 +138,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new HomeFragment(), "");
-        adapter.addFrag(new RecyclerViewFragment(), "");
-        adapter.addFrag(new HistoryFragment(), "");
-        viewPager.setAdapter(adapter);
+    private void setFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
