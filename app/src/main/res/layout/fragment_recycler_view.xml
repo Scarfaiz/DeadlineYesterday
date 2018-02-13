@@ -10,12 +10,51 @@
         android:layout_height="match_parent"
         android:id="@+id/recycler_view"/>
 
-    <TextView
-        android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/noDeadlines"
-        android:textSize="24sp" />
+    <LinearLayout
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:layout_marginBottom="150dp"
+        android:foregroundGravity="center">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mm"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginBottom="@dimen/fab_margin"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:text="@string/noDeadlines"
+                android:textColor="@color/BLACK"
+                android:textSize="20sp"
+                android:layout_margin="@dimen/fab_margin" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:text="@string/rest"
+                android:textColor="@color/GREY"
+                android:textSize="16sp"
+                android:layout_margin="12dp"
+                android:paddingStart="4dp"
+                 />
+
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>

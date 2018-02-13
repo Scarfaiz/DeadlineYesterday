@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.jeavie.deadlineyesterday.abilities.AddTaskActivity;
 import com.example.jeavie.deadlineyesterday.abilities.EditTaskActivity;
+import com.example.jeavie.deadlineyesterday.data.Codes;
 import com.example.jeavie.deadlineyesterday.data.DbActivity;
 import com.example.jeavie.deadlineyesterday.data.Deadline;
 import com.example.jeavie.deadlineyesterday.drawer.TagsActivity;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.Locale;
 
 //TODO: vector images +
-//TODO: SQLite database +
+//TODO: SQLite database +-
 
 //TODO: history activity - delete full data btn +, clear history - snackbar: cancel, return to uncompleted?
 //TODO: notifications activity
@@ -49,12 +50,6 @@ import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    public final static int INTENT_REQUEST_CODE = 1;
-    public final static int INTENT_REQUEST_CODE_TWO = 2;
-    public static int INTENT_RESULT_CODE = 1;
-    public static int INTENT_RESULT_CODE_TWO = 2;
-    public final static int INTENT_EMPTY_CODE = 0;
 
     //Swiping
     private boolean mSwiping = false; // detects if user is swiping on ACTION_UP
@@ -123,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, AddTaskActivity.class);
-                startActivityForResult(intent, INTENT_REQUEST_CODE);
+                startActivityForResult(intent, Codes.INTENT_REQUEST_CODE);
             }
         });
 
@@ -233,8 +228,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 getData=newDeadline.getString(2);
                                 getTime=newDeadline.getString(3);
                                 String deadline=newDeadline.getString(4);
-                                String tags=newDeadline.getString(5);
-                                boolean isInserted = db.updateData(id, id, summary, getData, getTime, deadline, tags, "history");
+                                String labels=newDeadline.getString(5);
+                                boolean isInserted = db.updateData(id, summary, getData, getTime, deadline, labels, "history");
                                 if (isInserted)
                                     Toast.makeText(getApplicationContext(), "Deadline completed", Toast.LENGTH_SHORT).show();
                                 list.remove(i);
@@ -266,8 +261,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 getData=newDeadline.getString(2);
                                 getTime=newDeadline.getString(3);
                                 String deadline=newDeadline.getString(4);
-                                String tags=newDeadline.getString(5);
-                                boolean isInserted = db.updateData(id, id, summary, getData, getTime, deadline, tags, "history");
+                                String labels=newDeadline.getString(5);
+                                boolean isInserted = db.updateData(id, summary, getData, getTime, deadline, labels, "history");
                                 if (isInserted)
                                     Toast.makeText(getApplicationContext(), "Deadline completed", Toast.LENGTH_SHORT).show();
                                 list.remove(i);
@@ -305,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Intent intent = new Intent();
                             intent.putExtra("number", id);
                             intent.setClass(MainActivity.this, EditTaskActivity.class);
-                            startActivityForResult(intent, INTENT_REQUEST_CODE_TWO);
+                            //startActivityForResult(intent, INTENT_REQUEST_CODE_TWO);
                         } else {
                             newDeadline.moveToFirst();
                             Toast.makeText(getApplicationContext(), "wat", Toast.LENGTH_SHORT).show();

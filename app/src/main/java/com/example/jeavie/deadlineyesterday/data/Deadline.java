@@ -12,8 +12,7 @@ public class Deadline extends AppCompatActivity {
     private String labels;
     //private  ArrayList tagsArrList;
 
-    public Deadline(String id, String summary, String date, String time, String deadline, String labels) {
-        this.id = id;
+    public Deadline(String summary, String date, String time, String deadline, String labels) {
         this.summary = summary;
         this.date = date;
         this.time = time;

@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.jeavie.deadlineyesterday.MainActivity;
 import com.example.jeavie.deadlineyesterday.R;
+import com.example.jeavie.deadlineyesterday.data.Codes;
 import com.example.jeavie.deadlineyesterday.data.DbActivity;
 import com.wafflecopter.charcounttextview.CharCountTextView;
 
@@ -234,7 +235,7 @@ public class EditTaskActivity extends AppCompatActivity{
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        setResult(MainActivity.INTENT_EMPTY_CODE, intent);
+        super.setResult(Codes.INTENT_EMPTY_CODE, intent);
         super.onBackPressed();
     }
     @Override
@@ -250,21 +251,21 @@ public class EditTaskActivity extends AppCompatActivity{
                 TagsEditText tagsEditText = findViewById(R.id.labels);
                 List<String> tags = tagsEditText.getTags();
 
-                MainActivity.INTENT_RESULT_CODE_TWO = codeToReturn();
-                if (MainActivity.INTENT_RESULT_CODE_TWO == 2){
+                Codes.INTENT_RESULT_CODE_TWO = codeToReturn();
+                if (Codes.INTENT_RESULT_CODE_TWO == 2){
                     deadline = getDeadline(changedDate, changedTime);
                     String tagstostring = getTags(tags);
                     DbActivity db = new DbActivity(this);
                     String a = id;
                     number = Integer.valueOf(a);
-                    boolean isInserted = db.updateData(id, numberData, changedSummary, changedDate, changedTime, deadline, tagstostring, "list");
+                    boolean isInserted = db.updateData(id, changedSummary, changedDate, changedTime, deadline, tagstostring, "list");
                     if (isInserted)
                         Toast.makeText(this, "Deadline upd", Toast.LENGTH_SHORT).show();
-                    setResult(MainActivity.INTENT_RESULT_CODE_TWO);
+                    super.setResult(Codes.INTENT_RESULT_CODE_TWO);
                     finish();
-                } else if (MainActivity.INTENT_RESULT_CODE_TWO == 1) {
+                } else if (Codes.INTENT_RESULT_CODE_TWO == 1) {
                     Toast.makeText(this, "You did not enter a summary", Toast.LENGTH_SHORT).show();
-                } else if (MainActivity.INTENT_RESULT_CODE_TWO == 3) {
+                } else if (Codes.INTENT_RESULT_CODE_TWO == 3) {
                     Toast.makeText(this, "Invalid date", Toast.LENGTH_SHORT).show();
                 }
         }

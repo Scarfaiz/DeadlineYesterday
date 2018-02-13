@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.jeavie.deadlineyesterday.MainActivity;
 import com.example.jeavie.deadlineyesterday.R;
+import com.example.jeavie.deadlineyesterday.data.Codes;
 import com.example.jeavie.deadlineyesterday.data.DbActivity;
 import com.wafflecopter.charcounttextview.CharCountTextView;
 
@@ -206,7 +207,7 @@ public class AddTaskActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        setResult(MainActivity.INTENT_EMPTY_CODE, intent);
+        super.setResult(Codes.INTENT_EMPTY_CODE, intent);
         super.onBackPressed();
     }
 
@@ -222,27 +223,27 @@ public class AddTaskActivity extends AppCompatActivity {
                 TagsEditText tagsEditText = findViewById(R.id.labels);
                 List<String> tags = tagsEditText.getTags();
 
-                MainActivity.INTENT_RESULT_CODE = codeToReturn();
-                if (MainActivity.INTENT_RESULT_CODE == 1){
+                Codes.INTENT_RESULT_CODE = codeToReturn();
+                if (Codes.INTENT_RESULT_CODE == 1){
                     String deadline = getDeadline(date, time);
                     String tagstostring = getTags(tags);
                     DbActivity db = new DbActivity(this);
-                    Cursor fullData = db.getAllData();
-                    String id;
-                    if (fullData.getCount() > 0){
-                        fullData.moveToLast();
-                        id = fullData.getString(1);
-                        int i = Integer.valueOf(id) + 1;
-                        id = String.valueOf(i);
-                    } else id = "1";
-                    boolean isInserted = db.insertData(id, summary, date, time, deadline, tagstostring, "list");
+//                    Cursor fullData = db.getAllData();
+//                    String id;
+//                    if (fullData.getCount() > 0){
+//                        fullData.moveToLast();
+//                        id = fullData.getString(1);
+//                        int i = Integer.valueOf(id) + 1;
+//                        id = String.valueOf(i);
+//                    } else id = "1";
+                    boolean isInserted = db.insertData(summary, date, time, deadline, tagstostring, "list");
                     if (isInserted)
-                        Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
-                    setResult(MainActivity.INTENT_RESULT_CODE);
+                        ;
+                    super.setResult(Codes.INTENT_RESULT_CODE);
                     finish();
-                } else if (MainActivity.INTENT_RESULT_CODE == 2) {
+                } else if (Codes.INTENT_RESULT_CODE == 2) {
                     Toast.makeText(this, "You did not enter a summary", Toast.LENGTH_SHORT).show();
-                } else if (MainActivity.INTENT_RESULT_CODE == 3) {
+                } else if (Codes.INTENT_RESULT_CODE == 3) {
                     Toast.makeText(this, "Invalid date", Toast.LENGTH_SHORT).show();
                 }
         }

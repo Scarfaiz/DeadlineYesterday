@@ -18,7 +18,7 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="divider">/</string>
-    <string name="noDeadlines">No deadlines</string>
+    <string name="noDeadlines">There are no deadlines</string>
     <string name="noCompletedDeadlines">No completed deadlines</string>
     <string name="completed">Completed</string>
     <string name="cleanHistory">Clean history</string>
@@ -26,4 +26,6 @@
     <string name="deadlines">Deadlines</string>
     <string name="home">Home</string>
     <string name="empty" />
+    <string name="rest">You can add a new one with the botton in the bottom right corner</string>
+    <string name="upcoming">Upcoming deadlines</string>
 </resources>
