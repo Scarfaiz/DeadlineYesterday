@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private RecyclerViewFragment recyclerViewFragment;
     private HistoryFragment historyFragment;
 
-    public static FloatingActionButton addDeadline;
+    public FloatingActionButton addDeadline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
