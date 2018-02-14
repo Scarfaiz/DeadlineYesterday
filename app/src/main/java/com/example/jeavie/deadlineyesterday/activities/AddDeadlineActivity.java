@@ -1,9 +1,8 @@
-package com.example.jeavie.deadlineyesterday.abilities;
+package com.example.jeavie.deadlineyesterday.activities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.jeavie.deadlineyesterday.MainActivity;
 import com.example.jeavie.deadlineyesterday.R;
 import com.example.jeavie.deadlineyesterday.data.Codes;
 import com.example.jeavie.deadlineyesterday.data.DbActivity;
@@ -34,19 +32,34 @@ import java.util.List;
 
 import mabbas007.tagsedittext.TagsEditText;
 
-public class AddTaskActivity extends AppCompatActivity {
+public class AddDeadlineActivity extends AppCompatActivity {
 
-    int minute, hour, year, month, day, check;
+    Toolbar toolbar;
+
+    EditText editText;
+    CharCountTextView charCountTextView;
+    TextView dateTextView, timeTextView;
+
     String format, summary, date, time;
-    TextView setDate, setTime;
+    int minute, hour, year, month, day;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_task);
+        setContentView(R.layout.activity_add_deadline);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_add_task_activity);
+        setToolbar();
+        setEditText();
+        setCharCountTextView();
+        setDate();
+        setTime();
+    }
+
+    public void setToolbar() {
+        toolbar = findViewById(R.id.toolbar_add_task_activity);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -57,10 +70,14 @@ public class AddTaskActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
 
-        final EditText editText = findViewById(R.id.summary);
+    public void setEditText() {
+        editText = findViewById(R.id.summary);
+    }
 
-        CharCountTextView charCountTextView = findViewById(R.id.tvTextCounter);
+    public void setCharCountTextView() {
+        charCountTextView = findViewById(R.id.tvTextCounter);
         charCountTextView.setEditText(editText);
         charCountTextView.setCharCountChangedListener(new CharCountTextView.CharCountChangedListener() {
             @Override
@@ -68,52 +85,54 @@ public class AddTaskActivity extends AppCompatActivity {
                 //stop?
             }
         });
+    }
 
-        check = 0;
-        setDate = findViewById(R.id.setDate);
+    public void setDate(){
+        dateTextView = findViewById(R.id.setDate);
 
         final Calendar currentDate = Calendar.getInstance();
         year = currentDate.get(Calendar.YEAR);
         month = currentDate.get(Calendar.MONTH) + 1;
         day = currentDate.get(Calendar.DAY_OF_MONTH);
-        setDate.setText(day + "/" + month + "/" + year);
+        dateTextView.setText(day + "/" + month + "/" + year);
         month -= 1;
         currentDate.set(Calendar.DAY_OF_MONTH, day);
 
-        setDate.setOnClickListener(new View.OnClickListener() {
+        dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(AddTaskActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(AddDeadlineActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         monthOfYear += 1;
-                        setDate.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
+                        dateTextView.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
                     }
                 }, year, month, day);
                 datePickerDialog.getDatePicker().setMinDate(currentDate.getTimeInMillis() - 1000);
                 datePickerDialog.show();
             }
         });
+    }
 
-
-        setTime = findViewById(R.id.setTime);
+    public void setTime(){
+        timeTextView = findViewById(R.id.setTime);
 
         Calendar currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
         minute = currentTime.get(Calendar.MINUTE);
         hour = selectedTimeFormat(hour);
-        setTime.setText(hour + " : " + minute + " " + format);
+        timeTextView.setText(hour + " : " + minute + " " + format);
 
-        setTime.setOnClickListener(new View.OnClickListener() {
+        timeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(AddTaskActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(AddDeadlineActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         hourOfDay = selectedTimeFormat(hourOfDay);
-                        setTime.setText(hourOfDay + " : " + minute + " " + format);
+                        timeTextView.setText(hourOfDay + " : " + minute + " " + format);
                     }
-                }, hour, minute, false);
+                }, hour, minute, true);
                 timePickerDialog.show();
             }
         });
@@ -125,32 +144,28 @@ public class AddTaskActivity extends AppCompatActivity {
         } else if (hour >= 12){
             hour -= 12;
             format = "PM";
-        } else {
+        } else
             format = "AM";
-        }
         return hour;
     }
 
     public int codeToReturn(){
-        EditText editTextSummary = findViewById(R.id.summary);
-        summary = editTextSummary.getText().toString();
+        editText = findViewById(R.id.summary);
+        summary = editText.getText().toString();
 
-        TextView textViewDate = findViewById(R.id.setDate);
-        date = textViewDate.getText().toString();
+        dateTextView = findViewById(R.id.setDate);
+        date = dateTextView.getText().toString();
 
-        TextView textViewTime = findViewById(R.id.setTime);
-        time = textViewTime.getText().toString();
+        timeTextView = findViewById(R.id.setTime);
+        time = timeTextView.getText().toString();
 
-        boolean check = isDateCorrect(date, time);
-        if (!check){
-            return 3;
-        }
-        if (TextUtils.isEmpty(summary.trim())) {
-            return 2;
-        } else return 1;
+        if (!(correctDate(date, time) > 0)) return 3;
+
+        if (TextUtils.isEmpty(summary.trim())) return 2;
+            else return 1;
     }
 
-    public boolean isDateCorrect (String date, String time){
+    public long correctDate (String date, String time){
         String format = date + " " + time;
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh : mm a");
         Date cal1 = new Date();
@@ -161,20 +176,12 @@ public class AddTaskActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         long diff = cal2.getTime() - cal1.getTime();
-        return (diff > 0);
+        return diff;
     }
 
     public String getDeadline (String date, String time){
-        String format = date + " " + time;
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh : mm a");
-        Date cal1 = new Date();
-        Date cal2 = null;
-        try {
-            cal2 = df.parse(format);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        long diff = cal2.getTime() - cal1.getTime();
+
+        long diff = correctDate(date, time);
 
         long diffSeconds = diff/(1000);
 
@@ -184,20 +191,18 @@ public class AddTaskActivity extends AppCompatActivity {
 
         long diffDays = diff / (24 * 60 * 60 * 1000);
 
-        if (diffDays>1 && diffHours > 24){
-            return String.valueOf(diffDays) + " days " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
-        } else if (diffDays==1 && diffHours > 24) {
-            return String.valueOf(diffDays) + " day " + String.valueOf(diffHours - (diffDays*24)) + " hrs";
-        }else if (diffHours>=1){
-            return String.valueOf(diffHours) + " h";
-        } else if (diffSeconds > 0)
+        if (diffDays>=1){
+            return String.valueOf(diffDays) + "d " + String.valueOf(diffHours - (diffDays*24)) + "h";
+        } else if (diffHours>=1){
+            return String.valueOf(diffHours) + "h " + String.valueOf(diffMinutes - (diffHours*60)) + "m";
+        } else if (diffSeconds > 0) //for debuging
             return String.valueOf(diffSeconds) + " s";
         else return String.valueOf(diffMinutes) + " m";
     }
 
-    public String getTags(List<String> tags){
-        String parsedTags = String.valueOf(tags).replace("[", "").replace("]", "");
-        return parsedTags;
+    public String getLabels(List<String> labels){
+        String parsedLabels = String.valueOf(labels).replace("[", "").replace("]", "");
+        return parsedLabels;
     }
 
     @Override
@@ -223,14 +228,14 @@ public class AddTaskActivity extends AppCompatActivity {
 
             case R.id.doneTask:
                 TagsEditText tagsEditText = findViewById(R.id.labels);
-                List<String> tags = tagsEditText.getTags();
+                List<String> labels = tagsEditText.getTags();
 
                 Codes.INTENT_RESULT_CODE = codeToReturn();
                 if (Codes.INTENT_RESULT_CODE == 1){
                     String deadline = getDeadline(date, time);
-                    String tagstostring = getTags(tags);
+                    String labelsToString = getLabels(labels);
                     DbActivity db = new DbActivity(this);
-                    boolean isInserted = db.insertData(summary, date, time, deadline, tagstostring, "list");
+                    boolean isInserted = db.insertData(summary, date, time, deadline, labelsToString);
                     if (isInserted)
                         sendMessage();
                     super.setResult(Codes.INTENT_RESULT_CODE);
@@ -246,7 +251,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
     private void sendMessage() {
         Log.d("sender", "Broadcasting message");
-        Intent intent = new Intent("AddDeadline");
+        Intent intent = new Intent("AddDeadlineActivity");
         //include some extra data.
         //intent.putExtra("message", "This is my message!");
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);

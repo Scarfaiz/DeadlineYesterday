@@ -46,7 +46,7 @@ public class EditTaskActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_task);
+        setContentView(R.layout.activity_add_deadline);
 
         Toolbar toolbar = findViewById(R.id.toolbar_add_task_activity);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));

@@ -20,9 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.example.jeavie.deadlineyesterday.abilities.AddTaskActivity;
+import com.example.jeavie.deadlineyesterday.activities.AddDeadlineActivity;
 import com.example.jeavie.deadlineyesterday.data.Codes;
-import com.example.jeavie.deadlineyesterday.drawer.LabelsActivity;
+import com.example.jeavie.deadlineyesterday.activities.LabelsActivity;
 import com.example.jeavie.deadlineyesterday.fragments.HistoryFragment;
 import com.example.jeavie.deadlineyesterday.fragments.HomeFragment;
 import com.example.jeavie.deadlineyesterday.fragments.RecyclerViewFragment;
@@ -51,11 +51,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     SharedPreferences preferences;
 
-    Toolbar toolbar;
     DrawerLayout drawerLayout;
+    FrameLayout frameLayout;
+
+    Toolbar toolbar;
     NavigationView navigationView;
     BottomNavigationView bottomNavigationView;
-    FrameLayout frameLayout;
 
     private HomeFragment homeFragment;
     private RecyclerViewFragment recyclerViewFragment;
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(MainActivity.this, AddTaskActivity.class);
+                intent.setClass(MainActivity.this, AddDeadlineActivity.class);
                 startActivityForResult(intent, Codes.INTENT_REQUEST_CODE);
             }
         });

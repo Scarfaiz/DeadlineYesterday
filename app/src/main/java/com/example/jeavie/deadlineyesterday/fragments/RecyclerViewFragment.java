@@ -17,12 +17,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.jeavie.deadlineyesterday.abilities.AddTaskActivity;
+import com.example.jeavie.deadlineyesterday.activities.AddDeadlineActivity;
 import com.example.jeavie.deadlineyesterday.R;
 import com.example.jeavie.deadlineyesterday.data.Codes;
 import com.example.jeavie.deadlineyesterday.data.DbActivity;
 import com.example.jeavie.deadlineyesterday.data.Deadline;
-import com.example.jeavie.deadlineyesterday.adapters.DeadlineAdapter;
+import com.example.jeavie.deadlineyesterday.adapter.DeadlineAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +51,14 @@ public class RecyclerViewFragment extends Fragment{
                              Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+
+        setBasicView();
+        addDeadline();
+
+        return v;
+    }
+
+    public void setBasicView(){
         recyclerView = v.findViewById(R.id.recycler_view);
         empty = v.findViewById(R.id.empty);
 
@@ -85,19 +93,15 @@ public class RecyclerViewFragment extends Fragment{
         deadlineAdapter = new DeadlineAdapter(getContext(), deadlines);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(deadlineAdapter);
-
-        addDeadline(v);
-
-        return v;
     }
 
-    public void addDeadline(View v){
+    public void addDeadline(){
         addDeadline = v.findViewById(R.id.add_deadline);
         addDeadline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(getContext(), AddTaskActivity.class);
+                intent.setClass(getContext(), AddDeadlineActivity.class);
                 startActivityForResult(intent, Codes.INTENT_REQUEST_CODE);
             }
         });
@@ -108,7 +112,7 @@ public class RecyclerViewFragment extends Fragment{
         super.onCreate(savedInstanceState);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                 mMessageReceiver,
-                new IntentFilter("AddDeadline"));
+                new IntentFilter("AddDeadlineActivity"));
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {

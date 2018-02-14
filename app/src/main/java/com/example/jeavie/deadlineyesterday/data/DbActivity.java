@@ -45,7 +45,7 @@ public class DbActivity extends SQLiteOpenHelper {
     }
 
     public boolean insertData (String summary, String date,
-                               String time, String deadline, String labels, String list) {
+                               String time, String deadline, String labels) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DB_SUMMARY, summary);

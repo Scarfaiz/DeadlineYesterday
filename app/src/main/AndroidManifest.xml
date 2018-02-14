@@ -20,7 +20,7 @@
         </activity>
 
         <activity
-            android:name=".abilities.AddTaskActivity"
+            android:name=".activities.AddDeadlineActivity"
             android:label="@string/addDeadline"
             android:parentActivityName=".MainActivity"
             android:configChanges="locale"

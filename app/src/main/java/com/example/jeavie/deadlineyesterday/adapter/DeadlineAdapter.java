@@ -1,4 +1,4 @@
-package com.example.jeavie.deadlineyesterday.adapters;
+package com.example.jeavie.deadlineyesterday.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
