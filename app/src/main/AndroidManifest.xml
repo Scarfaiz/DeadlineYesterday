@@ -21,7 +21,7 @@
 
         <activity
             android:name=".abilities.AddTaskActivity"
-            android:label="@string/addTask"
+            android:label="@string/addDeadline"
             android:parentActivityName=".MainActivity"
             android:configChanges="locale"
             android:windowSoftInputMode="stateVisible">
@@ -43,8 +43,8 @@
         </activity>
 
         <activity
-            android:name=".abilities.EditTaskActivity"
-            android:label="@string/addTask"
+            android:name=".bin.EditTaskActivity"
+            android:label="@string/addDeadline"
             android:parentActivityName=".MainActivity"
             android:configChanges="locale">
             <meta-data

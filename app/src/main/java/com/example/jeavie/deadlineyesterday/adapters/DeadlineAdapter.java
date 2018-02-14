@@ -55,7 +55,6 @@ public class DeadlineAdapter extends RecyclerView.Adapter<DeadlineAdapter.mViewH
             summary = itemView.findViewById(R.id.customSummary);
             deadline = itemView.findViewById(R.id.customDeadline);
             labels = itemView.findViewById(R.id.customTags);
-//            itemView.setOnClickListener((View.OnClickListener) this);
 
         }
     }

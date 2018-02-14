@@ -12,8 +12,7 @@ public class HomeFragment extends Fragment{
 
     View v;
 
-    public HomeFragment() {
-        // Required empty public constructor
+    public HomeFragment() { // Required empty public constructor
     }
 
     @Override

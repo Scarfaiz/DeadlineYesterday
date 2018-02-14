@@ -12,8 +12,7 @@ public class HistoryFragment extends Fragment{
 
     View v;
 
-    public HistoryFragment() {
-        // Required empty public constructor
+    public HistoryFragment() { // Required empty public constructor
     }
 
     @Override

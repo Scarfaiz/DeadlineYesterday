@@ -24,7 +24,10 @@ public class DbActivity extends SQLiteOpenHelper {
     public static final String DB_DEADLINE = "deadline";
     public static final String DB_LABELS = "labels";
 
-    private static final String DATABASE_CREATE = "create table " + DB_TABLE + " ( " + DB_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + DB_SUMMARY + " TEXT NOT NULL, " + DB_DATE + " TEXT NOT NULL, " + DB_TIME + " TEXT NOT NULL, " + DB_DEADLINE + " TEXT NOT NULL, " + DB_LABELS + " TEXT NOT NULL" + " )";
+    private static final String DATABASE_CREATE = "create table " + DB_TABLE +
+            " ( " + DB_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + DB_SUMMARY +
+            " TEXT NOT NULL, " + DB_DATE + " TEXT NOT NULL, " + DB_TIME +
+            " TEXT NOT NULL, " + DB_DEADLINE + " TEXT NOT NULL, " + DB_LABELS + " TEXT NOT NULL" + " )";
 
     public DbActivity(Context context) {
         super(context, DB_NAME, null, DB_VER);

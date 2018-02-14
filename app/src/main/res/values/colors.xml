@@ -8,19 +8,27 @@
     <color name="colorA">#FF3F51B5</color>
 
         <!--material colors-->
-    <color name="WHITE">#FAFAFA</color>
-    <color name="WHITE_TRANSPARENT">#80FAFAFA</color>
-    <color name="BLACK">#000000</color>
-    <color name="blue_grey">#37474F</color>
-    <color name="dark_grey">#424242</color>
-    <color name="GREY">#757575</color>
-    <color name="LIGHT_GREY">#E0E0E0</color>
-    <color name="LIGHT">#EEEEEE</color>
-    <color name="CYAN">#00BCD4</color>
-    <color name="green">#66BB6A</color>
-    <color name="yellow">#FFEE58</color>
-    <color name="orange">#FF9800</color>
-    <color name="red">#e53935</color>
 
+    <color name="BLACK">#000000</color>
+
+    <color name="GREY">#616161</color>
+    <color name="GREY500">#9E9E9E</color>
+    <color name="GREY400">#BDBDBD</color>
+    <color name="GREY300">#E0E0E0</color>
+    <color name="GREY200">#EEEEEE</color>
+    <color name="LIGHT">#F5F5F5</color>
+
+    <color name="WHITE_TRANSPARENT">#80FAFAFA</color>
+    <color name="WHITE">#FAFAFA</color>
+
+    <!--<color name="CYAN">#00BCD4</color>-->
+
+    <!--<color name="green">#66BB6A</color>-->
+    <!--<color name="yellow">#FFEE58</color>-->
+    <!--<color name="orange">#FF9800</color>-->
+    <!--<color name="red">#e53935</color>-->
+
+    <!--<color name="blue_grey">#37474F</color>-->
+    <!--<color name="dark_grey">#424242</color>-->
 
 </resources>

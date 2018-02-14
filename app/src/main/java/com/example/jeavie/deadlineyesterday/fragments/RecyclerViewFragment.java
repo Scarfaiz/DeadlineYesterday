@@ -1,20 +1,23 @@
 package com.example.jeavie.deadlineyesterday.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.example.jeavie.deadlineyesterday.abilities.EditTaskActivity;
-import com.example.jeavie.deadlineyesterday.MainActivity;
+import com.example.jeavie.deadlineyesterday.abilities.AddTaskActivity;
 import com.example.jeavie.deadlineyesterday.R;
 import com.example.jeavie.deadlineyesterday.data.Codes;
 import com.example.jeavie.deadlineyesterday.data.DbActivity;
@@ -26,16 +29,19 @@ import java.util.List;
 
 public class RecyclerViewFragment extends Fragment{
 
-    View v;
-    private RecyclerView recyclerView;
-    private List<Deadline> deadlines;
-    DeadlineAdapter deadlineAdapter;
-
     DbActivity db;
     Cursor fullData;
-    LinearLayout empty;
 
-    String summary, date, time;
+    View v;
+
+    ConstraintLayout addDeadline;
+    CardView empty;
+
+    RecyclerView recyclerView;
+    List<Deadline> deadlines;
+    DeadlineAdapter deadlineAdapter;
+
+    String summary, date, time, deadline, labels;
 
     public RecyclerViewFragment() { // Required empty public constructor
     }
@@ -60,9 +66,8 @@ public class RecyclerViewFragment extends Fragment{
                         summary = fullData.getString(1);
                         date = fullData.getString(2);
                         time = fullData.getString(3);
-                        String deadline = fullData.getString(4);
-                        String labels = fullData.getString(5);
-                        //String labels = "wtf";
+                        deadline = fullData.getString(4);
+                        labels = fullData.getString(5);
                         deadlines.add(new Deadline(summary, date, time, deadline,
                                 labels));
                         i++;
@@ -70,6 +75,7 @@ public class RecyclerViewFragment extends Fragment{
                 } while (fullData.moveToNext());
             }
             empty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
         else {
             deadlines = new ArrayList<>();
@@ -79,47 +85,83 @@ public class RecyclerViewFragment extends Fragment{
         deadlineAdapter = new DeadlineAdapter(getContext(), deadlines);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(deadlineAdapter);
+
+        addDeadline(v);
+
         return v;
+    }
+
+    public void addDeadline(View v){
+        addDeadline = v.findViewById(R.id.add_deadline);
+        addDeadline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(getContext(), AddTaskActivity.class);
+                startActivityForResult(intent, Codes.INTENT_REQUEST_CODE);
+            }
+        });
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
+                mMessageReceiver,
+                new IntentFilter("AddDeadline"));
     }
 
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            empty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            DbActivity db = new DbActivity(getContext());
+            Cursor newDeadline = db.getAllData();
+            newDeadline.moveToLast();
+            summary = newDeadline.getString(1);
+            date = newDeadline.getString(2);
+            time = newDeadline.getString(3);
+            deadline = newDeadline.getString(4);
+            labels = newDeadline.getString(5);
+            deadlines.add(new Deadline(summary, date, time, deadline, labels));
+            deadlineAdapter.notifyDataSetChanged();
+            //String message = intent.getStringExtra("message");
+            Log.d("receiver", "Got message: " + "fake message");
+
+        }
+    };
+
     @Override
-    public void onActivityResult (int requestCode, int resultCode, Intent data) {
-        if (requestCode == Codes.INTENT_RESULT_CODE){
-            if(resultCode == Codes.INTENT_RESULT_CODE) {
-                DbActivity db = new DbActivity(getContext());
-                Cursor newDeadline = db.getAllData();
-                newDeadline.moveToLast();
-                String id = newDeadline.getString(1);
-                summary = newDeadline.getString(2);
-                date = newDeadline.getString(3);
-                time = newDeadline.getString(4);
-                String deadline = newDeadline.getString(5);
-                String tags = newDeadline.getString(6);
-                deadlines.add(new Deadline(summary, date, time, deadline, tags));
-                deadlineAdapter.notifyDataSetChanged();
-                super.onActivityResult(requestCode, resultCode, data);
-            }
-        }
-        else if (requestCode == Codes.INTENT_RESULT_CODE_TWO){
-            if (resultCode == Codes.INTENT_RESULT_CODE_TWO) {
-                String a = deadlines.get(EditTaskActivity.number).getId();
-                Cursor newDeadline = db.getData(a);
-                String id = newDeadline.getString(0);
-                summary=newDeadline.getString(1);
-                date=newDeadline.getString(2);
-                time=newDeadline.getString(3);
-                String deadline=newDeadline.getString(4);
-                String tags=newDeadline.getString(5);
-                deadlines.remove(Integer.valueOf(id) - 1);
-                deadlines.add(Integer.valueOf(id) - 1, new Deadline(summary, date, time, deadline, tags));
-                deadlineAdapter.notifyDataSetChanged();
-            }
-        }
+    public void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mMessageReceiver);
+        super.onDestroy();
     }
+
+//    @Override
+//    public void onActivityResult (int requestCode, int resultCode, Intent data) {
+//        if (requestCode == Codes.INTENT_RESULT_CODE){
+//            if(resultCode == Codes.INTENT_RESULT_CODE) {
+//
+//                super.onActivityResult(requestCode, resultCode, data);
+//            }
+//        }
+//        else if (requestCode == Codes.INTENT_RESULT_CODE_TWO){
+//            if (resultCode == Codes.INTENT_RESULT_CODE_TWO) {
+//                String a = deadlines.get(EditTaskActivity.number).getId();
+//                Cursor newDeadline = db.getData(a);
+//                String id = newDeadline.getString(0);
+//                summary=newDeadline.getString(1);
+//                date=newDeadline.getString(2);
+//                time=newDeadline.getString(3);
+//                String deadline=newDeadline.getString(4);
+//                String tags=newDeadline.getString(5);
+//                deadlines.remove(Integer.valueOf(id) - 1);
+//                deadlines.add(Integer.valueOf(id) - 1, new Deadline(summary, date, time, deadline, tags));
+//                deadlineAdapter.notifyDataSetChanged();
+//            }
+//        }
+//    }
 
 }

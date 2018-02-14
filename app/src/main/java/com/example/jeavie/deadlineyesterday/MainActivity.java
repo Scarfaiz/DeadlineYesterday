@@ -3,7 +3,6 @@ package com.example.jeavie.deadlineyesterday;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -18,55 +17,42 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.jeavie.deadlineyesterday.abilities.AddTaskActivity;
-import com.example.jeavie.deadlineyesterday.abilities.EditTaskActivity;
 import com.example.jeavie.deadlineyesterday.data.Codes;
-import com.example.jeavie.deadlineyesterday.data.DbActivity;
-import com.example.jeavie.deadlineyesterday.data.Deadline;
-import com.example.jeavie.deadlineyesterday.drawer.TagsActivity;
+import com.example.jeavie.deadlineyesterday.drawer.LabelsActivity;
 import com.example.jeavie.deadlineyesterday.fragments.HistoryFragment;
 import com.example.jeavie.deadlineyesterday.fragments.HomeFragment;
 import com.example.jeavie.deadlineyesterday.fragments.RecyclerViewFragment;
 
-import java.util.List;
 import java.util.Locale;
 
 //TODO: vector images +
 //TODO: SQLite database +-
-
-//TODO: history activity - delete full data btn +, clear history - snackbar: cancel, return to uncompleted?
+//TODO: add and edit in one
+//TODO: show btn add
+//TODO: home activity
+//TODO: history - delete full data btn +, clear history - snackbar: cancel, return to uncompleted?
 //TODO: notifications activity
 //TODO: about activity
 //TODO: vector icon
-//TODO: upd time in recyclerView or dates or smth?
-//TODO: sort by order/deadlines/tags?
+//TODO: upd deadlines in recyclerView
+//TODO: sort by deadlines
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    //Swiping
-    private boolean mSwiping = false; // detects if user is swiping on ACTION_UP
-    private boolean mItemPressed = false; // Detects if user is currently holding down a view
-
-    private ListView listView;
-    private Toolbar toolbar;
-    List<Deadline> list;
-    String summary, getData, getTime;
-
-    public static FloatingActionButton addDeadline;
+    Toolbar toolbar;
     BottomNavigationView bottomNavigationView;
     FrameLayout frameLayout;
 
     private HomeFragment homeFragment;
     private RecyclerViewFragment recyclerViewFragment;
     private HistoryFragment historyFragment;
+
+    public static FloatingActionButton addDeadline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,14 +135,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
             case R.id.labels:
-                startActivity(new Intent(this, TagsActivity.class));
+                startActivity(new Intent(this, LabelsActivity.class));
                 return true;
 
             case R.id.notifications:
@@ -172,150 +157,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    private View.OnTouchListener mTouchListener = new View.OnTouchListener()
-    {
-        float mDownX;
-        private int mSwipeSlop = -1;
-        boolean swiped;
-
-        @Override
-        public boolean onTouch(final View v, MotionEvent event) {
-            if (mSwipeSlop < 0) {
-                mSwipeSlop = ViewConfiguration.get(MainActivity.this).getScaledTouchSlop();
-            }
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    if (mItemPressed) return false; // Doesn't allow swiping two items at same time
-                    mItemPressed = true;
-                    mDownX = event.getX();
-                    swiped = false;
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                    v.setTranslationX(0);
-                    mItemPressed = false;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                {
-                    float x = event.getX() + v.getTranslationX();
-                    float deltaX = x - mDownX;
-                    float deltaXAbs = Math.abs(deltaX);
-
-                    if (!mSwiping) {
-                        if (deltaXAbs > mSwipeSlop) {
-                            mSwiping = true; // tells if user is actually swiping or just touching in sloppy manner
-                            listView.requestDisallowInterceptTouchEvent(true);
-                        }
-                    }
-                    if (mSwiping && !swiped) { // Need to make sure the user is both swiping and has not already completed a swipe action (hence mSwiping and swiped)
-                        v.setTranslationX((x - mDownX)); // moves the view as long as the user is swiping and has not already swiped
-
-                        if (deltaX > v.getWidth() / 4) { // swipe to right
-                            mDownX = x;
-                            swiped = true;
-                            mSwiping = false;
-                            mItemPressed = false;
-
-                            v.animate().setDuration(300).translationX(v.getWidth()/4);
-
-                            DbActivity db = new DbActivity(getApplicationContext());
-                            int i = listView.getPositionForView(v);
-                            String a = list.get(i).getId();
-                            Cursor newDeadline = db.getData(a);
-                            if(newDeadline.moveToFirst()) {
-                                String id = newDeadline.getString(0);
-                                summary=newDeadline.getString(1);
-                                getData=newDeadline.getString(2);
-                                getTime=newDeadline.getString(3);
-                                String deadline=newDeadline.getString(4);
-                                String labels=newDeadline.getString(5);
-                                boolean isInserted = db.updateData(id, summary, getData, getTime, deadline, labels, "history");
-                                if (isInserted)
-                                    Toast.makeText(getApplicationContext(), "Deadline completed", Toast.LENGTH_SHORT).show();
-                                list.remove(i);
-                                //deadlineActivityAdapter.notifyDataSetChanged();
-                            } else {
-                                //code, if needed, to handle no row being found.
-                            }
-
-
-
-                            return true;
-                        }
-                        else if (deltaX < -1 * (v.getWidth() / 4)) { // swipe to left
-
-                            mDownX = x;
-                            swiped = true;
-                            mSwiping = false;
-                            mItemPressed = false;
-
-                            v.animate().setDuration(300).translationX(-v.getWidth()/4);
-
-                            DbActivity db = new DbActivity(getApplicationContext());
-                            int i = listView.getPositionForView(v);
-                            String a = list.get(i).getId();
-                            Cursor newDeadline = db.getData(a);
-                            if(newDeadline.moveToFirst()) {
-                                String id = newDeadline.getString(0);
-                                summary=newDeadline.getString(1);
-                                getData=newDeadline.getString(2);
-                                getTime=newDeadline.getString(3);
-                                String deadline=newDeadline.getString(4);
-                                String labels=newDeadline.getString(5);
-                                boolean isInserted = db.updateData(id, summary, getData, getTime, deadline, labels, "history");
-                                if (isInserted)
-                                    Toast.makeText(getApplicationContext(), "Deadline completed", Toast.LENGTH_SHORT).show();
-                                list.remove(i);
-                                //deadlineActivityAdapter.notifyDataSetChanged();
-                            } else {
-                                //code, if needed, to handle no row being found.
-                            }
-
-                            return true;
-                        }
-                    }
-
-                }
-                break;
-                case MotionEvent.ACTION_UP: {
-                    if (mSwiping) { // if the user was swiping, don't go to the and just animate the view back into position
-                        v.animate().setDuration(300).translationX(0).withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                mSwiping = false;
-                                mItemPressed = false;
-                                listView.setEnabled(true);
-                            }
-                        });
-                    }
-                    else { // user was not swiping; registers as a click
-
-                        DbActivity db = new DbActivity(getApplicationContext());
-                        int i = listView.getPositionForView(v);
-                        String a = list.get(i).getId();
-                        Cursor newDeadline = db.getData(a);
-                        Toast.makeText(getApplicationContext(), a, Toast.LENGTH_SHORT).show();
-                        if(newDeadline.moveToFirst()) {
-                            String id = newDeadline.getString(0);
-                            Intent intent = new Intent();
-                            intent.putExtra("number", id);
-                            intent.setClass(MainActivity.this, EditTaskActivity.class);
-                            //startActivityForResult(intent, INTENT_REQUEST_CODE_TWO);
-                        } else {
-                            newDeadline.moveToFirst();
-                            Toast.makeText(getApplicationContext(), "wat", Toast.LENGTH_SHORT).show();
-                        }
-                        mItemPressed = false;
-                        listView.setEnabled(true);
-
-                        return true;
-                    }
-                }
-                default:
-                    return false;
-            }
-            return true;
-        }
-    };
 
 }

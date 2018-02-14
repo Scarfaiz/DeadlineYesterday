@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:padding="@dimen/fab_margin"
+    android:padding="@dimen/basicMargin"
     android:theme="@style/AppTheme">
 
     <ImageView
@@ -13,16 +14,15 @@
         android:contentDescription="@string/app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/item"
+        android:paddingTop="@dimen/basicMargin"
         app:srcCompat="@mipmap/ic_launcher_round"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/item"
+        android:paddingTop="@dimen/basicMargin"
         android:text="@string/app_name"
         android:textColor="@color/WHITE"
         android:textSize="18sp" />
-
 
 </LinearLayout>

@@ -224,18 +224,18 @@ public class HistoryActivity extends AppCompatActivity {
 
                             v.animate().setDuration(300).translationX(v.getWidth()/4);
 
-                            int i = listView.getPositionForView(v);
-                            String a = list.get(i).getId();
-                            Cursor newDeadline = db.getData(a);
-                            if(newDeadline.moveToFirst()) {
-                                String id = newDeadline.getString(0);
-                                int done = db.deleteData(id);
-                                Toast.makeText(getApplicationContext(), "Deadline deleted", Toast.LENGTH_SHORT).show();
-                                list.remove(i);
-                                //deadlineActivityAdapter.notifyDataSetChanged();
-                            } else {
-                                //code, if needed, to handle no row being found.
-                            }
+//                            int i = listView.getPositionForView(v);
+//                            String a = list.get(i).getId();
+//                            Cursor newDeadline = db.getData(a);
+//                            if(newDeadline.moveToFirst()) {
+//                                String id = newDeadline.getString(0);
+//                                int done = db.deleteData(id);
+//                                Toast.makeText(getApplicationContext(), "Deadline deleted", Toast.LENGTH_SHORT).show();
+//                                list.remove(i);
+//                                //deadlineActivityAdapter.notifyDataSetChanged();
+//                            } else {
+//                                //code, if needed, to handle no row being found.
+//                            }
 
                             Cursor cursor = db.getAllData();
                             if (cursor.getCount() == 0){
@@ -255,17 +255,17 @@ public class HistoryActivity extends AppCompatActivity {
                             v.animate().setDuration(300).translationX(-v.getWidth()/4);
 
                             int i = listView.getPositionForView(v);
-                            String a = list.get(i).getId();
-                            Cursor newDeadline = db.getData(a);
-                            if(newDeadline.moveToFirst()) {
-                                String id = newDeadline.getString(0);
-                                int done = db.deleteData(id);
-                                Toast.makeText(getApplicationContext(), "Deadline deleted", Toast.LENGTH_SHORT).show();
-                                list.remove(i);
-                                //deadlineActivityAdapter.notifyDataSetChanged();
-                            } else {
-                                //code, if needed, to handle no row being found.
-                            }
+                            //String a = list.get(i).getId();
+                            //Cursor newDeadline = db.getData(a);
+//                            if(newDeadline.moveToFirst()) {
+//                                String id = newDeadline.getString(0);
+//                                int done = db.deleteData(id);
+//                                Toast.makeText(getApplicationContext(), "Deadline deleted", Toast.LENGTH_SHORT).show();
+//                                list.remove(i);
+//                                //deadlineActivityAdapter.notifyDataSetChanged();
+//                            } else {
+//                                //code, if needed, to handle no row being found.
+//                            }
 
                             Cursor cursor = db.getAllData();
 

@@ -5,9 +5,11 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -228,17 +230,9 @@ public class AddTaskActivity extends AppCompatActivity {
                     String deadline = getDeadline(date, time);
                     String tagstostring = getTags(tags);
                     DbActivity db = new DbActivity(this);
-//                    Cursor fullData = db.getAllData();
-//                    String id;
-//                    if (fullData.getCount() > 0){
-//                        fullData.moveToLast();
-//                        id = fullData.getString(1);
-//                        int i = Integer.valueOf(id) + 1;
-//                        id = String.valueOf(i);
-//                    } else id = "1";
                     boolean isInserted = db.insertData(summary, date, time, deadline, tagstostring, "list");
                     if (isInserted)
-                        ;
+                        sendMessage();
                     super.setResult(Codes.INTENT_RESULT_CODE);
                     finish();
                 } else if (Codes.INTENT_RESULT_CODE == 2) {
@@ -248,6 +242,14 @@ public class AddTaskActivity extends AppCompatActivity {
                 }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void sendMessage() {
+        Log.d("sender", "Broadcasting message");
+        Intent intent = new Intent("AddDeadline");
+        //include some extra data.
+        //intent.putExtra("message", "This is my message!");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
 }

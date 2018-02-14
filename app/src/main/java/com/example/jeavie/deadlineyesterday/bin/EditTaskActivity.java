@@ -1,4 +1,4 @@
-package com.example.jeavie.deadlineyesterday.abilities;
+package com.example.jeavie.deadlineyesterday.bin;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.jeavie.deadlineyesterday.MainActivity;
 import com.example.jeavie.deadlineyesterday.R;
 import com.example.jeavie.deadlineyesterday.data.Codes;
 import com.example.jeavie.deadlineyesterday.data.DbActivity;
@@ -83,7 +82,7 @@ public class EditTaskActivity extends AppCompatActivity{
             String[] tags = tagsData.split(", ");
             editTextTags.setTags(tags);
         } else {
-            editTextTags.setHint(getResources().getString(R.string.addTags));
+            editTextTags.setHint(getResources().getString(R.string.addLabels));
         }
 
         CharCountTextView charCountTextView = findViewById(R.id.tvTextCounter);
