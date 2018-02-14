@@ -31,7 +31,12 @@ import java.util.Locale;
 
 //TODO: vector images +
 //TODO: SQLite database +-
+
 //TODO: add and edit in one
+//TODO: clean bin
+//TODO: tags to labels
+//TODO: addDeadline style, btn?
+//TODO: colors
 //TODO: show btn add
 //TODO: home activity
 //TODO: history - delete full data btn +, clear history - snackbar: cancel, return to uncompleted?
@@ -44,7 +49,11 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    SharedPreferences preferences;
+
     Toolbar toolbar;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
     BottomNavigationView bottomNavigationView;
     FrameLayout frameLayout;
 
@@ -60,17 +69,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);// language configuration
+        setPreferences();
+        setDrawerLayout();
+        setNavigationView();
+        setToolbar();
+        setBottomNavigationView();
+        setFab();
+    }
+
+    private void setPreferences (){
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);// language configuration
         String lang = getResources().getConfiguration().locale.getDisplayLanguage(Locale.CHINESE);
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, null);
+    }
 
+    private void setDrawerLayout(){
+        drawerLayout = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    private void setNavigationView(){
+        navigationView = findViewById(R.id.navigation);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void setToolbar(){
         toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
+    }
 
+    private void setBottomNavigationView(){
         homeFragment = new HomeFragment();
         recyclerViewFragment = new RecyclerViewFragment();
         historyFragment = new HistoryFragment();
@@ -97,7 +132,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
         });
+    }
 
+    private void setFab(){
         addDeadline = findViewById(R.id.addTask);
         addDeadline.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,16 +144,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivityForResult(intent, Codes.INTENT_REQUEST_CODE);
             }
         });
-
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.open, R.string.close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = findViewById(R.id.navigation);
-        navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     private void setFragment(Fragment fragment) {
@@ -127,9 +154,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
