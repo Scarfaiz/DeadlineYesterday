@@ -39,11 +39,11 @@ public class AddDeadlineActivity extends AppCompatActivity {
     EditText editText;
     CharCountTextView charCountTextView;
     TextView dateTextView, timeTextView;
+    TagsEditText tagsEditText;
 
+    List<String> labels;
     String format, summary, date, time;
     int minute, hour, year, month, day;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,13 +196,18 @@ public class AddDeadlineActivity extends AppCompatActivity {
         } else if (diffHours>=1){
             return String.valueOf(diffHours) + "h " + String.valueOf(diffMinutes - (diffHours*60)) + "m";
         } else if (diffSeconds > 0) //for debuging
-            return String.valueOf(diffSeconds) + " s";
-        else return String.valueOf(diffMinutes) + " m";
+            return String.valueOf(diffSeconds) + "s ";
+        else return String.valueOf(diffMinutes) + "m ";
     }
 
     public String getLabels(List<String> labels){
         String parsedLabels = String.valueOf(labels).replace("[", "").replace("]", "");
         return parsedLabels;
+    }
+
+    public void setLabels(){
+        tagsEditText = findViewById(R.id.labels);
+        labels = tagsEditText.getTags();
     }
 
     @Override
@@ -227,11 +232,10 @@ public class AddDeadlineActivity extends AppCompatActivity {
                 return true;
 
             case R.id.doneTask:
-                TagsEditText tagsEditText = findViewById(R.id.labels);
-                List<String> labels = tagsEditText.getTags();
-
+                setLabels();
                 Codes.INTENT_RESULT_CODE = codeToReturn();
                 if (Codes.INTENT_RESULT_CODE == 1){
+
                     String deadline = getDeadline(date, time);
                     String labelsToString = getLabels(labels);
                     DbActivity db = new DbActivity(this);

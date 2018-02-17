@@ -33,6 +33,7 @@ public class DeadlineAdapter extends RecyclerView.Adapter<DeadlineAdapter.mViewH
 
     @Override
     public void onBindViewHolder(mViewHolder holder, int position) {
+        //holder.date.setText(deadlines.get(position).getDate());
         holder.summary.setText(deadlines.get(position).getSummary());
         holder.deadline.setText(deadlines.get(position).getDeadline());
         holder.labels.setText(String.valueOf(deadlines.get(position).getLabels()));
@@ -43,8 +44,19 @@ public class DeadlineAdapter extends RecyclerView.Adapter<DeadlineAdapter.mViewH
         return deadlines.size();
     }
 
-    public static class mViewHolder extends RecyclerView.ViewHolder{
+    public static class mViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
+        @Override
+        public void onClick(View v) {
+
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            return false;
+        }
+
+        //private TextView date;
         private TextView summary;
         private TextView deadline;
         private TextView labels;
@@ -52,9 +64,10 @@ public class DeadlineAdapter extends RecyclerView.Adapter<DeadlineAdapter.mViewH
         public mViewHolder(View itemView) {
             super(itemView);
 
+            //date = itemView.findViewById(R.id.date);
             summary = itemView.findViewById(R.id.customSummary);
             deadline = itemView.findViewById(R.id.customDeadline);
-            labels = itemView.findViewById(R.id.customTags);
+            labels = itemView.findViewById(R.id.customLabels);
 
         }
     }

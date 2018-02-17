@@ -30,9 +30,15 @@ import com.example.jeavie.deadlineyesterday.fragments.RecyclerViewFragment;
 import java.util.Locale;
 
 //TODO: vector images +
+//TODO: empty btn
+//TODO: recyclerview style +
+
 //TODO: SQLite database +-
 
 //TODO: add and edit in one
+//TODO: today, tomorrow, report cardviews
+//TODO: today, tomorrow, report views
+//TODO: custom labels?
 //TODO: clean bin
 //TODO: tags to labels
 //TODO: addDeadline style, btn?
@@ -57,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Toolbar toolbar;
     NavigationView navigationView;
     BottomNavigationView bottomNavigationView;
+    ActionBarDrawerToggle toggle;
 
     private HomeFragment homeFragment;
     private RecyclerViewFragment recyclerViewFragment;
@@ -71,9 +78,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main_drawer);
 
         setPreferences();
+        setToolbar();
         setDrawerLayout();
         setNavigationView();
-        setToolbar();
         setBottomNavigationView();
         setFab();
     }
@@ -88,9 +95,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getBaseContext().getResources().updateConfiguration(config, null);
     }
 
+    private void setToolbar(){
+        toolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+    }
+
     private void setDrawerLayout(){
         drawerLayout = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -99,11 +111,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setNavigationView(){
         navigationView = findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    private void setToolbar(){
-        toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
     }
 
     private void setBottomNavigationView(){
@@ -142,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, AddDeadlineActivity.class);
+                //one more intent? try - catch
                 startActivityForResult(intent, Codes.INTENT_REQUEST_CODE);
             }
         });

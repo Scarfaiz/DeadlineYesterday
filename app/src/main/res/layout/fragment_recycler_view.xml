@@ -33,9 +33,10 @@
         </RelativeLayout>
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/add_deadline"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/add_deadline">
+            android:layout_height="56dp"
+            android:layout_gravity="bottom">
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -43,8 +44,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/LIGHT"
                 android:paddingBottom="@dimen/basicMargin"
-                android:paddingStart="@dimen/basicMargin"
                 android:paddingEnd="@dimen/basicMargin"
+                android:paddingStart="@dimen/basicMargin"
                 android:paddingTop="16dp"
                 android:src="@drawable/ic_forward"
                 app:layout_constraintBottom_toBottomOf="parent"
