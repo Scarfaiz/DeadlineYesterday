@@ -2,7 +2,11 @@ package com.example.jeavie.deadlineyesterday.activities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -39,11 +43,12 @@ public class AddDeadlineActivity extends AppCompatActivity {
     EditText editText;
     CharCountTextView charCountTextView;
     TextView dateTextView, timeTextView;
-    TagsEditText tagsEditText;
+    TagsEditText labelsEditText;
 
     List<String> labels;
     String format, summary, date, time;
-    int minute, hour, year, month, day;
+    int minute, hour, year, month, day, position;
+    boolean dataIsSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +57,10 @@ public class AddDeadlineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_deadline);
 
         setToolbar();
-        setEditText();
+        setViews();
         setCharCountTextView();
+
+        dataIsSet = setDataFromRecyclerView();
         setDate();
         setTime();
     }
@@ -72,12 +79,16 @@ public class AddDeadlineActivity extends AppCompatActivity {
         });
     }
 
-    public void setEditText() {
+    public void setViews(){
         editText = findViewById(R.id.summary);
+        charCountTextView = findViewById(R.id.tvTextCounter);
+        dateTextView = findViewById(R.id.setDate);
+        timeTextView = findViewById(R.id.setTime);
+        labelsEditText = findViewById(R.id.labels);
     }
 
     public void setCharCountTextView() {
-        charCountTextView = findViewById(R.id.tvTextCounter);
+
         charCountTextView.setEditText(editText);
         charCountTextView.setCharCountChangedListener(new CharCountTextView.CharCountChangedListener() {
             @Override
@@ -87,14 +98,44 @@ public class AddDeadlineActivity extends AppCompatActivity {
         });
     }
 
-    public void setDate(){
-        dateTextView = findViewById(R.id.setDate);
+    public boolean setDataFromRecyclerView(){
+        Intent intent = getIntent();
+        summary = intent.getStringExtra("summary");
+        try {
+            if (!TextUtils.isEmpty(summary.trim())) {
+                position = intent.getIntExtra("position", -1);
+                date = intent.getStringExtra("date");
+                time = intent.getStringExtra("time");
+                String ls = intent.getStringExtra("labels");
 
+                editText.setText(summary);
+                dateTextView.setText(date);
+                timeTextView.setText(time);
+                try {
+                    if (!TextUtils.isEmpty(ls.trim())) {
+                        String[] label = ls.split(", ");
+                        labelsEditText.setTags(label);
+                    } else {
+                        labelsEditText.setHint(getResources().getString(R.string.addLabels));
+                    }
+                } catch (NullPointerException e) {
+                    // yeah, it's empty
+                }
+                return true;
+            }
+        }
+        catch (NullPointerException e){
+            return false;
+        }
+        return true;
+    }
+
+    public void setDate(){
         final Calendar currentDate = Calendar.getInstance();
         year = currentDate.get(Calendar.YEAR);
         month = currentDate.get(Calendar.MONTH) + 1;
         day = currentDate.get(Calendar.DAY_OF_MONTH);
-        dateTextView.setText(day + "/" + month + "/" + year);
+        if(!dataIsSet) dateTextView.setText(day + "/" + month + "/" + year);
         month -= 1;
         currentDate.set(Calendar.DAY_OF_MONTH, day);
 
@@ -115,13 +156,12 @@ public class AddDeadlineActivity extends AppCompatActivity {
     }
 
     public void setTime(){
-        timeTextView = findViewById(R.id.setTime);
 
         Calendar currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
         minute = currentTime.get(Calendar.MINUTE);
         hour = selectedTimeFormat(hour);
-        timeTextView.setText(hour + " : " + minute + " " + format);
+        if(!dataIsSet) timeTextView.setText(hour + " : " + minute + " " + format);
 
         timeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,14 +190,11 @@ public class AddDeadlineActivity extends AppCompatActivity {
     }
 
     public int codeToReturn(){
-        editText = findViewById(R.id.summary);
+
         summary = editText.getText().toString();
-
-        dateTextView = findViewById(R.id.setDate);
         date = dateTextView.getText().toString();
-
-        timeTextView = findViewById(R.id.setTime);
         time = timeTextView.getText().toString();
+        labels = labelsEditText.getTags();
 
         if (!(correctDate(date, time) > 0)) return 3;
 
@@ -205,11 +242,6 @@ public class AddDeadlineActivity extends AppCompatActivity {
         return parsedLabels;
     }
 
-    public void setLabels(){
-        tagsEditText = findViewById(R.id.labels);
-        labels = tagsEditText.getTags();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_task, menu);
@@ -232,16 +264,22 @@ public class AddDeadlineActivity extends AppCompatActivity {
                 return true;
 
             case R.id.doneTask:
-                setLabels();
+
                 Codes.INTENT_RESULT_CODE = codeToReturn();
                 if (Codes.INTENT_RESULT_CODE == 1){
 
                     String deadline = getDeadline(date, time);
                     String labelsToString = getLabels(labels);
                     DbActivity db = new DbActivity(this);
-                    boolean isInserted = db.insertData(summary, date, time, deadline, labelsToString);
-                    if (isInserted)
-                        sendMessage();
+                    boolean isInserted;
+                    String id = String.valueOf(Codes.ID);
+                    if(!dataIsSet) {
+                        isInserted = db.insertData(id, summary, date, time, deadline, labelsToString);
+                    } else {
+                        isInserted = db.updateData(id, id, summary, date, time, deadline, labelsToString);
+                        Codes.ID++;
+                        newDeadlineToFragment();
+                    }
                     super.setResult(Codes.INTENT_RESULT_CODE);
                     finish();
                 } else if (Codes.INTENT_RESULT_CODE == 2) {
@@ -253,11 +291,13 @@ public class AddDeadlineActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void sendMessage() {
+    private void newDeadlineToFragment() {
         Log.d("sender", "Broadcasting message");
-        Intent intent = new Intent("AddDeadlineActivity");
-        //include some extra data.
-        //intent.putExtra("message", "This is my message!");
+        Intent intent = new Intent("AddDeadline");
+        if (dataIsSet) {
+            intent.putExtra("position", position);
+            intent.putExtra("upd", "upd");
+        }
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 

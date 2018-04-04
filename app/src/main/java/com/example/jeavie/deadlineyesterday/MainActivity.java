@@ -36,21 +36,28 @@ import java.util.Locale;
 //TODO: SQLite database +-
 
 //TODO: add and edit in one
+
+//TODO: home activity:
 //TODO: today, tomorrow, report cardviews
 //TODO: today, tomorrow, report views
+
 //TODO: custom labels?
 //TODO: clean bin
 //TODO: tags to labels
 //TODO: addDeadline style, btn?
 //TODO: colors
 //TODO: show btn add
-//TODO: home activity
+
 //TODO: history - delete full data btn +, clear history - snackbar: cancel, return to uncompleted?
+
 //TODO: notifications activity
 //TODO: about activity
+
 //TODO: vector icon
+
 //TODO: upd deadlines in recyclerView
-//TODO: sort by deadlines
+
+//TODO: sort by deadlines/add
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

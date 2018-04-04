@@ -62,7 +62,7 @@ public class HistoryActivity extends AppCompatActivity {
                         timeData=fullData.getString(4);
                         String deadline=fullData.getString(5);
                         String tags=fullData.getString(6);
-                        list.add(new Deadline(summaryData, dateData, timeData, deadline,
+                        list.add(new Deadline(id, summaryData, dateData, timeData, deadline,
                                 tags));
                         i++;
                     }
@@ -136,7 +136,7 @@ public class HistoryActivity extends AppCompatActivity {
                                                 timeData=fullData.getString(4);
                                                 String deadline=fullData.getString(5);
                                                 String tags=fullData.getString(6);
-                                                list.add(new Deadline(summaryData, dateData, timeData, deadline,
+                                                list.add(new Deadline(id, summaryData, dateData, timeData, deadline,
                                                         tags));
                                                 i++;
                                             }

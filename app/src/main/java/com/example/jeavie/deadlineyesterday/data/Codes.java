@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 public class Codes extends AppCompatActivity{
 
+    public static int ID = 1;
     public final static int INTENT_REQUEST_CODE = 1;
     public final static int INTENT_REQUEST_CODE_TWO = 2;
     public static int INTENT_RESULT_CODE = 1;

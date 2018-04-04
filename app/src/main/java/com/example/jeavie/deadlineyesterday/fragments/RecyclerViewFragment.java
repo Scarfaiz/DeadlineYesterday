@@ -12,10 +12,12 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.jeavie.deadlineyesterday.activities.AddDeadlineActivity;
 import com.example.jeavie.deadlineyesterday.R;
@@ -41,7 +43,7 @@ public class RecyclerViewFragment extends Fragment{
     List<Deadline> deadlines;
     DeadlineAdapter deadlineAdapter;
 
-    String summary, date, time, deadline, labels;
+    String id, summary, date, time, deadline, labels;
 
     public RecyclerViewFragment() { // Required empty public constructor
     }
@@ -69,14 +71,15 @@ public class RecyclerViewFragment extends Fragment{
                 deadlines = new ArrayList<>();
                 int i = 1;
                 do {
-                    String check = fullData.getString(4);
+                    String check = fullData.getString(5);
                     if (!check.startsWith("co")){
-                        summary = fullData.getString(1);
-                        date = fullData.getString(2);
-                        time = fullData.getString(3);
-                        deadline = fullData.getString(4);
-                        labels = fullData.getString(5);
-                        deadlines.add(new Deadline(summary, date, time, deadline,
+                        id = fullData.getString(1);
+                        summary = fullData.getString(2);
+                        date = fullData.getString(3);
+                        time = fullData.getString(4);
+                        deadline = fullData.getString(5);
+                        labels = fullData.getString(6);
+                        deadlines.add(new Deadline(id, summary, date, time, deadline,
                                 labels));
                         i++;
                     }
@@ -112,7 +115,7 @@ public class RecyclerViewFragment extends Fragment{
         super.onCreate(savedInstanceState);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                 mMessageReceiver,
-                new IntentFilter("AddDeadlineActivity"));
+                new IntentFilter("AddDeadline"));
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -122,16 +125,36 @@ public class RecyclerViewFragment extends Fragment{
             recyclerView.setVisibility(View.VISIBLE);
             DbActivity db = new DbActivity(getContext());
             Cursor newDeadline = db.getAllData();
-            newDeadline.moveToLast();
-            summary = newDeadline.getString(1);
-            date = newDeadline.getString(2);
-            time = newDeadline.getString(3);
-            deadline = newDeadline.getString(4);
-            labels = newDeadline.getString(5);
-            deadlines.add(new Deadline(summary, date, time, deadline, labels));
+            int position = intent.getIntExtra("position", -1);
+            String upd = intent.getStringExtra("upd");
+            try {
+                if (!TextUtils.isEmpty(upd.trim())){
+                    newDeadline.moveToPosition(position);
+                    Toast.makeText(context, upd, Toast.LENGTH_SHORT).show();
+                    id = newDeadline.getString(1);
+                    summary = newDeadline.getString(2);
+                    date = newDeadline.getString(3);
+                    time = newDeadline.getString(4);
+                    deadline = newDeadline.getString(5);
+                    labels = newDeadline.getString(6);
+                    deadlines.remove(position);
+                    deadlines.add(position, new Deadline(String.valueOf(position), summary, date, time, deadline, labels));
+                }
+                else {
+                    id = newDeadline.getString(1);
+                    summary = newDeadline.getString(2);
+                    date = newDeadline.getString(3);
+                    time = newDeadline.getString(4);
+                    deadline = newDeadline.getString(5);
+                    labels = newDeadline.getString(6);
+                    deadlines.add(new Deadline(id, summary, date, time, deadline, labels));
+                }
+            }
+            catch (NullPointerException e){
+                newDeadline.moveToLast();
+            }
             deadlineAdapter.notifyDataSetChanged();
-            //String message = intent.getStringExtra("message");
-            Log.d("receiver", "Got message: " + "fake message");
+            Log.d("receiver", "Got message: " + "deadline added");
 
         }
     };

@@ -4,18 +4,28 @@ import android.support.v7.app.AppCompatActivity;
 
 public class Deadline extends AppCompatActivity {
 
+    private String id;
     private String summary;
     private String date;
     private String time;
     private String deadline;
     private String labels;
 
-    public Deadline(String summary, String date, String time, String deadline, String labels) {
+    public Deadline(String id, String summary, String date, String time, String deadline, String labels) {
+        this.id = id;
         this.summary = summary;
         this.date = date;
         this.time = time;
         this.deadline = deadline;
         this.labels = labels;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getSummary() {
