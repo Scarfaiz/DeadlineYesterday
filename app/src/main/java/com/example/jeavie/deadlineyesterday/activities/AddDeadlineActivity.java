@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -272,14 +273,22 @@ public class AddDeadlineActivity extends AppCompatActivity {
                     String labelsToString = getLabels(labels);
                     DbActivity db = new DbActivity(this);
                     boolean isInserted;
-                    String id = String.valueOf(Codes.ID);
+                    String id;
                     if(!dataIsSet) {
+                        try{
+                            Cursor newDeadline = db.getAllData();
+                            newDeadline.moveToLast();
+                            id = String.valueOf(Integer.valueOf(newDeadline.getString(1)) + 1);
+                        }catch (CursorIndexOutOfBoundsException e){
+                            id = String.valueOf(Codes.ID);
+                        }
                         isInserted = db.insertData(id, summary, date, time, deadline, labelsToString);
                     } else {
+                        id = String.valueOf(position + 1);
+                        Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
                         isInserted = db.updateData(id, id, summary, date, time, deadline, labelsToString);
-                        Codes.ID++;
-                        newDeadlineToFragment();
                     }
+                    newDeadlineToFragment();
                     super.setResult(Codes.INTENT_RESULT_CODE);
                     finish();
                 } else if (Codes.INTENT_RESULT_CODE == 2) {

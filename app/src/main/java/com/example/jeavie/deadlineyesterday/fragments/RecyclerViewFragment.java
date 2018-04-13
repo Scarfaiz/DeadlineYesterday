@@ -122,15 +122,12 @@ public class RecyclerViewFragment extends Fragment{
         @Override
         public void onReceive(Context context, Intent intent) {
             empty.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
             DbActivity db = new DbActivity(getContext());
             Cursor newDeadline = db.getAllData();
             int position = intent.getIntExtra("position", -1);
-            String upd = intent.getStringExtra("upd");
             try {
-                if (!TextUtils.isEmpty(upd.trim())){
+                if (position != -1){
                     newDeadline.moveToPosition(position);
-                    Toast.makeText(context, upd, Toast.LENGTH_SHORT).show();
                     id = newDeadline.getString(1);
                     summary = newDeadline.getString(2);
                     date = newDeadline.getString(3);
@@ -141,6 +138,7 @@ public class RecyclerViewFragment extends Fragment{
                     deadlines.add(position, new Deadline(String.valueOf(position), summary, date, time, deadline, labels));
                 }
                 else {
+                    newDeadline.moveToLast();
                     id = newDeadline.getString(1);
                     summary = newDeadline.getString(2);
                     date = newDeadline.getString(3);
@@ -154,8 +152,8 @@ public class RecyclerViewFragment extends Fragment{
                 newDeadline.moveToLast();
             }
             deadlineAdapter.notifyDataSetChanged();
-            Log.d("receiver", "Got message: " + "deadline added");
-
+            recyclerView.setVisibility(View.VISIBLE);
+//            Log.d("receiver", "Got message: " + "deadline added");
         }
     };
 
@@ -165,30 +163,5 @@ public class RecyclerViewFragment extends Fragment{
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mMessageReceiver);
         super.onDestroy();
     }
-
-//    @Override
-//    public void onActivityResult (int requestCode, int resultCode, Intent data) {
-//        if (requestCode == Codes.INTENT_RESULT_CODE){
-//            if(resultCode == Codes.INTENT_RESULT_CODE) {
-//
-//                super.onActivityResult(requestCode, resultCode, data);
-//            }
-//        }
-//        else if (requestCode == Codes.INTENT_RESULT_CODE_TWO){
-//            if (resultCode == Codes.INTENT_RESULT_CODE_TWO) {
-//                String a = deadlines.get(EditTaskActivity.number).getId();
-//                Cursor newDeadline = db.getData(a);
-//                String id = newDeadline.getString(0);
-//                summary=newDeadline.getString(1);
-//                date=newDeadline.getString(2);
-//                time=newDeadline.getString(3);
-//                String deadline=newDeadline.getString(4);
-//                String tags=newDeadline.getString(5);
-//                deadlines.remove(Integer.valueOf(id) - 1);
-//                deadlines.add(Integer.valueOf(id) - 1, new Deadline(summary, date, time, deadline, tags));
-//                deadlineAdapter.notifyDataSetChanged();
-//            }
-//        }
-//    }
 
 }

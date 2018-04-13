@@ -32,10 +32,10 @@ import java.util.Locale;
 //TODO: vector images +
 //TODO: empty btn
 //TODO: recyclerview style +
+//TODO: add and edit in one +
 
 //TODO: SQLite database +-
 
-//TODO: add and edit in one
 
 //TODO: home activity:
 //TODO: today, tomorrow, report cardviews
@@ -48,7 +48,7 @@ import java.util.Locale;
 //TODO: colors
 //TODO: show btn add
 
-//TODO: history - delete full data btn +, clear history - snackbar: cancel, return to uncompleted?
+//TODO: history - delete full data btn, clear history - snackbar: cancel, return to uncompleted?
 
 //TODO: notifications activity
 //TODO: about activity
