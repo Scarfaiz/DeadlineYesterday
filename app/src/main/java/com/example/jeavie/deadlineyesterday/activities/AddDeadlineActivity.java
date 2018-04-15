@@ -69,6 +69,7 @@ public class AddDeadlineActivity extends AppCompatActivity {
     public void setToolbar() {
         toolbar = findViewById(R.id.toolbar_add_task_activity);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.WHITE));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/basicMargin"
         android:text="@string/app_name"
-        android:textColor="@color/WHITE"
         android:textSize="18sp" />
 
 </LinearLayout>

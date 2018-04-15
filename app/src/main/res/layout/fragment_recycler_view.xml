@@ -28,7 +28,7 @@
                 android:layout_height="267dp"
                 android:layout_alignParentTop="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/image" />
+                android:src="@drawable/add_deadline" />
 
         </RelativeLayout>
 
@@ -62,7 +62,7 @@
                 android:paddingEnd="@dimen/basicMargin"
                 android:paddingStart="@dimen/basicMargin"
                 android:paddingTop="18dp"
-                android:text="@string/rest"
+                android:text="@string/noDeadlines"
                 android:textColor="@color/GREY"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"

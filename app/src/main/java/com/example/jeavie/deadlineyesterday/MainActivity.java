@@ -33,9 +33,13 @@ import java.util.Locale;
 //TODO: empty btn
 //TODO: recyclerview style +
 //TODO: add and edit in one +
+//TODO: addDeadline style, btn? +
 
 //TODO: SQLite database +-
 
+
+//TODO: upd deadlines in recyclerView
+//TODO: history - delete full data btn, clear history - snackbar: cancel, return to uncompleted?
 
 //TODO: home activity:
 //TODO: today, tomorrow, report cardviews
@@ -44,18 +48,18 @@ import java.util.Locale;
 //TODO: custom labels?
 //TODO: clean bin
 //TODO: tags to labels
-//TODO: addDeadline style, btn?
+
 //TODO: colors
 //TODO: show btn add
 
-//TODO: history - delete full data btn, clear history - snackbar: cancel, return to uncompleted?
+
 
 //TODO: notifications activity
 //TODO: about activity
 
 //TODO: vector icon
 
-//TODO: upd deadlines in recyclerView
+
 
 //TODO: sort by deadlines/add
 

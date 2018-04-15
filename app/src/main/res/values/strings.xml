@@ -20,7 +20,7 @@
     <string name="labels">Labels</string>
     <string name="month">Month</string>
     <string name="noCompletedDeadlines">No completed deadlines</string>
-    <string name="noDeadlines">There are no deadlines</string>
+    <string name="noDeadlines">No deadlines. Add a new one by clicking here</string>
     <string name="notifications">Notifications</string>
     <string name="open">Open</string>
     <string name="other">Other</string>
@@ -52,6 +52,6 @@
 
 
 
-    <string name="rest">No deadlines. Add a new one by clicking here</string>
+
     <string name="upcoming">Upcoming deadlines</string>
 </resources>
