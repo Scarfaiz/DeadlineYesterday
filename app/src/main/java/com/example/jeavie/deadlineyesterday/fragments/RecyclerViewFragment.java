@@ -5,18 +5,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.jeavie.deadlineyesterday.activities.AddDeadlineActivity;
@@ -25,11 +33,17 @@ import com.example.jeavie.deadlineyesterday.data.Codes;
 import com.example.jeavie.deadlineyesterday.data.DbActivity;
 import com.example.jeavie.deadlineyesterday.data.Deadline;
 import com.example.jeavie.deadlineyesterday.adapter.DeadlineAdapter;
+import com.example.jeavie.deadlineyesterday.helper.RecyclerViewSwipeHelper;
+import com.example.jeavie.deadlineyesterday.interfaces.RecyclerViewSwipeHelperListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class RecyclerViewFragment extends Fragment{
+public class RecyclerViewFragment extends Fragment implements RecyclerViewSwipeHelperListener {
 
     DbActivity db;
     Cursor fullData;
@@ -37,6 +51,7 @@ public class RecyclerViewFragment extends Fragment{
     View v;
 
     ConstraintLayout addDeadline;
+    RelativeLayout rootRecyclerViewLayout;
     CardView empty;
 
     RecyclerView recyclerView;
@@ -56,12 +71,21 @@ public class RecyclerViewFragment extends Fragment{
 
         setBasicView();
         addDeadline();
+        setHandler();
 
         return v;
     }
 
     public void setBasicView(){
+        rootRecyclerViewLayout = v.findViewById(R.id.rootRecyclerViewLayout);
         recyclerView = v.findViewById(R.id.recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        ItemTouchHelper.SimpleCallback simpleCallback = new RecyclerViewSwipeHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
+
         empty = v.findViewById(R.id.empty);
 
         db = new DbActivity(getContext());
@@ -71,14 +95,14 @@ public class RecyclerViewFragment extends Fragment{
                 deadlines = new ArrayList<>();
                 int i = 1;
                 do {
-                    String check = fullData.getString(5);
+                    String check = fullData.getString(3);
                     if (!check.startsWith("co")){
                         id = fullData.getString(1);
                         summary = fullData.getString(2);
                         date = fullData.getString(3);
                         time = fullData.getString(4);
-                        deadline = fullData.getString(5);
-                        labels = fullData.getString(6);
+                        deadline = getDeadline(date, time);
+                        labels = fullData.getString(5);
                         deadlines.add(new Deadline(id, summary, date, time, deadline,
                                 labels));
                         i++;
@@ -110,6 +134,53 @@ public class RecyclerViewFragment extends Fragment{
         });
     }
 
+    public void setHandler(){
+        final Handler handler = new Handler();
+        final int delay = 1000 ; //minutes * 60
+
+        handler.postDelayed(new Runnable(){
+            public void run(){
+                deadlineAdapter.timer();
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
+    }
+
+    public long correctDate (String date, String time){
+        String format = date + " " + time;
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh : mm");
+        Date cal1 = new Date();
+        Date cal2 = null;
+        try {
+            cal2 = df.parse(format);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long diff = cal2.getTime() - cal1.getTime();
+        return diff;
+    }
+
+    public String getDeadline (String date, String time){
+
+        long diff = correctDate(date, time);
+
+        long diffSeconds = diff/(1000);
+
+        long diffMinutes = diff / (60 * 1000);
+
+        long diffHours = diff / (60 * 60 * 1000);
+
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        if (diffDays>=1){
+            return String.valueOf(diffDays) + "d " + String.valueOf(diffHours - (diffDays*24)) + "h";
+        } else if (diffHours>=1){
+            return String.valueOf(diffHours) + "h " + String.valueOf(diffMinutes - (diffHours*60)) + "m";
+        } else if (diffSeconds > 0) //for debuging
+            return String.valueOf(diffSeconds) + "s ";
+        else return String.valueOf(diffMinutes) + "m ";
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,8 +203,8 @@ public class RecyclerViewFragment extends Fragment{
                     summary = newDeadline.getString(2);
                     date = newDeadline.getString(3);
                     time = newDeadline.getString(4);
-                    deadline = newDeadline.getString(5);
-                    labels = newDeadline.getString(6);
+                    deadline = getDeadline(date, time);
+                    labels = newDeadline.getString(5);
                     deadlines.remove(position);
                     deadlines.add(position, new Deadline(String.valueOf(position), summary, date, time, deadline, labels));
                 }
@@ -143,8 +214,8 @@ public class RecyclerViewFragment extends Fragment{
                     summary = newDeadline.getString(2);
                     date = newDeadline.getString(3);
                     time = newDeadline.getString(4);
-                    deadline = newDeadline.getString(5);
-                    labels = newDeadline.getString(6);
+                    deadline = getDeadline(date, time);
+                    labels = newDeadline.getString(5);
                     deadlines.add(new Deadline(id, summary, date, time, deadline, labels));
                 }
             }
@@ -164,4 +235,43 @@ public class RecyclerViewFragment extends Fragment{
         super.onDestroy();
     }
 
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof DeadlineAdapter.mViewHolder){
+            final int index = viewHolder.getAdapterPosition();
+
+            final Deadline deletedDeadline = deadlines.get(index);
+            Toast.makeText(getContext(), String.valueOf(deadlines.get(index).getId()), Toast.LENGTH_SHORT).show();
+
+            deadlineAdapter.removeDeadline(index);
+
+            DbActivity db = new DbActivity(getContext());
+            //Cursor swipedDeadline = db.getAllData(); // change date string to send it to history
+            //swipedDeadline.moveToPosition(index);
+
+//            db.deleteData(String.valueOf(index));
+
+
+            Snackbar snackbar = Snackbar.make(rootRecyclerViewLayout, "Completed", Snackbar.LENGTH_LONG);
+            View snackbarView = snackbar.getView();
+            FrameLayout snackBarView = (FrameLayout) snackbar.getView();
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackBarView.getChildAt(0).getLayoutParams();
+            params.setMargins(params.leftMargin,
+                    params.topMargin,
+                    params.rightMargin,
+                    params.bottomMargin + 10);
+
+            snackBarView.getChildAt(0).setLayoutParams(params);
+            snackbarView.setMinimumHeight(145);
+
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deadlineAdapter.restoreDeadline(deletedDeadline, index);
+                }
+            });
+            snackbar.setActionTextColor(getResources().getColor(R.color.RED400));
+            snackbar.show();
+        }
+    }
 }

@@ -162,8 +162,9 @@ public class AddDeadlineActivity extends AppCompatActivity {
         Calendar currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
         minute = currentTime.get(Calendar.MINUTE);
-        hour = selectedTimeFormat(hour);
-        if(!dataIsSet) timeTextView.setText(hour + " : " + minute + " " + format);
+//        hour = selectedTimeFormat(hour);
+        if(!dataIsSet) timeTextView.setText(hour + " : " + minute);
+//        if(!dataIsSet) timeTextView.setText(hour + " : " + minute + " " + format);
 
         timeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,8 +172,9 @@ public class AddDeadlineActivity extends AppCompatActivity {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(AddDeadlineActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        hourOfDay = selectedTimeFormat(hourOfDay);
-                        timeTextView.setText(hourOfDay + " : " + minute + " " + format);
+//                        hourOfDay = selectedTimeFormat(hourOfDay);
+                        timeTextView.setText(hourOfDay + " : " + minute);
+//                        timeTextView.setText(hourOfDay + " : " + minute + " " + format);
                     }
                 }, hour, minute, true);
                 timePickerDialog.show();
@@ -180,16 +182,16 @@ public class AddDeadlineActivity extends AppCompatActivity {
         });
     }
 
-    public int selectedTimeFormat(int hour){
-        if (hour == 0){
-            format = "AM";
-        } else if (hour >= 12){
-            hour -= 12;
-            format = "PM";
-        } else
-            format = "AM";
-        return hour;
-    }
+//    public int selectedTimeFormat(int hour){
+//        if (hour == 0){
+//            format = "AM";
+//        } else if (hour >= 12){
+//            hour -= 12;
+//            format = "PM";
+//        } else
+//            format = "AM";
+//        return hour;
+//    }
 
     public int codeToReturn(){
 
@@ -206,7 +208,7 @@ public class AddDeadlineActivity extends AppCompatActivity {
 
     public long correctDate (String date, String time){
         String format = date + " " + time;
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh : mm a");
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh : mm");
         Date cal1 = new Date();
         Date cal2 = null;
         try {
@@ -270,7 +272,7 @@ public class AddDeadlineActivity extends AppCompatActivity {
                 Codes.INTENT_RESULT_CODE = codeToReturn();
                 if (Codes.INTENT_RESULT_CODE == 1){
 
-                    String deadline = getDeadline(date, time);
+//                    String deadline = getDeadline(date, time);
                     String labelsToString = getLabels(labels);
                     DbActivity db = new DbActivity(this);
                     boolean isInserted;
@@ -283,11 +285,11 @@ public class AddDeadlineActivity extends AppCompatActivity {
                         }catch (CursorIndexOutOfBoundsException e){
                             id = String.valueOf(Codes.ID);
                         }
-                        isInserted = db.insertData(id, summary, date, time, deadline, labelsToString);
+                        isInserted = db.insertData(id, summary, date, time, labelsToString);
                     } else {
                         id = String.valueOf(position + 1);
                         Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
-                        isInserted = db.updateData(id, id, summary, date, time, deadline, labelsToString);
+                        isInserted = db.updateData(id, id, summary, date, time, labelsToString);
                     }
                     newDeadlineToFragment();
                     super.setResult(Codes.INTENT_RESULT_CODE);

@@ -61,14 +61,14 @@ public class HistoryFragment extends Fragment{
                 deadlines = new ArrayList<>();
                 int i = 1;
                 do {
-                    String check = fullData.getString(5);
+                    String check = fullData.getString(3);
                     if (!check.startsWith("co")){
                         id = fullData.getString(1);
                         summary = fullData.getString(2);
                         date = fullData.getString(3);
                         time = fullData.getString(4);
-                        deadline = fullData.getString(5);
-                        labels = fullData.getString(6);
+                        deadline = "Completed";
+                        labels = fullData.getString(5);
                         deadlines.add(new Deadline(id, summary, date, time, deadline,
                                 labels));
                         i++;
