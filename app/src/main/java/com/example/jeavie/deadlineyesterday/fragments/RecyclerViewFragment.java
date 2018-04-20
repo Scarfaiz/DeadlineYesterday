@@ -58,6 +58,8 @@ public class RecyclerViewFragment extends Fragment implements RecyclerViewSwipeH
     List<Deadline> deadlines;
     DeadlineAdapter deadlineAdapter;
 
+    private boolean isDataRestored;
+
     String id, summary, date, time, deadline, labels;
 
     public RecyclerViewFragment() { // Required empty public constructor
@@ -77,6 +79,7 @@ public class RecyclerViewFragment extends Fragment implements RecyclerViewSwipeH
     }
 
     public void setBasicView(){
+
         rootRecyclerViewLayout = v.findViewById(R.id.rootRecyclerViewLayout);
         recyclerView = v.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -85,18 +88,15 @@ public class RecyclerViewFragment extends Fragment implements RecyclerViewSwipeH
 
         ItemTouchHelper.SimpleCallback simpleCallback = new RecyclerViewSwipeHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
-
         empty = v.findViewById(R.id.empty);
-
         db = new DbActivity(getContext());
         fullData = db.getAllData();
-        if (fullData.getCount() > 0){
+        deadlines = new ArrayList<>();
+        if (fullData.getCount() > 0) {
             if (fullData.moveToFirst()) {
-                deadlines = new ArrayList<>();
-                int i = 1;
                 do {
                     String check = fullData.getString(3);
-                    if (!check.startsWith("co")){
+                    if (!check.startsWith("co")) {
                         id = fullData.getString(1);
                         summary = fullData.getString(2);
                         date = fullData.getString(3);
@@ -105,21 +105,20 @@ public class RecyclerViewFragment extends Fragment implements RecyclerViewSwipeH
                         labels = fullData.getString(5);
                         deadlines.add(new Deadline(id, summary, date, time, deadline,
                                 labels));
-                        i++;
                     }
                 } while (fullData.moveToNext());
             }
             empty.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
-        else {
-            deadlines = new ArrayList<>();
+        if (deadlines.size() == 0) {
             recyclerView.setVisibility(View.GONE);
             empty.setVisibility(View.VISIBLE);
         }
         deadlineAdapter = new DeadlineAdapter(getContext(), deadlines);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(deadlineAdapter);
+
     }
 
     public void addDeadline(){
@@ -241,18 +240,12 @@ public class RecyclerViewFragment extends Fragment implements RecyclerViewSwipeH
             final int index = viewHolder.getAdapterPosition();
 
             final Deadline deletedDeadline = deadlines.get(index);
-            Toast.makeText(getContext(), String.valueOf(deadlines.get(index).getId()), Toast.LENGTH_SHORT).show();
+            final String idOfDeleted = deletedDeadline.getId();
+            Toast.makeText(getContext(), "id is " + idOfDeleted, Toast.LENGTH_SHORT).show();
 
             deadlineAdapter.removeDeadline(index);
 
-            DbActivity db = new DbActivity(getContext());
-            //Cursor swipedDeadline = db.getAllData(); // change date string to send it to history
-            //swipedDeadline.moveToPosition(index);
-
-//            db.deleteData(String.valueOf(index));
-
-
-            Snackbar snackbar = Snackbar.make(rootRecyclerViewLayout, "Completed", Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(rootRecyclerViewLayout, "Completed", Snackbar.LENGTH_SHORT);
             View snackbarView = snackbar.getView();
             FrameLayout snackBarView = (FrameLayout) snackbar.getView();
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackBarView.getChildAt(0).getLayoutParams();
@@ -268,8 +261,36 @@ public class RecyclerViewFragment extends Fragment implements RecyclerViewSwipeH
                 @Override
                 public void onClick(View v) {
                     deadlineAdapter.restoreDeadline(deletedDeadline, index);
+                    isDataRestored = true;
+                    empty.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+            }).setCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int dismissType) {
+                    super.onDismissed(snackbar, dismissType);
+
+                    if(dismissType != DISMISS_EVENT_ACTION){
+                        DbActivity db = new DbActivity(getContext());
+                        Cursor swipedDeadline = db.getAllData(); // change date string to send it to history
+                        swipedDeadline.moveToPosition(Integer.valueOf(idOfDeleted) - 1);
+                        id = swipedDeadline.getString(1);
+                        summary = swipedDeadline.getString(2);
+                        date = "completed";
+                        time = swipedDeadline.getString(4);
+                        labels = swipedDeadline.getString(5);
+                        Toast.makeText(getContext(), id, Toast.LENGTH_SHORT).show();
+                        boolean isInserted = db.updateData(id, id, summary, date, time, labels);
+                        if (deadlines.size() == 0) {
+                            recyclerView.setVisibility(View.GONE);
+                            empty.setVisibility(View.VISIBLE);
+                        }
+                    }
                 }
             });
+
+
+
             snackbar.setActionTextColor(getResources().getColor(R.color.RED400));
             snackbar.show();
         }

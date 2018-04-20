@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.jeavie.deadlineyesterday.R;
 import com.example.jeavie.deadlineyesterday.adapter.DeadlineAdapter;
@@ -47,6 +48,9 @@ public class HistoryFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_history, container, false);
+
+        setBasicView();
+
         return v;
     }
 
@@ -56,13 +60,13 @@ public class HistoryFragment extends Fragment{
 
         db = new DbActivity(getContext());
         fullData = db.getAllData();
+        deadlines = new ArrayList<>();
         if (fullData.getCount() > 0){
             if (fullData.moveToFirst()) {
-                deadlines = new ArrayList<>();
-                int i = 1;
                 do {
                     String check = fullData.getString(3);
-                    if (!check.startsWith("co")){
+//                    Toast.makeText(getContext(), check, Toast.LENGTH_SHORT).show();
+                    if (check.startsWith("co")){
                         id = fullData.getString(1);
                         summary = fullData.getString(2);
                         date = fullData.getString(3);
@@ -71,15 +75,13 @@ public class HistoryFragment extends Fragment{
                         labels = fullData.getString(5);
                         deadlines.add(new Deadline(id, summary, date, time, deadline,
                                 labels));
-                        i++;
                     }
                 } while (fullData.moveToNext());
             }
             empty.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
-        else {
-            deadlines = new ArrayList<>();
+        if (deadlines.size() == 0) {
             recyclerView.setVisibility(View.GONE);
             empty.setVisibility(View.VISIBLE);
         }
